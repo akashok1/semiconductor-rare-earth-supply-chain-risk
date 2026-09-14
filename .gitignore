@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+CLAUDE.md
+.claude/
+data/raw/
+!data/raw/.gitkeep
+.venv/
+__pycache__/
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+.DS_Store
+.ipynb_checkpoints/
