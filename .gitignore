@@ -3,7 +3,7 @@
 !.env.example
 CLAUDE.md
 .claude/
-data/raw/
+data/raw/*
 !data/raw/.gitkeep
 .venv/
 __pycache__/
