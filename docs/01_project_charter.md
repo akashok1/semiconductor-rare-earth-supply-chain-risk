@@ -1,9 +1,9 @@
-# Project Charter: Trade Chokepoint Exposure
+# Project Charter: Import Concentration Risk
 
 | Field | Value |
 |---|---|
-| Project name | Trade Chokepoint Exposure |
-| Repository | `trade-chokepoint-exposure` |
+| Project name | Import Concentration Risk |
+| Repository | `import-concentration-risk` |
 | Document ID | `docs/01_project_charter.md` |
 | Version | 1.0 |
 | Status | Approved for build |
@@ -74,7 +74,7 @@ Success criteria are deliberately mechanical. None of them is "stakeholder is sa
 1. Semiconductors and semiconductor manufacturing equipment: HS 8541, 8542, 8486 families.
 2. Rare earths and permanent magnets: HS 2805.30, the 2846 family, 8505.11.
 
-HS codes listed above are candidates. Every one is verified against the live Comtrade code list on Day 1 before it enters `dim_product`.
+HS codes listed above are candidates. Every one is verified against the live Comtrade code list during the Verification phase before it enters `dim_product`.
 
 **Explicitly excluded, with reasons**
 
@@ -120,22 +120,22 @@ RACI for the build itself is trivial, since one person executes every task. It i
 
 ## 8. Milestones
 
-| Day | Milestone | Exit condition |
-|---|---|---|
-| Day 1 | Data reality check | Comtrade key works, every HS6 code verified against the live code list, latest available year confirmed, record counts inspected by year, PortWatch layer paginating correctly |
-| Day 2 | Pipeline standing | Raw tables landed in Postgres, staging models built, `hs_bridge.csv` populated, first tests passing |
-| Day 3 | Measures built | Concentration mart complete, routing matrix drafted and documented, exposure mart complete |
-| Day 4 | Analysis and BI | Event study chosen and run, sensitivity test run, Tableau dashboard built, Excel workbook built |
-| Day 5 | Documentation and release | FRD, data dictionary, traceability matrix, UAT test plan, assumptions and limitations written; GitHub Actions workflow committed; README finished; history squashed; repo made public |
+| Phase | Exit condition |
+|---|---|
+| Verification | Comtrade key works, every HS6 code verified against the live code list, latest available year confirmed, record counts inspected by year, PortWatch layer paginating correctly |
+| Ingest | Raw tables landed in Postgres, staging models built, `hs_bridge.csv` populated, first tests passing |
+| Measures | Concentration mart complete, routing matrix drafted and documented, exposure mart complete |
+| Analysis and BI | Event study chosen and run, sensitivity test run, Tableau dashboard built, Excel workbook built |
+| Documentation | FRD, data dictionary, traceability matrix, UAT test plan, assumptions and limitations written; GitHub Actions workflow committed; README finished; history squashed; repo made public |
 
-Day 1 gates everything. If the HS codes or the year range come back different from the assumptions in section 5, the scope table is amended before any model is written, not after.
+The Verification phase gates everything. If the HS codes or the year range come back different from the assumptions in section 5, the scope table is amended before any model is written, not after.
 
 ## 9. Assumptions
 
 | ID | Assumption | If it proves false |
 |---|---|---|
 | A-1 | Comtrade free tier access remains available at 500 calls per day | Fall back to the keyless `public - v1` endpoint at 500 records and narrow the year range |
-| A-2 | The candidate HS6 codes exist in HS2017 and carry meaningful US import value | Replace codes on Day 1 and amend the scope table |
+| A-2 | The candidate HS6 codes exist in HS2017 and carry meaningful US import value | Replace codes during the Verification phase and amend the scope table |
 | A-3 | Bilateral import value is an acceptable proxy for supply dependency | Stated as a limitation; no alternative public source exists |
 | A-4 | Country of origin in Comtrade approximates the true production origin | Recorded as a limitation. Transshipment and rules of origin distort this and the distortion is not measurable here |
 | A-5 | Chokepoint transit volumes from PortWatch are a reasonable proxy for route activity | Flagged chokepoints with known signal loss are caveated, not silently used |
@@ -166,7 +166,7 @@ Day 1 gates everything. If the HS codes or the year range come back different fr
 |---|---|---|---|---|
 | R-1 | Comtrade free tier key is regenerated or deactivated mid build | Medium | High | Ingest fails loudly on 401. Portal login every two weeks. Raw data cached locally so a dead key does not block transformation |
 | R-2 | Routing matrix is judged arbitrary by a reviewer | High | High | Every weight carries a stated basis. Sensitivity test is a must ship, not a stretch. The matrix is presented as an assumption, never as a measurement |
-| R-3 | HS concordance breaks the time series | Medium | Medium | `hs_version` carried through every layer. Bridge table held as data. Record counts inspected by year on Day 1 to find breaks directly |
+| R-3 | HS concordance breaks the time series | Medium | Medium | `hs_version` carried through every layer. Bridge table held as data. Record counts inspected by year during the Verification phase to find breaks directly |
 | R-4 | PortWatch series breaks read as real growth | Medium | Medium | Known breaks flagged in the mart and annotated on the dashboard |
 | R-5 | Scope creep into ports, more baskets, or more reporters | High | Medium | Scope table in section 5 is the test. Additions require a decision log entry |
 | R-6 | Documentation volume outpaces analytical substance | Medium | High | The event study and sensitivity test ship before any document other than this charter and the BRD |

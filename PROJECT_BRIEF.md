@@ -1,7 +1,7 @@
-# PROJECT BRIEF — Trade Chokepoint Exposure
+# PROJECT BRIEF — Import Concentration Risk
 
 **Owner:** Akash A
-**Repo:** `trade-chokepoint-exposure`
+**Repo:** `import-concentration-risk`
 **Status:** Setup / Day 0
 **Last updated:** 2026-09-13
 
@@ -49,7 +49,7 @@ Every requirement traces back to this decision. If something in the build does n
 1. **Semiconductors and semiconductor manufacturing equipment** — HS 8541, 8542, 8486 families
 2. **Rare earths and permanent magnets** — HS 2805.30, 2846 family, 8505.11
 
-> Starting HS codes are candidates only. Verify every one against the live Comtrade code list on Day 1 before committing them to `dim_product`.
+> Starting HS codes are candidates only. Verify every one against the live Comtrade code list during the Verification phase before committing them to `dim_product`.
 
 **Analytical note on magnets:** China's concentration in downstream magnet manufacturing (8505.11) is generally more extreme than in raw rare earth metals (2805.30). If the data shows that gap, it is the most interesting finding in the basket. Do not assume it; measure it.
 
@@ -62,7 +62,7 @@ Every requirement traces back to this decision. If something in the build does n
 - **Access:** Free tier, requires registered API key
 - **Limits:** Up to 100K records per call, up to 500 calls per day
 - **Client:** `comtradeapicall` (official UN Python package)
-- **Key storage:** `.env`, gitignored. Subscription name `trade-chokepoint-exposure`
+- **Key storage:** `.env`, gitignored. Subscription name `import-concentration-risk`
 - **Operational trap:** Free-tier keys may be regenerated ad hoc under the fair usage policy, and free users must log into the portal regularly to keep keys active. Ingest must fail loudly on 401, never silently write an empty file. Log into the portal every couple of weeks.
 - **Fair usage:** Do not scrape the UI. Do not register multiple accounts to dodge the daily limit. Throttle and cache.
 - **No-key fallback:** `public - v1` endpoint returns 500 records with no key. Sufficient for building and testing the ingest script.
@@ -149,7 +149,7 @@ One canonical product maps to many HS codes across vintages.
 ## 9. Repo structure
 
 ```
-trade-chokepoint-exposure/
+import-concentration-risk/
 ├── PROJECT_BRIEF.md
 ├── CLAUDE.md               # gitignored
 ├── README.md

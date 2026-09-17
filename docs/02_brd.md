@@ -1,8 +1,8 @@
-# Business Requirements Document: Trade Chokepoint Exposure
+# Business Requirements Document: Import Concentration Risk
 
 | Field | Value |
 |---|---|
-| Project name | Trade Chokepoint Exposure |
+| Project name | Import Concentration Risk |
 | Document ID | `docs/02_brd.md` |
 | Version | 1.0 |
 | Status | Baselined for build |
@@ -15,7 +15,7 @@
 | Version | Date | Change | Author |
 |---|---|---|---|
 | 0.1 | 2026-09-13 | Draft from project brief | Akash A |
-| 1.0 | 2026-09-14 | Baselined ahead of Day 1 data verification | Akash A |
+| 1.0 | 2026-09-14 | Baselined ahead of the Verification phase | Akash A |
 
 > This document states **what the business needs and why**. It does not state how the solution is built. Models, tests, endpoints, and schemas live in the FRD. Every requirement here carries an ID that the traceability matrix uses to connect a business need to a functional specification, a test case, and a shipped artefact.
 
@@ -198,12 +198,12 @@ Assumptions A-1 through A-6 and constraints are recorded in the project charter,
 
 | ID | Question | Owner | Needed by | Blocks |
 |---|---|---|---|---|
-| OQ-1 | Do all candidate commodity codes exist in the chosen classification vintage with meaningful US import value? | Analyst | Day 1 | BR-01, scope table |
-| OQ-2 | What is the latest available year for US import data? | Analyst | Day 1 | BR-12 |
-| OQ-3 | Where do classification breaks actually appear in the record counts? | Analyst | Day 1 | BR-13 |
-| OQ-4 | Which chokepoints do the two baskets plausibly transit? | Analyst | Day 2 | BR-07, BR-08 |
-| OQ-5 | Which disruption gives the cleanest event study for these baskets? | Analyst | Day 3 | BR-14 |
-| OQ-6 | Which threshold guideline version is current, and what are its bands? | Analyst | Day 3 | BR-04 |
+| OQ-1 | Do all candidate commodity codes exist in the chosen classification vintage with meaningful US import value? | Analyst | Verification | BR-01, scope table |
+| OQ-2 | What is the latest available year for US import data? | Analyst | Verification | BR-12 |
+| OQ-3 | Where do classification breaks actually appear in the record counts? | Analyst | Verification | BR-13 |
+| OQ-4 | Which chokepoints do the two baskets plausibly transit? | Analyst | Ingest | BR-07, BR-08 |
+| OQ-5 | Which disruption gives the cleanest event study for these baskets? | Analyst | Measures | BR-14 |
+| OQ-6 | Which threshold guideline version is current, and what are its bands? | Analyst | Measures | BR-04 |
 
 No requirement above is baselined as final until OQ-1 and OQ-2 are answered. If either answer contradicts the scope table, this document goes to version 1.1 before any model is written against it.
 
