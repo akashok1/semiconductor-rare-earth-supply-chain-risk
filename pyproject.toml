@@ -1,11 +1,19 @@
 [project]
-name = "trade-chokepoint-exposure"
+name = "import-concentration-risk"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
     "comtradeapicall>=1.3.2",
+    "matplotlib>=3.11.2",
     "pandas>=3.0.5",
     "pyarrow>=25.0.1",
     "python-dotenv>=1.2.3",
     "requests>=2.34.2",
+    "searoute>=1.6.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.3.0",
+    "jupyter>=1.1.1",
 ]
