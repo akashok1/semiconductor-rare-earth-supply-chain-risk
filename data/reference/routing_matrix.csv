@@ -1,0 +1,841 @@
+origin_locode,origin_country_iso3,destination_locode,us_coast,portid,chokepoint_name,crosses,min_distance_km,threshold_km
+TWKHH,TWN,USLAX,west_coast,chokepoint1,Suez Canal,0,8489.233,200
+TWKHH,TWN,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+TWKHH,TWN,USLAX,west_coast,chokepoint3,Bosporus Strait,0,8365.743,200
+TWKHH,TWN,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,8117.937,200
+TWKHH,TWN,USLAX,west_coast,chokepoint5,Malacca Strait,0,3010.71,200
+TWKHH,TWN,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,6321.108,200
+TWKHH,TWN,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,12232.407,200
+TWKHH,TWN,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+TWKHH,TWN,USLAX,west_coast,chokepoint9,Dover Strait,0,8642.88,200
+TWKHH,TWN,USLAX,west_coast,chokepoint10,Oresund Strait,0,8158.262,200
+TWKHH,TWN,USLAX,west_coast,chokepoint11,Taiwan Strait,1,76.622,200
+TWKHH,TWN,USLAX,west_coast,chokepoint12,Korea Strait,0,378.787,200
+TWKHH,TWN,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+TWKHH,TWN,USLAX,west_coast,chokepoint14,Luzon Strait,0,270.507,200
+TWKHH,TWN,USLAX,west_coast,chokepoint15,Lombok Strait,0,3474.918,200
+TWKHH,TWN,USLAX,west_coast,chokepoint16,Ombai Strait,0,3480.82,200
+TWKHH,TWN,USLAX,west_coast,chokepoint17,Bohai Strait,0,1161.577,200
+TWKHH,TWN,USLAX,west_coast,chokepoint18,Torres Strait,0,4328.001,200
+TWKHH,TWN,USLAX,west_coast,chokepoint19,Sunda Strait,0,3536.258,200
+TWKHH,TWN,USLAX,west_coast,chokepoint20,Makassar Strait,0,2474.448,200
+TWKHH,TWN,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+TWKHH,TWN,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+TWKHH,TWN,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+TWKHH,TWN,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+TWKHH,TWN,USLAX,west_coast,chokepoint25,Balabac Strait,0,1722.536,200
+TWKHH,TWN,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+TWKHH,TWN,USLAX,west_coast,chokepoint27,Mindoro Strait,0,1132.998,200
+TWKHH,TWN,USLAX,west_coast,chokepoint28,Kerch Strait,0,7650.817,200
+TWKHH,TWN,USNYC,east_coast,chokepoint1,Suez Canal,0,8489.233,200
+TWKHH,TWN,USNYC,east_coast,chokepoint2,Panama Canal,1,0.248,200
+TWKHH,TWN,USNYC,east_coast,chokepoint3,Bosporus Strait,0,8084.643,200
+TWKHH,TWN,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,8117.937,200
+TWKHH,TWN,USNYC,east_coast,chokepoint5,Malacca Strait,0,3010.71,200
+TWKHH,TWN,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,6321.108,200
+TWKHH,TWN,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,11443.865,200
+TWKHH,TWN,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,5833.407,200
+TWKHH,TWN,USNYC,east_coast,chokepoint9,Dover Strait,0,5708.798,200
+TWKHH,TWN,USNYC,east_coast,chokepoint10,Oresund Strait,0,6227.698,200
+TWKHH,TWN,USNYC,east_coast,chokepoint11,Taiwan Strait,1,76.622,200
+TWKHH,TWN,USNYC,east_coast,chokepoint12,Korea Strait,0,378.787,200
+TWKHH,TWN,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+TWKHH,TWN,USNYC,east_coast,chokepoint14,Luzon Strait,0,270.507,200
+TWKHH,TWN,USNYC,east_coast,chokepoint15,Lombok Strait,0,3474.918,200
+TWKHH,TWN,USNYC,east_coast,chokepoint16,Ombai Strait,0,3480.82,200
+TWKHH,TWN,USNYC,east_coast,chokepoint17,Bohai Strait,0,1161.577,200
+TWKHH,TWN,USNYC,east_coast,chokepoint18,Torres Strait,0,4328.001,200
+TWKHH,TWN,USNYC,east_coast,chokepoint19,Sunda Strait,0,3536.258,200
+TWKHH,TWN,USNYC,east_coast,chokepoint20,Makassar Strait,0,2474.448,200
+TWKHH,TWN,USNYC,east_coast,chokepoint21,Magellan Strait,0,6683.489,200
+TWKHH,TWN,USNYC,east_coast,chokepoint22,Yucatan Channel,0,1155.92,200
+TWKHH,TWN,USNYC,east_coast,chokepoint23,Windward Passage,1,21.243,200
+TWKHH,TWN,USNYC,east_coast,chokepoint24,Mona Passage,0,672.952,200
+TWKHH,TWN,USNYC,east_coast,chokepoint25,Balabac Strait,0,1722.536,200
+TWKHH,TWN,USNYC,east_coast,chokepoint26,Bering Strait,0,1961.803,200
+TWKHH,TWN,USNYC,east_coast,chokepoint27,Mindoro Strait,0,1132.998,200
+TWKHH,TWN,USNYC,east_coast,chokepoint28,Kerch Strait,0,7650.817,200
+MYPKG,MYS,USLAX,west_coast,chokepoint1,Suez Canal,0,7746.316,200
+MYPKG,MYS,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+MYPKG,MYS,USLAX,west_coast,chokepoint3,Bosporus Strait,0,8233.292,200
+MYPKG,MYS,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,6386.673,200
+MYPKG,MYS,USLAX,west_coast,chokepoint5,Malacca Strait,1,10.536,200
+MYPKG,MYS,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,5317.21,200
+MYPKG,MYS,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,9280.417,200
+MYPKG,MYS,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+MYPKG,MYS,USLAX,west_coast,chokepoint9,Dover Strait,0,8642.88,200
+MYPKG,MYS,USLAX,west_coast,chokepoint10,Oresund Strait,0,8158.262,200
+MYPKG,MYS,USLAX,west_coast,chokepoint11,Taiwan Strait,0,294.873,200
+MYPKG,MYS,USLAX,west_coast,chokepoint12,Korea Strait,0,582.83,200
+MYPKG,MYS,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+MYPKG,MYS,USLAX,west_coast,chokepoint14,Luzon Strait,1,54.833,200
+MYPKG,MYS,USLAX,west_coast,chokepoint15,Lombok Strait,0,1655.832,200
+MYPKG,MYS,USLAX,west_coast,chokepoint16,Ombai Strait,0,2426.008,200
+MYPKG,MYS,USLAX,west_coast,chokepoint17,Bohai Strait,0,1439.041,200
+MYPKG,MYS,USLAX,west_coast,chokepoint18,Torres Strait,0,3951.683,200
+MYPKG,MYS,USLAX,west_coast,chokepoint19,Sunda Strait,0,817.499,200
+MYPKG,MYS,USLAX,west_coast,chokepoint20,Makassar Strait,0,1301.802,200
+MYPKG,MYS,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+MYPKG,MYS,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+MYPKG,MYS,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+MYPKG,MYS,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+MYPKG,MYS,USLAX,west_coast,chokepoint25,Balabac Strait,0,604.619,200
+MYPKG,MYS,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+MYPKG,MYS,USLAX,west_coast,chokepoint27,Mindoro Strait,0,504.837,200
+MYPKG,MYS,USLAX,west_coast,chokepoint28,Kerch Strait,0,7747.568,200
+MYPKG,MYS,USNYC,east_coast,chokepoint1,Suez Canal,1,7.631,200
+MYPKG,MYS,USNYC,east_coast,chokepoint2,Panama Canal,0,3525.609,200
+MYPKG,MYS,USNYC,east_coast,chokepoint3,Bosporus Strait,0,855.841,200
+MYPKG,MYS,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,1,10.212,200
+MYPKG,MYS,USNYC,east_coast,chokepoint5,Malacca Strait,0,219.57,200
+MYPKG,MYS,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,1478.12,200
+MYPKG,MYS,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,5767.743,200
+MYPKG,MYS,USNYC,east_coast,chokepoint8,Gibraltar Strait,1,0.949,200
+MYPKG,MYS,USNYC,east_coast,chokepoint9,Dover Strait,0,1541.827,200
+MYPKG,MYS,USNYC,east_coast,chokepoint10,Oresund Strait,0,2006.619,200
+MYPKG,MYS,USNYC,east_coast,chokepoint11,Taiwan Strait,0,3109.891,200
+MYPKG,MYS,USNYC,east_coast,chokepoint12,Korea Strait,0,4480.917,200
+MYPKG,MYS,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,5741.17,200
+MYPKG,MYS,USNYC,east_coast,chokepoint14,Luzon Strait,0,2902.141,200
+MYPKG,MYS,USNYC,east_coast,chokepoint15,Lombok Strait,0,2041.415,200
+MYPKG,MYS,USNYC,east_coast,chokepoint16,Ombai Strait,0,2921.212,200
+MYPKG,MYS,USNYC,east_coast,chokepoint17,Bohai Strait,0,4276.873,200
+MYPKG,MYS,USNYC,east_coast,chokepoint18,Torres Strait,0,4752.186,200
+MYPKG,MYS,USNYC,east_coast,chokepoint19,Sunda Strait,0,1106.709,200
+MYPKG,MYS,USNYC,east_coast,chokepoint20,Makassar Strait,0,2013.58,200
+MYPKG,MYS,USNYC,east_coast,chokepoint21,Magellan Strait,0,10297.441,200
+MYPKG,MYS,USNYC,east_coast,chokepoint22,Yucatan Channel,0,2347.359,200
+MYPKG,MYS,USNYC,east_coast,chokepoint23,Windward Passage,0,2276.213,200
+MYPKG,MYS,USNYC,east_coast,chokepoint24,Mona Passage,0,2428.26,200
+MYPKG,MYS,USNYC,east_coast,chokepoint25,Balabac Strait,0,1812.242,200
+MYPKG,MYS,USNYC,east_coast,chokepoint26,Bering Strait,0,6025.196,200
+MYPKG,MYS,USNYC,east_coast,chokepoint27,Mindoro Strait,0,2342.424,200
+MYPKG,MYS,USNYC,east_coast,chokepoint28,Kerch Strait,0,1525.639,200
+CNSGH,CHN,USLAX,west_coast,chokepoint1,Suez Canal,0,8222.143,200
+CNSGH,CHN,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+CNSGH,CHN,USLAX,west_coast,chokepoint3,Bosporus Strait,0,7963.166,200
+CNSGH,CHN,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,8159.186,200
+CNSGH,CHN,USLAX,west_coast,chokepoint5,Malacca Strait,0,3861.226,200
+CNSGH,CHN,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,6233.13,200
+CNSGH,CHN,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,12811.79,200
+CNSGH,CHN,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+CNSGH,CHN,USLAX,west_coast,chokepoint9,Dover Strait,0,8642.88,200
+CNSGH,CHN,USLAX,west_coast,chokepoint10,Oresund Strait,0,8094.089,200
+CNSGH,CHN,USLAX,west_coast,chokepoint11,Taiwan Strait,0,750.63,200
+CNSGH,CHN,USLAX,west_coast,chokepoint12,Korea Strait,1,74.174,200
+CNSGH,CHN,USLAX,west_coast,chokepoint13,Tsugaru Strait,1,3.872,200
+CNSGH,CHN,USLAX,west_coast,chokepoint14,Luzon Strait,0,1194.15,200
+CNSGH,CHN,USLAX,west_coast,chokepoint15,Lombok Strait,0,4437.615,200
+CNSGH,CHN,USLAX,west_coast,chokepoint16,Ombai Strait,0,4399.172,200
+CNSGH,CHN,USLAX,west_coast,chokepoint17,Bohai Strait,0,715.755,200
+CNSGH,CHN,USLAX,west_coast,chokepoint18,Torres Strait,0,5000.93,200
+CNSGH,CHN,USLAX,west_coast,chokepoint19,Sunda Strait,0,4459.85,200
+CNSGH,CHN,USLAX,west_coast,chokepoint20,Makassar Strait,0,3431.528,200
+CNSGH,CHN,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+CNSGH,CHN,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+CNSGH,CHN,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+CNSGH,CHN,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+CNSGH,CHN,USLAX,west_coast,chokepoint25,Balabac Strait,0,2685.218,200
+CNSGH,CHN,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+CNSGH,CHN,USLAX,west_coast,chokepoint27,Mindoro Strait,0,2085.973,200
+CNSGH,CHN,USLAX,west_coast,chokepoint28,Kerch Strait,0,7227.571,200
+CNSGH,CHN,USNYC,east_coast,chokepoint1,Suez Canal,0,8222.143,200
+CNSGH,CHN,USNYC,east_coast,chokepoint2,Panama Canal,1,0.248,200
+CNSGH,CHN,USNYC,east_coast,chokepoint3,Bosporus Strait,0,7963.166,200
+CNSGH,CHN,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,8159.186,200
+CNSGH,CHN,USNYC,east_coast,chokepoint5,Malacca Strait,0,3861.226,200
+CNSGH,CHN,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,6233.13,200
+CNSGH,CHN,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,11443.865,200
+CNSGH,CHN,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,5833.407,200
+CNSGH,CHN,USNYC,east_coast,chokepoint9,Dover Strait,0,5708.798,200
+CNSGH,CHN,USNYC,east_coast,chokepoint10,Oresund Strait,0,6227.698,200
+CNSGH,CHN,USNYC,east_coast,chokepoint11,Taiwan Strait,0,750.63,200
+CNSGH,CHN,USNYC,east_coast,chokepoint12,Korea Strait,1,74.174,200
+CNSGH,CHN,USNYC,east_coast,chokepoint13,Tsugaru Strait,1,3.872,200
+CNSGH,CHN,USNYC,east_coast,chokepoint14,Luzon Strait,0,1194.15,200
+CNSGH,CHN,USNYC,east_coast,chokepoint15,Lombok Strait,0,4437.615,200
+CNSGH,CHN,USNYC,east_coast,chokepoint16,Ombai Strait,0,4399.172,200
+CNSGH,CHN,USNYC,east_coast,chokepoint17,Bohai Strait,0,715.755,200
+CNSGH,CHN,USNYC,east_coast,chokepoint18,Torres Strait,0,5000.93,200
+CNSGH,CHN,USNYC,east_coast,chokepoint19,Sunda Strait,0,4459.85,200
+CNSGH,CHN,USNYC,east_coast,chokepoint20,Makassar Strait,0,3431.528,200
+CNSGH,CHN,USNYC,east_coast,chokepoint21,Magellan Strait,0,6683.489,200
+CNSGH,CHN,USNYC,east_coast,chokepoint22,Yucatan Channel,0,1155.92,200
+CNSGH,CHN,USNYC,east_coast,chokepoint23,Windward Passage,1,21.243,200
+CNSGH,CHN,USNYC,east_coast,chokepoint24,Mona Passage,0,672.952,200
+CNSGH,CHN,USNYC,east_coast,chokepoint25,Balabac Strait,0,2685.218,200
+CNSGH,CHN,USNYC,east_coast,chokepoint26,Bering Strait,0,1961.803,200
+CNSGH,CHN,USNYC,east_coast,chokepoint27,Mindoro Strait,0,2085.973,200
+CNSGH,CHN,USNYC,east_coast,chokepoint28,Kerch Strait,0,7227.571,200
+KRPUS,KOR,USLAX,west_coast,chokepoint1,Suez Canal,0,8684.65,200
+KRPUS,KOR,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+KRPUS,KOR,USLAX,west_coast,chokepoint3,Bosporus Strait,0,8286.65,200
+KRPUS,KOR,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,8834.413,200
+KRPUS,KOR,USLAX,west_coast,chokepoint5,Malacca Strait,0,4615.127,200
+KRPUS,KOR,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,6853.285,200
+KRPUS,KOR,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,13631.803,200
+KRPUS,KOR,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+KRPUS,KOR,USLAX,west_coast,chokepoint9,Dover Strait,0,8642.88,200
+KRPUS,KOR,USLAX,west_coast,chokepoint10,Oresund Strait,0,8094.089,200
+KRPUS,KOR,USLAX,west_coast,chokepoint11,Taiwan Strait,0,1453.357,200
+KRPUS,KOR,USLAX,west_coast,chokepoint12,Korea Strait,1,96.43,200
+KRPUS,KOR,USLAX,west_coast,chokepoint13,Tsugaru Strait,1,3.872,200
+KRPUS,KOR,USLAX,west_coast,chokepoint14,Luzon Strait,0,1782.856,200
+KRPUS,KOR,USLAX,west_coast,chokepoint15,Lombok Strait,0,5008.179,200
+KRPUS,KOR,USLAX,west_coast,chokepoint16,Ombai Strait,0,4822.751,200
+KRPUS,KOR,USLAX,west_coast,chokepoint17,Bohai Strait,0,830.44,200
+KRPUS,KOR,USLAX,west_coast,chokepoint18,Torres Strait,0,5152.087,200
+KRPUS,KOR,USLAX,west_coast,chokepoint19,Sunda Strait,0,5157.455,200
+KRPUS,KOR,USLAX,west_coast,chokepoint20,Makassar Strait,0,3972.409,200
+KRPUS,KOR,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+KRPUS,KOR,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+KRPUS,KOR,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+KRPUS,KOR,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+KRPUS,KOR,USLAX,west_coast,chokepoint25,Balabac Strait,0,3295.599,200
+KRPUS,KOR,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+KRPUS,KOR,USLAX,west_coast,chokepoint27,Mindoro Strait,0,2648.815,200
+KRPUS,KOR,USLAX,west_coast,chokepoint28,Kerch Strait,0,7533.551,200
+KRPUS,KOR,USNYC,east_coast,chokepoint1,Suez Canal,0,8684.65,200
+KRPUS,KOR,USNYC,east_coast,chokepoint2,Panama Canal,1,0.248,200
+KRPUS,KOR,USNYC,east_coast,chokepoint3,Bosporus Strait,0,8084.643,200
+KRPUS,KOR,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,8834.413,200
+KRPUS,KOR,USNYC,east_coast,chokepoint5,Malacca Strait,0,4615.127,200
+KRPUS,KOR,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,6853.285,200
+KRPUS,KOR,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,11443.865,200
+KRPUS,KOR,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,5833.407,200
+KRPUS,KOR,USNYC,east_coast,chokepoint9,Dover Strait,0,5708.798,200
+KRPUS,KOR,USNYC,east_coast,chokepoint10,Oresund Strait,0,6227.698,200
+KRPUS,KOR,USNYC,east_coast,chokepoint11,Taiwan Strait,0,1453.357,200
+KRPUS,KOR,USNYC,east_coast,chokepoint12,Korea Strait,1,96.43,200
+KRPUS,KOR,USNYC,east_coast,chokepoint13,Tsugaru Strait,1,3.872,200
+KRPUS,KOR,USNYC,east_coast,chokepoint14,Luzon Strait,0,1782.856,200
+KRPUS,KOR,USNYC,east_coast,chokepoint15,Lombok Strait,0,5008.179,200
+KRPUS,KOR,USNYC,east_coast,chokepoint16,Ombai Strait,0,4822.751,200
+KRPUS,KOR,USNYC,east_coast,chokepoint17,Bohai Strait,0,830.44,200
+KRPUS,KOR,USNYC,east_coast,chokepoint18,Torres Strait,0,5152.087,200
+KRPUS,KOR,USNYC,east_coast,chokepoint19,Sunda Strait,0,5157.455,200
+KRPUS,KOR,USNYC,east_coast,chokepoint20,Makassar Strait,0,3972.409,200
+KRPUS,KOR,USNYC,east_coast,chokepoint21,Magellan Strait,0,6683.489,200
+KRPUS,KOR,USNYC,east_coast,chokepoint22,Yucatan Channel,0,1155.92,200
+KRPUS,KOR,USNYC,east_coast,chokepoint23,Windward Passage,1,21.243,200
+KRPUS,KOR,USNYC,east_coast,chokepoint24,Mona Passage,0,672.952,200
+KRPUS,KOR,USNYC,east_coast,chokepoint25,Balabac Strait,0,3295.599,200
+KRPUS,KOR,USNYC,east_coast,chokepoint26,Bering Strait,0,1961.803,200
+KRPUS,KOR,USNYC,east_coast,chokepoint27,Mindoro Strait,0,2648.815,200
+KRPUS,KOR,USNYC,east_coast,chokepoint28,Kerch Strait,0,7533.551,200
+JPYOK,JPN,USLAX,west_coast,chokepoint1,Suez Canal,0,9475.435,200
+JPYOK,JPN,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+JPYOK,JPN,USLAX,west_coast,chokepoint3,Bosporus Strait,0,8971.667,200
+JPYOK,JPN,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,9762.896,200
+JPYOK,JPN,USLAX,west_coast,chokepoint5,Malacca Strait,0,5328.827,200
+JPYOK,JPN,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,7759.624,200
+JPYOK,JPN,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,14525.394,200
+JPYOK,JPN,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+JPYOK,JPN,USLAX,west_coast,chokepoint9,Dover Strait,0,8642.88,200
+JPYOK,JPN,USLAX,west_coast,chokepoint10,Oresund Strait,0,8158.262,200
+JPYOK,JPN,USLAX,west_coast,chokepoint11,Taiwan Strait,0,2221.291,200
+JPYOK,JPN,USLAX,west_coast,chokepoint12,Korea Strait,0,961.36,200
+JPYOK,JPN,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+JPYOK,JPN,USLAX,west_coast,chokepoint14,Luzon Strait,0,2408.936,200
+JPYOK,JPN,USLAX,west_coast,chokepoint15,Lombok Strait,0,5414.555,200
+JPYOK,JPN,USLAX,west_coast,chokepoint16,Ombai Strait,0,5029.047,200
+JPYOK,JPN,USLAX,west_coast,chokepoint17,Bohai Strait,0,1704.733,200
+JPYOK,JPN,USLAX,west_coast,chokepoint18,Torres Strait,0,4949.252,200
+JPYOK,JPN,USLAX,west_coast,chokepoint19,Sunda Strait,0,5759.996,200
+JPYOK,JPN,USLAX,west_coast,chokepoint20,Makassar Strait,0,4375.987,200
+JPYOK,JPN,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+JPYOK,JPN,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+JPYOK,JPN,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+JPYOK,JPN,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+JPYOK,JPN,USLAX,west_coast,chokepoint25,Balabac Strait,0,3825.602,200
+JPYOK,JPN,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+JPYOK,JPN,USLAX,west_coast,chokepoint27,Mindoro Strait,0,3160.735,200
+JPYOK,JPN,USLAX,west_coast,chokepoint28,Kerch Strait,0,8214.656,200
+JPYOK,JPN,USNYC,east_coast,chokepoint1,Suez Canal,0,9083.42,200
+JPYOK,JPN,USNYC,east_coast,chokepoint2,Panama Canal,1,0.248,200
+JPYOK,JPN,USNYC,east_coast,chokepoint3,Bosporus Strait,0,8084.643,200
+JPYOK,JPN,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,9762.896,200
+JPYOK,JPN,USNYC,east_coast,chokepoint5,Malacca Strait,0,5328.827,200
+JPYOK,JPN,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,7759.624,200
+JPYOK,JPN,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,11443.865,200
+JPYOK,JPN,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,5833.407,200
+JPYOK,JPN,USNYC,east_coast,chokepoint9,Dover Strait,0,5708.798,200
+JPYOK,JPN,USNYC,east_coast,chokepoint10,Oresund Strait,0,6227.698,200
+JPYOK,JPN,USNYC,east_coast,chokepoint11,Taiwan Strait,0,2221.291,200
+JPYOK,JPN,USNYC,east_coast,chokepoint12,Korea Strait,0,961.36,200
+JPYOK,JPN,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+JPYOK,JPN,USNYC,east_coast,chokepoint14,Luzon Strait,0,2408.936,200
+JPYOK,JPN,USNYC,east_coast,chokepoint15,Lombok Strait,0,5414.555,200
+JPYOK,JPN,USNYC,east_coast,chokepoint16,Ombai Strait,0,5029.047,200
+JPYOK,JPN,USNYC,east_coast,chokepoint17,Bohai Strait,0,1704.733,200
+JPYOK,JPN,USNYC,east_coast,chokepoint18,Torres Strait,0,4949.252,200
+JPYOK,JPN,USNYC,east_coast,chokepoint19,Sunda Strait,0,5759.996,200
+JPYOK,JPN,USNYC,east_coast,chokepoint20,Makassar Strait,0,4375.987,200
+JPYOK,JPN,USNYC,east_coast,chokepoint21,Magellan Strait,0,6683.489,200
+JPYOK,JPN,USNYC,east_coast,chokepoint22,Yucatan Channel,0,1155.92,200
+JPYOK,JPN,USNYC,east_coast,chokepoint23,Windward Passage,1,21.243,200
+JPYOK,JPN,USNYC,east_coast,chokepoint24,Mona Passage,0,672.952,200
+JPYOK,JPN,USNYC,east_coast,chokepoint25,Balabac Strait,0,3825.602,200
+JPYOK,JPN,USNYC,east_coast,chokepoint26,Bering Strait,0,1961.803,200
+JPYOK,JPN,USNYC,east_coast,chokepoint27,Mindoro Strait,0,3160.735,200
+JPYOK,JPN,USNYC,east_coast,chokepoint28,Kerch Strait,0,8214.656,200
+VNSGN,VNM,USLAX,west_coast,chokepoint1,Suez Canal,0,7951.246,200
+VNSGN,VNM,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+VNSGN,VNM,USLAX,west_coast,chokepoint3,Bosporus Strait,0,8241.694,200
+VNSGN,VNM,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,6916.873,200
+VNSGN,VNM,USLAX,west_coast,chokepoint5,Malacca Strait,0,1069.167,200
+VNSGN,VNM,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,5535.986,200
+VNSGN,VNM,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,10299.749,200
+VNSGN,VNM,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+VNSGN,VNM,USLAX,west_coast,chokepoint9,Dover Strait,0,8642.88,200
+VNSGN,VNM,USLAX,west_coast,chokepoint10,Oresund Strait,0,8158.262,200
+VNSGN,VNM,USLAX,west_coast,chokepoint11,Taiwan Strait,1,5.408,200
+VNSGN,VNM,USLAX,west_coast,chokepoint12,Korea Strait,0,378.787,200
+VNSGN,VNM,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+VNSGN,VNM,USLAX,west_coast,chokepoint14,Luzon Strait,0,421.647,200
+VNSGN,VNM,USLAX,west_coast,chokepoint15,Lombok Strait,0,2244.234,200
+VNSGN,VNM,USLAX,west_coast,chokepoint16,Ombai Strait,0,2760.687,200
+VNSGN,VNM,USLAX,west_coast,chokepoint17,Bohai Strait,0,1161.577,200
+VNSGN,VNM,USLAX,west_coast,chokepoint18,Torres Strait,0,4207.75,200
+VNSGN,VNM,USLAX,west_coast,chokepoint19,Sunda Strait,0,1773.735,200
+VNSGN,VNM,USLAX,west_coast,chokepoint20,Makassar Strait,0,1596.728,200
+VNSGN,VNM,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+VNSGN,VNM,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+VNSGN,VNM,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+VNSGN,VNM,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+VNSGN,VNM,USLAX,west_coast,chokepoint25,Balabac Strait,0,837.357,200
+VNSGN,VNM,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+VNSGN,VNM,USLAX,west_coast,chokepoint27,Mindoro Strait,0,860.037,200
+VNSGN,VNM,USLAX,west_coast,chokepoint28,Kerch Strait,0,7571.464,200
+VNSGN,VNM,USNYC,east_coast,chokepoint1,Suez Canal,1,7.631,200
+VNSGN,VNM,USNYC,east_coast,chokepoint2,Panama Canal,0,3525.609,200
+VNSGN,VNM,USNYC,east_coast,chokepoint3,Bosporus Strait,0,855.841,200
+VNSGN,VNM,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,1,10.212,200
+VNSGN,VNM,USNYC,east_coast,chokepoint5,Malacca Strait,1,10.536,200
+VNSGN,VNM,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,1478.12,200
+VNSGN,VNM,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,5767.743,200
+VNSGN,VNM,USNYC,east_coast,chokepoint8,Gibraltar Strait,1,0.949,200
+VNSGN,VNM,USNYC,east_coast,chokepoint9,Dover Strait,0,1541.827,200
+VNSGN,VNM,USNYC,east_coast,chokepoint10,Oresund Strait,0,2006.619,200
+VNSGN,VNM,USNYC,east_coast,chokepoint11,Taiwan Strait,0,2101.431,200
+VNSGN,VNM,USNYC,east_coast,chokepoint12,Korea Strait,0,3483.144,200
+VNSGN,VNM,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,4746.549,200
+VNSGN,VNM,USNYC,east_coast,chokepoint14,Luzon Strait,0,1901.948,200
+VNSGN,VNM,USNYC,east_coast,chokepoint15,Lombok Strait,0,1656.129,200
+VNSGN,VNM,USNYC,east_coast,chokepoint16,Ombai Strait,0,2527.924,200
+VNSGN,VNM,USNYC,east_coast,chokepoint17,Bohai Strait,0,3409.66,200
+VNSGN,VNM,USNYC,east_coast,chokepoint18,Torres Strait,0,4322.079,200
+VNSGN,VNM,USNYC,east_coast,chokepoint19,Sunda Strait,0,817.499,200
+VNSGN,VNM,USNYC,east_coast,chokepoint20,Makassar Strait,0,1538.535,200
+VNSGN,VNM,USNYC,east_coast,chokepoint21,Magellan Strait,0,10297.441,200
+VNSGN,VNM,USNYC,east_coast,chokepoint22,Yucatan Channel,0,2347.359,200
+VNSGN,VNM,USNYC,east_coast,chokepoint23,Windward Passage,0,2276.213,200
+VNSGN,VNM,USNYC,east_coast,chokepoint24,Mona Passage,0,2428.26,200
+VNSGN,VNM,USNYC,east_coast,chokepoint25,Balabac Strait,0,1081.154,200
+VNSGN,VNM,USNYC,east_coast,chokepoint26,Bering Strait,0,6025.196,200
+VNSGN,VNM,USNYC,east_coast,chokepoint27,Mindoro Strait,0,1456.478,200
+VNSGN,VNM,USNYC,east_coast,chokepoint28,Kerch Strait,0,1525.639,200
+THLCH,THA,USLAX,west_coast,chokepoint1,Suez Canal,0,7210.491,200
+THLCH,THA,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+THLCH,THA,USLAX,west_coast,chokepoint3,Bosporus Strait,0,7528.137,200
+THLCH,THA,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,6199.664,200
+THLCH,THA,USLAX,west_coast,chokepoint5,Malacca Strait,0,800.497,200
+THLCH,THA,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,4792.713,200
+THLCH,THA,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,9897.468,200
+THLCH,THA,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+THLCH,THA,USLAX,west_coast,chokepoint9,Dover Strait,0,8642.88,200
+THLCH,THA,USLAX,west_coast,chokepoint10,Oresund Strait,0,8158.262,200
+THLCH,THA,USLAX,west_coast,chokepoint11,Taiwan Strait,1,5.408,200
+THLCH,THA,USLAX,west_coast,chokepoint12,Korea Strait,0,378.787,200
+THLCH,THA,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+THLCH,THA,USLAX,west_coast,chokepoint14,Luzon Strait,0,421.647,200
+THLCH,THA,USLAX,west_coast,chokepoint15,Lombok Strait,0,2206.123,200
+THLCH,THA,USLAX,west_coast,chokepoint16,Ombai Strait,0,2760.687,200
+THLCH,THA,USLAX,west_coast,chokepoint17,Bohai Strait,0,1161.577,200
+THLCH,THA,USLAX,west_coast,chokepoint18,Torres Strait,0,4207.75,200
+THLCH,THA,USLAX,west_coast,chokepoint19,Sunda Strait,0,1587.284,200
+THLCH,THA,USLAX,west_coast,chokepoint20,Makassar Strait,0,1596.728,200
+THLCH,THA,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+THLCH,THA,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+THLCH,THA,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+THLCH,THA,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+THLCH,THA,USLAX,west_coast,chokepoint25,Balabac Strait,0,837.357,200
+THLCH,THA,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+THLCH,THA,USLAX,west_coast,chokepoint27,Mindoro Strait,0,860.037,200
+THLCH,THA,USLAX,west_coast,chokepoint28,Kerch Strait,0,6969.878,200
+THLCH,THA,USNYC,east_coast,chokepoint1,Suez Canal,1,7.631,200
+THLCH,THA,USNYC,east_coast,chokepoint2,Panama Canal,0,3525.609,200
+THLCH,THA,USNYC,east_coast,chokepoint3,Bosporus Strait,0,855.841,200
+THLCH,THA,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,1,10.212,200
+THLCH,THA,USNYC,east_coast,chokepoint5,Malacca Strait,1,10.536,200
+THLCH,THA,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,1478.12,200
+THLCH,THA,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,5767.743,200
+THLCH,THA,USNYC,east_coast,chokepoint8,Gibraltar Strait,1,0.949,200
+THLCH,THA,USNYC,east_coast,chokepoint9,Dover Strait,0,1541.827,200
+THLCH,THA,USNYC,east_coast,chokepoint10,Oresund Strait,0,2006.619,200
+THLCH,THA,USNYC,east_coast,chokepoint11,Taiwan Strait,0,2374.523,200
+THLCH,THA,USNYC,east_coast,chokepoint12,Korea Strait,0,3692.904,200
+THLCH,THA,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,4941.783,200
+THLCH,THA,USNYC,east_coast,chokepoint14,Luzon Strait,0,2331.704,200
+THLCH,THA,USNYC,east_coast,chokepoint15,Lombok Strait,0,1656.129,200
+THLCH,THA,USNYC,east_coast,chokepoint16,Ombai Strait,0,2527.924,200
+THLCH,THA,USNYC,east_coast,chokepoint17,Bohai Strait,0,3432.632,200
+THLCH,THA,USNYC,east_coast,chokepoint18,Torres Strait,0,4364.755,200
+THLCH,THA,USNYC,east_coast,chokepoint19,Sunda Strait,0,817.499,200
+THLCH,THA,USNYC,east_coast,chokepoint20,Makassar Strait,0,1648.153,200
+THLCH,THA,USNYC,east_coast,chokepoint21,Magellan Strait,0,10297.441,200
+THLCH,THA,USNYC,east_coast,chokepoint22,Yucatan Channel,0,2347.359,200
+THLCH,THA,USNYC,east_coast,chokepoint23,Windward Passage,0,2276.213,200
+THLCH,THA,USNYC,east_coast,chokepoint24,Mona Passage,0,2428.26,200
+THLCH,THA,USNYC,east_coast,chokepoint25,Balabac Strait,0,1490.764,200
+THLCH,THA,USNYC,east_coast,chokepoint26,Bering Strait,0,6025.196,200
+THLCH,THA,USNYC,east_coast,chokepoint27,Mindoro Strait,0,2006.416,200
+THLCH,THA,USNYC,east_coast,chokepoint28,Kerch Strait,0,1525.639,200
+PHBTG,PHL,USLAX,west_coast,chokepoint1,Suez Canal,0,9087.841,200
+PHBTG,PHL,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+PHBTG,PHL,USLAX,west_coast,chokepoint3,Bosporus Strait,0,9149.767,200
+PHBTG,PHL,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,8347.051,200
+PHBTG,PHL,USLAX,west_coast,chokepoint5,Malacca Strait,0,2398.334,200
+PHBTG,PHL,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,6765.267,200
+PHBTG,PHL,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,11758.105,200
+PHBTG,PHL,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+PHBTG,PHL,USLAX,west_coast,chokepoint9,Dover Strait,0,8919.663,200
+PHBTG,PHL,USLAX,west_coast,chokepoint10,Oresund Strait,0,9070.994,200
+PHBTG,PHL,USLAX,west_coast,chokepoint11,Taiwan Strait,0,1203.578,200
+PHBTG,PHL,USLAX,west_coast,chokepoint12,Korea Strait,0,1522.751,200
+PHBTG,PHL,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,1527.96,200
+PHBTG,PHL,USLAX,west_coast,chokepoint14,Luzon Strait,0,732.341,200
+PHBTG,PHL,USLAX,west_coast,chokepoint15,Lombok Strait,0,2471.738,200
+PHBTG,PHL,USLAX,west_coast,chokepoint16,Ombai Strait,0,2312.4,200
+PHBTG,PHL,USLAX,west_coast,chokepoint17,Bohai Strait,0,2374.893,200
+PHBTG,PHL,USLAX,west_coast,chokepoint18,Torres Strait,0,3156.217,200
+PHBTG,PHL,USLAX,west_coast,chokepoint19,Sunda Strait,0,2725.665,200
+PHBTG,PHL,USLAX,west_coast,chokepoint20,Makassar Strait,0,1431.778,200
+PHBTG,PHL,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+PHBTG,PHL,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+PHBTG,PHL,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+PHBTG,PHL,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+PHBTG,PHL,USLAX,west_coast,chokepoint25,Balabac Strait,0,793.465,200
+PHBTG,PHL,USLAX,west_coast,chokepoint26,Bering Strait,0,2703.691,200
+PHBTG,PHL,USLAX,west_coast,chokepoint27,Mindoro Strait,1,133.452,200
+PHBTG,PHL,USLAX,west_coast,chokepoint28,Kerch Strait,0,8481.147,200
+PHBTG,PHL,USNYC,east_coast,chokepoint1,Suez Canal,0,9083.42,200
+PHBTG,PHL,USNYC,east_coast,chokepoint2,Panama Canal,1,0.248,200
+PHBTG,PHL,USNYC,east_coast,chokepoint3,Bosporus Strait,0,8084.643,200
+PHBTG,PHL,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,8347.051,200
+PHBTG,PHL,USNYC,east_coast,chokepoint5,Malacca Strait,0,2398.334,200
+PHBTG,PHL,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,6765.267,200
+PHBTG,PHL,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,11443.865,200
+PHBTG,PHL,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,5833.407,200
+PHBTG,PHL,USNYC,east_coast,chokepoint9,Dover Strait,0,5708.798,200
+PHBTG,PHL,USNYC,east_coast,chokepoint10,Oresund Strait,0,6227.698,200
+PHBTG,PHL,USNYC,east_coast,chokepoint11,Taiwan Strait,0,1203.578,200
+PHBTG,PHL,USNYC,east_coast,chokepoint12,Korea Strait,0,1522.751,200
+PHBTG,PHL,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,1527.96,200
+PHBTG,PHL,USNYC,east_coast,chokepoint14,Luzon Strait,0,732.341,200
+PHBTG,PHL,USNYC,east_coast,chokepoint15,Lombok Strait,0,2471.738,200
+PHBTG,PHL,USNYC,east_coast,chokepoint16,Ombai Strait,0,2312.4,200
+PHBTG,PHL,USNYC,east_coast,chokepoint17,Bohai Strait,0,2374.893,200
+PHBTG,PHL,USNYC,east_coast,chokepoint18,Torres Strait,0,3156.217,200
+PHBTG,PHL,USNYC,east_coast,chokepoint19,Sunda Strait,0,2725.665,200
+PHBTG,PHL,USNYC,east_coast,chokepoint20,Makassar Strait,0,1431.778,200
+PHBTG,PHL,USNYC,east_coast,chokepoint21,Magellan Strait,0,6683.489,200
+PHBTG,PHL,USNYC,east_coast,chokepoint22,Yucatan Channel,0,1155.92,200
+PHBTG,PHL,USNYC,east_coast,chokepoint23,Windward Passage,1,21.243,200
+PHBTG,PHL,USNYC,east_coast,chokepoint24,Mona Passage,0,672.952,200
+PHBTG,PHL,USNYC,east_coast,chokepoint25,Balabac Strait,0,793.465,200
+PHBTG,PHL,USNYC,east_coast,chokepoint26,Bering Strait,0,2703.691,200
+PHBTG,PHL,USNYC,east_coast,chokepoint27,Mindoro Strait,1,133.452,200
+PHBTG,PHL,USNYC,east_coast,chokepoint28,Kerch Strait,0,8245.597,200
+SGSIN,SGP,USLAX,west_coast,chokepoint1,Suez Canal,0,8158.429,200
+SGSIN,SGP,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+SGSIN,SGP,USLAX,west_coast,chokepoint3,Bosporus Strait,0,8596.245,200
+SGSIN,SGP,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,6778.916,200
+SGSIN,SGP,USLAX,west_coast,chokepoint5,Malacca Strait,1,125.495,200
+SGSIN,SGP,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,5729.134,200
+SGSIN,SGP,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,9443.356,200
+SGSIN,SGP,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9594.3,200
+SGSIN,SGP,USLAX,west_coast,chokepoint9,Dover Strait,0,8642.88,200
+SGSIN,SGP,USLAX,west_coast,chokepoint10,Oresund Strait,0,8158.262,200
+SGSIN,SGP,USLAX,west_coast,chokepoint11,Taiwan Strait,0,294.873,200
+SGSIN,SGP,USLAX,west_coast,chokepoint12,Korea Strait,0,582.83,200
+SGSIN,SGP,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+SGSIN,SGP,USLAX,west_coast,chokepoint14,Luzon Strait,1,54.833,200
+SGSIN,SGP,USLAX,west_coast,chokepoint15,Lombok Strait,0,1655.832,200
+SGSIN,SGP,USLAX,west_coast,chokepoint16,Ombai Strait,0,2426.008,200
+SGSIN,SGP,USLAX,west_coast,chokepoint17,Bohai Strait,0,1439.041,200
+SGSIN,SGP,USLAX,west_coast,chokepoint18,Torres Strait,0,3951.683,200
+SGSIN,SGP,USLAX,west_coast,chokepoint19,Sunda Strait,0,817.502,200
+SGSIN,SGP,USLAX,west_coast,chokepoint20,Makassar Strait,0,1301.802,200
+SGSIN,SGP,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+SGSIN,SGP,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+SGSIN,SGP,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+SGSIN,SGP,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+SGSIN,SGP,USLAX,west_coast,chokepoint25,Balabac Strait,0,604.619,200
+SGSIN,SGP,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+SGSIN,SGP,USLAX,west_coast,chokepoint27,Mindoro Strait,0,504.837,200
+SGSIN,SGP,USLAX,west_coast,chokepoint28,Kerch Strait,0,7876.999,200
+SGSIN,SGP,USNYC,east_coast,chokepoint1,Suez Canal,1,7.631,200
+SGSIN,SGP,USNYC,east_coast,chokepoint2,Panama Canal,0,3525.609,200
+SGSIN,SGP,USNYC,east_coast,chokepoint3,Bosporus Strait,0,855.841,200
+SGSIN,SGP,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,1,10.212,200
+SGSIN,SGP,USNYC,east_coast,chokepoint5,Malacca Strait,1,10.536,200
+SGSIN,SGP,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,1478.12,200
+SGSIN,SGP,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,5767.743,200
+SGSIN,SGP,USNYC,east_coast,chokepoint8,Gibraltar Strait,1,0.949,200
+SGSIN,SGP,USNYC,east_coast,chokepoint9,Dover Strait,0,1541.827,200
+SGSIN,SGP,USNYC,east_coast,chokepoint10,Oresund Strait,0,2006.619,200
+SGSIN,SGP,USNYC,east_coast,chokepoint11,Taiwan Strait,0,3118.999,200
+SGSIN,SGP,USNYC,east_coast,chokepoint12,Korea Strait,0,4480.917,200
+SGSIN,SGP,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,5741.17,200
+SGSIN,SGP,USNYC,east_coast,chokepoint14,Luzon Strait,0,2860.67,200
+SGSIN,SGP,USNYC,east_coast,chokepoint15,Lombok Strait,0,1711.749,200
+SGSIN,SGP,USNYC,east_coast,chokepoint16,Ombai Strait,0,2596.541,200
+SGSIN,SGP,USNYC,east_coast,chokepoint17,Bohai Strait,0,4276.873,200
+SGSIN,SGP,USNYC,east_coast,chokepoint18,Torres Strait,0,4438.545,200
+SGSIN,SGP,USNYC,east_coast,chokepoint19,Sunda Strait,0,817.982,200
+SGSIN,SGP,USNYC,east_coast,chokepoint20,Makassar Strait,0,1727.469,200
+SGSIN,SGP,USNYC,east_coast,chokepoint21,Magellan Strait,0,10297.441,200
+SGSIN,SGP,USNYC,east_coast,chokepoint22,Yucatan Channel,0,2347.359,200
+SGSIN,SGP,USNYC,east_coast,chokepoint23,Windward Passage,0,2276.213,200
+SGSIN,SGP,USNYC,east_coast,chokepoint24,Mona Passage,0,2428.26,200
+SGSIN,SGP,USNYC,east_coast,chokepoint25,Balabac Strait,0,1630.106,200
+SGSIN,SGP,USNYC,east_coast,chokepoint26,Bering Strait,0,6025.196,200
+SGSIN,SGP,USNYC,east_coast,chokepoint27,Mindoro Strait,0,2215.293,200
+SGSIN,SGP,USNYC,east_coast,chokepoint28,Kerch Strait,0,1525.639,200
+DEHAM,DEU,USLAX,west_coast,chokepoint1,Suez Canal,0,3128.59,200
+DEHAM,DEU,USLAX,west_coast,chokepoint2,Panama Canal,1,0.248,200
+DEHAM,DEU,USLAX,west_coast,chokepoint3,Bosporus Strait,0,1985.345,200
+DEHAM,DEU,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,5395.196,200
+DEHAM,DEU,USLAX,west_coast,chokepoint5,Malacca Strait,0,10054.517,200
+DEHAM,DEU,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,4890.414,200
+DEHAM,DEU,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,9682.191,200
+DEHAM,DEU,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,1517.193,200
+DEHAM,DEU,USLAX,west_coast,chokepoint9,Dover Strait,1,4.573,200
+DEHAM,DEU,USLAX,west_coast,chokepoint10,Oresund Strait,0,289.022,200
+DEHAM,DEU,USLAX,west_coast,chokepoint11,Taiwan Strait,0,9047.899,200
+DEHAM,DEU,USLAX,west_coast,chokepoint12,Korea Strait,0,8675.797,200
+DEHAM,DEU,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,8426.766,200
+DEHAM,DEU,USLAX,west_coast,chokepoint14,Luzon Strait,0,9523.903,200
+DEHAM,DEU,USLAX,west_coast,chokepoint15,Lombok Strait,0,11804.57,200
+DEHAM,DEU,USLAX,west_coast,chokepoint16,Ombai Strait,0,12404.833,200
+DEHAM,DEU,USLAX,west_coast,chokepoint17,Bohai Strait,0,7868.295,200
+DEHAM,DEU,USLAX,west_coast,chokepoint18,Torres Strait,0,11468.897,200
+DEHAM,DEU,USLAX,west_coast,chokepoint19,Sunda Strait,0,10925.102,200
+DEHAM,DEU,USLAX,west_coast,chokepoint20,Makassar Strait,0,11240.96,200
+DEHAM,DEU,USLAX,west_coast,chokepoint21,Magellan Strait,0,6683.489,200
+DEHAM,DEU,USLAX,west_coast,chokepoint22,Yucatan Channel,0,1276.376,200
+DEHAM,DEU,USLAX,west_coast,chokepoint23,Windward Passage,0,472.311,200
+DEHAM,DEU,USLAX,west_coast,chokepoint24,Mona Passage,1,22.28,200
+DEHAM,DEU,USLAX,west_coast,chokepoint25,Balabac Strait,0,10463.936,200
+DEHAM,DEU,USLAX,west_coast,chokepoint26,Bering Strait,0,4703.805,200
+DEHAM,DEU,USLAX,west_coast,chokepoint27,Mindoro Strait,0,10205.434,200
+DEHAM,DEU,USLAX,west_coast,chokepoint28,Kerch Strait,0,2123.046,200
+DEHAM,DEU,USNYC,east_coast,chokepoint1,Suez Canal,0,3128.59,200
+DEHAM,DEU,USNYC,east_coast,chokepoint2,Panama Canal,0,3525.609,200
+DEHAM,DEU,USNYC,east_coast,chokepoint3,Bosporus Strait,0,1985.345,200
+DEHAM,DEU,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,5395.196,200
+DEHAM,DEU,USNYC,east_coast,chokepoint5,Malacca Strait,0,10054.517,200
+DEHAM,DEU,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,4890.414,200
+DEHAM,DEU,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,9858.788,200
+DEHAM,DEU,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,2269.341,200
+DEHAM,DEU,USNYC,east_coast,chokepoint9,Dover Strait,0,503.987,200
+DEHAM,DEU,USNYC,east_coast,chokepoint10,Oresund Strait,0,289.022,200
+DEHAM,DEU,USNYC,east_coast,chokepoint11,Taiwan Strait,0,9047.899,200
+DEHAM,DEU,USNYC,east_coast,chokepoint12,Korea Strait,0,8675.797,200
+DEHAM,DEU,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,8414.918,200
+DEHAM,DEU,USNYC,east_coast,chokepoint14,Luzon Strait,0,9523.903,200
+DEHAM,DEU,USNYC,east_coast,chokepoint15,Lombok Strait,0,11804.57,200
+DEHAM,DEU,USNYC,east_coast,chokepoint16,Ombai Strait,0,12404.833,200
+DEHAM,DEU,USNYC,east_coast,chokepoint17,Bohai Strait,0,7868.295,200
+DEHAM,DEU,USNYC,east_coast,chokepoint18,Torres Strait,0,13582.341,200
+DEHAM,DEU,USNYC,east_coast,chokepoint19,Sunda Strait,0,10925.102,200
+DEHAM,DEU,USNYC,east_coast,chokepoint20,Makassar Strait,0,11240.96,200
+DEHAM,DEU,USNYC,east_coast,chokepoint21,Magellan Strait,0,10328.869,200
+DEHAM,DEU,USNYC,east_coast,chokepoint22,Yucatan Channel,0,2347.359,200
+DEHAM,DEU,USNYC,east_coast,chokepoint23,Windward Passage,0,2277.216,200
+DEHAM,DEU,USNYC,east_coast,chokepoint24,Mona Passage,0,2500.688,200
+DEHAM,DEU,USNYC,east_coast,chokepoint25,Balabac Strait,0,10463.936,200
+DEHAM,DEU,USNYC,east_coast,chokepoint26,Bering Strait,0,5997.913,200
+DEHAM,DEU,USNYC,east_coast,chokepoint27,Mindoro Strait,0,10205.434,200
+DEHAM,DEU,USNYC,east_coast,chokepoint28,Kerch Strait,0,2123.046,200
+IEDFT,IRL,USLAX,west_coast,chokepoint1,Suez Canal,0,3922.736,200
+IEDFT,IRL,USLAX,west_coast,chokepoint2,Panama Canal,1,0.248,200
+IEDFT,IRL,USLAX,west_coast,chokepoint3,Bosporus Strait,0,2898.909,200
+IEDFT,IRL,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,6171.378,200
+IEDFT,IRL,USLAX,west_coast,chokepoint5,Malacca Strait,0,11095.245,200
+IEDFT,IRL,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,5895.74,200
+IEDFT,IRL,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,9990.127,200
+IEDFT,IRL,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,1737.319,200
+IEDFT,IRL,USLAX,west_coast,chokepoint9,Dover Strait,0,520.345,200
+IEDFT,IRL,USLAX,west_coast,chokepoint10,Oresund Strait,0,1242.195,200
+IEDFT,IRL,USLAX,west_coast,chokepoint11,Taiwan Strait,0,9918.626,200
+IEDFT,IRL,USLAX,west_coast,chokepoint12,Korea Strait,0,9402.421,200
+IEDFT,IRL,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,8426.766,200
+IEDFT,IRL,USLAX,west_coast,chokepoint14,Luzon Strait,0,10405.121,200
+IEDFT,IRL,USLAX,west_coast,chokepoint15,Lombok Strait,0,12832.143,200
+IEDFT,IRL,USLAX,west_coast,chokepoint16,Ombai Strait,0,12962.701,200
+IEDFT,IRL,USLAX,west_coast,chokepoint17,Bohai Strait,0,8643.716,200
+IEDFT,IRL,USLAX,west_coast,chokepoint18,Torres Strait,0,11468.897,200
+IEDFT,IRL,USLAX,west_coast,chokepoint19,Sunda Strait,0,11968.751,200
+IEDFT,IRL,USLAX,west_coast,chokepoint20,Makassar Strait,0,12230.057,200
+IEDFT,IRL,USLAX,west_coast,chokepoint21,Magellan Strait,0,6683.489,200
+IEDFT,IRL,USLAX,west_coast,chokepoint22,Yucatan Channel,0,1276.376,200
+IEDFT,IRL,USLAX,west_coast,chokepoint23,Windward Passage,0,472.311,200
+IEDFT,IRL,USLAX,west_coast,chokepoint24,Mona Passage,1,22.28,200
+IEDFT,IRL,USLAX,west_coast,chokepoint25,Balabac Strait,0,11438.367,200
+IEDFT,IRL,USLAX,west_coast,chokepoint26,Bering Strait,0,4703.805,200
+IEDFT,IRL,USLAX,west_coast,chokepoint27,Mindoro Strait,0,11134.649,200
+IEDFT,IRL,USLAX,west_coast,chokepoint28,Kerch Strait,0,3152.457,200
+IEDFT,IRL,USNYC,east_coast,chokepoint1,Suez Canal,0,3922.736,200
+IEDFT,IRL,USNYC,east_coast,chokepoint2,Panama Canal,0,3525.609,200
+IEDFT,IRL,USNYC,east_coast,chokepoint3,Bosporus Strait,0,2898.909,200
+IEDFT,IRL,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,6171.378,200
+IEDFT,IRL,USNYC,east_coast,chokepoint5,Malacca Strait,0,11095.245,200
+IEDFT,IRL,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,5895.74,200
+IEDFT,IRL,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,9990.127,200
+IEDFT,IRL,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,1737.319,200
+IEDFT,IRL,USNYC,east_coast,chokepoint9,Dover Strait,0,520.345,200
+IEDFT,IRL,USNYC,east_coast,chokepoint10,Oresund Strait,0,1242.195,200
+IEDFT,IRL,USNYC,east_coast,chokepoint11,Taiwan Strait,0,9918.626,200
+IEDFT,IRL,USNYC,east_coast,chokepoint12,Korea Strait,0,9402.421,200
+IEDFT,IRL,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,9036.389,200
+IEDFT,IRL,USNYC,east_coast,chokepoint14,Luzon Strait,0,10405.121,200
+IEDFT,IRL,USNYC,east_coast,chokepoint15,Lombok Strait,0,12832.143,200
+IEDFT,IRL,USNYC,east_coast,chokepoint16,Ombai Strait,0,13393.209,200
+IEDFT,IRL,USNYC,east_coast,chokepoint17,Bohai Strait,0,8643.716,200
+IEDFT,IRL,USNYC,east_coast,chokepoint18,Torres Strait,0,14421.44,200
+IEDFT,IRL,USNYC,east_coast,chokepoint19,Sunda Strait,0,11968.751,200
+IEDFT,IRL,USNYC,east_coast,chokepoint20,Makassar Strait,0,12230.057,200
+IEDFT,IRL,USNYC,east_coast,chokepoint21,Magellan Strait,0,10328.869,200
+IEDFT,IRL,USNYC,east_coast,chokepoint22,Yucatan Channel,0,2347.359,200
+IEDFT,IRL,USNYC,east_coast,chokepoint23,Windward Passage,0,2277.216,200
+IEDFT,IRL,USNYC,east_coast,chokepoint24,Mona Passage,0,2500.688,200
+IEDFT,IRL,USNYC,east_coast,chokepoint25,Balabac Strait,0,11438.367,200
+IEDFT,IRL,USNYC,east_coast,chokepoint26,Bering Strait,0,6025.196,200
+IEDFT,IRL,USNYC,east_coast,chokepoint27,Mindoro Strait,0,11134.649,200
+IEDFT,IRL,USNYC,east_coast,chokepoint28,Kerch Strait,0,3152.457,200
+ILHFA,ISR,USLAX,west_coast,chokepoint1,Suez Canal,0,306.356,200
+ILHFA,ISR,USLAX,west_coast,chokepoint2,Panama Canal,1,0.248,200
+ILHFA,ISR,USLAX,west_coast,chokepoint3,Bosporus Strait,0,783.103,200
+ILHFA,ISR,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,2377.628,200
+ILHFA,ISR,USLAX,west_coast,chokepoint5,Malacca Strait,0,7841.021,200
+ILHFA,ISR,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,2231.576,200
+ILHFA,ISR,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,7646.385,200
+ILHFA,ISR,USLAX,west_coast,chokepoint8,Gibraltar Strait,1,0.849,200
+ILHFA,ISR,USLAX,west_coast,chokepoint9,Dover Strait,0,1541.827,200
+ILHFA,ISR,USLAX,west_coast,chokepoint10,Oresund Strait,0,2006.619,200
+ILHFA,ISR,USLAX,west_coast,chokepoint11,Taiwan Strait,0,8108.032,200
+ILHFA,ISR,USLAX,west_coast,chokepoint12,Korea Strait,0,8391.588,200
+ILHFA,ISR,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,8426.766,200
+ILHFA,ISR,USLAX,west_coast,chokepoint14,Luzon Strait,0,8475.376,200
+ILHFA,ISR,USLAX,west_coast,chokepoint15,Lombok Strait,0,9664.446,200
+ILHFA,ISR,USLAX,west_coast,chokepoint16,Ombai Strait,0,10520.919,200
+ILHFA,ISR,USLAX,west_coast,chokepoint17,Bohai Strait,0,7512.389,200
+ILHFA,ISR,USLAX,west_coast,chokepoint18,Torres Strait,0,11468.897,200
+ILHFA,ISR,USLAX,west_coast,chokepoint19,Sunda Strait,0,8598.908,200
+ILHFA,ISR,USLAX,west_coast,chokepoint20,Makassar Strait,0,9452.824,200
+ILHFA,ISR,USLAX,west_coast,chokepoint21,Magellan Strait,0,6683.489,200
+ILHFA,ISR,USLAX,west_coast,chokepoint22,Yucatan Channel,0,1276.376,200
+ILHFA,ISR,USLAX,west_coast,chokepoint23,Windward Passage,0,472.311,200
+ILHFA,ISR,USLAX,west_coast,chokepoint24,Mona Passage,1,17.722,200
+ILHFA,ISR,USLAX,west_coast,chokepoint25,Balabac Strait,0,8832.489,200
+ILHFA,ISR,USLAX,west_coast,chokepoint26,Bering Strait,0,4703.805,200
+ILHFA,ISR,USLAX,west_coast,chokepoint27,Mindoro Strait,0,8844.549,200
+ILHFA,ISR,USLAX,west_coast,chokepoint28,Kerch Strait,0,1361.212,200
+ILHFA,ISR,USNYC,east_coast,chokepoint1,Suez Canal,0,306.356,200
+ILHFA,ISR,USNYC,east_coast,chokepoint2,Panama Canal,0,3525.609,200
+ILHFA,ISR,USNYC,east_coast,chokepoint3,Bosporus Strait,0,783.103,200
+ILHFA,ISR,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,2377.628,200
+ILHFA,ISR,USNYC,east_coast,chokepoint5,Malacca Strait,0,7841.021,200
+ILHFA,ISR,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,2231.576,200
+ILHFA,ISR,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,7646.385,200
+ILHFA,ISR,USNYC,east_coast,chokepoint8,Gibraltar Strait,1,0.949,200
+ILHFA,ISR,USNYC,east_coast,chokepoint9,Dover Strait,0,1541.827,200
+ILHFA,ISR,USNYC,east_coast,chokepoint10,Oresund Strait,0,2006.619,200
+ILHFA,ISR,USNYC,east_coast,chokepoint11,Taiwan Strait,0,8108.032,200
+ILHFA,ISR,USNYC,east_coast,chokepoint12,Korea Strait,0,8391.588,200
+ILHFA,ISR,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,8800.024,200
+ILHFA,ISR,USNYC,east_coast,chokepoint14,Luzon Strait,0,8475.376,200
+ILHFA,ISR,USNYC,east_coast,chokepoint15,Lombok Strait,0,9664.446,200
+ILHFA,ISR,USNYC,east_coast,chokepoint16,Ombai Strait,0,10520.919,200
+ILHFA,ISR,USNYC,east_coast,chokepoint17,Bohai Strait,0,7512.389,200
+ILHFA,ISR,USNYC,east_coast,chokepoint18,Torres Strait,0,12208.964,200
+ILHFA,ISR,USNYC,east_coast,chokepoint19,Sunda Strait,0,8598.908,200
+ILHFA,ISR,USNYC,east_coast,chokepoint20,Makassar Strait,0,9452.824,200
+ILHFA,ISR,USNYC,east_coast,chokepoint21,Magellan Strait,0,10297.441,200
+ILHFA,ISR,USNYC,east_coast,chokepoint22,Yucatan Channel,0,2347.359,200
+ILHFA,ISR,USNYC,east_coast,chokepoint23,Windward Passage,0,2276.213,200
+ILHFA,ISR,USNYC,east_coast,chokepoint24,Mona Passage,0,2428.26,200
+ILHFA,ISR,USNYC,east_coast,chokepoint25,Balabac Strait,0,8832.489,200
+ILHFA,ISR,USNYC,east_coast,chokepoint26,Bering Strait,0,6025.196,200
+ILHFA,ISR,USNYC,east_coast,chokepoint27,Mindoro Strait,0,8844.549,200
+ILHFA,ISR,USNYC,east_coast,chokepoint28,Kerch Strait,0,1361.212,200
+INBOM,IND,USLAX,west_coast,chokepoint1,Suez Canal,0,4214.824,200
+INBOM,IND,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+INBOM,IND,USLAX,west_coast,chokepoint3,Bosporus Strait,0,4776.132,200
+INBOM,IND,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,3181.698,200
+INBOM,IND,USLAX,west_coast,chokepoint5,Malacca Strait,1,10.536,200
+INBOM,IND,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,1787.952,200
+INBOM,IND,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,7557.839,200
+INBOM,IND,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,7753.18,200
+INBOM,IND,USLAX,west_coast,chokepoint9,Dover Strait,0,7057.257,200
+INBOM,IND,USLAX,west_coast,chokepoint10,Oresund Strait,0,6379.556,200
+INBOM,IND,USLAX,west_coast,chokepoint11,Taiwan Strait,0,294.873,200
+INBOM,IND,USLAX,west_coast,chokepoint12,Korea Strait,0,582.83,200
+INBOM,IND,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,549.082,200
+INBOM,IND,USLAX,west_coast,chokepoint14,Luzon Strait,1,54.833,200
+INBOM,IND,USLAX,west_coast,chokepoint15,Lombok Strait,0,1655.832,200
+INBOM,IND,USLAX,west_coast,chokepoint16,Ombai Strait,0,2426.008,200
+INBOM,IND,USLAX,west_coast,chokepoint17,Bohai Strait,0,1439.041,200
+INBOM,IND,USLAX,west_coast,chokepoint18,Torres Strait,0,3951.683,200
+INBOM,IND,USLAX,west_coast,chokepoint19,Sunda Strait,0,817.499,200
+INBOM,IND,USLAX,west_coast,chokepoint20,Makassar Strait,0,1301.802,200
+INBOM,IND,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+INBOM,IND,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+INBOM,IND,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+INBOM,IND,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+INBOM,IND,USLAX,west_coast,chokepoint25,Balabac Strait,0,604.619,200
+INBOM,IND,USLAX,west_coast,chokepoint26,Bering Strait,0,1661.351,200
+INBOM,IND,USLAX,west_coast,chokepoint27,Mindoro Strait,0,504.837,200
+INBOM,IND,USLAX,west_coast,chokepoint28,Kerch Strait,0,4402.039,200
+INBOM,IND,USNYC,east_coast,chokepoint1,Suez Canal,1,7.631,200
+INBOM,IND,USNYC,east_coast,chokepoint2,Panama Canal,0,3525.609,200
+INBOM,IND,USNYC,east_coast,chokepoint3,Bosporus Strait,0,855.841,200
+INBOM,IND,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,1,10.212,200
+INBOM,IND,USNYC,east_coast,chokepoint5,Malacca Strait,0,3783.826,200
+INBOM,IND,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,1204.834,200
+INBOM,IND,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,5767.743,200
+INBOM,IND,USNYC,east_coast,chokepoint8,Gibraltar Strait,1,0.949,200
+INBOM,IND,USNYC,east_coast,chokepoint9,Dover Strait,0,1541.827,200
+INBOM,IND,USNYC,east_coast,chokepoint10,Oresund Strait,0,2006.619,200
+INBOM,IND,USNYC,east_coast,chokepoint11,Taiwan Strait,0,4880.498,200
+INBOM,IND,USNYC,east_coast,chokepoint12,Korea Strait,0,5792.114,200
+INBOM,IND,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,6785.511,200
+INBOM,IND,USNYC,east_coast,chokepoint14,Luzon Strait,0,5073.311,200
+INBOM,IND,USNYC,east_coast,chokepoint15,Lombok Strait,0,5605.078,200
+INBOM,IND,USNYC,east_coast,chokepoint16,Ombai Strait,0,6484.635,200
+INBOM,IND,USNYC,east_coast,chokepoint17,Bohai Strait,0,5100.929,200
+INBOM,IND,USNYC,east_coast,chokepoint18,Torres Strait,0,8256.609,200
+INBOM,IND,USNYC,east_coast,chokepoint19,Sunda Strait,0,4545.795,200
+INBOM,IND,USNYC,east_coast,chokepoint20,Makassar Strait,0,5470.427,200
+INBOM,IND,USNYC,east_coast,chokepoint21,Magellan Strait,0,10297.441,200
+INBOM,IND,USNYC,east_coast,chokepoint22,Yucatan Channel,0,2347.359,200
+INBOM,IND,USNYC,east_coast,chokepoint23,Windward Passage,0,2276.213,200
+INBOM,IND,USNYC,east_coast,chokepoint24,Mona Passage,0,2428.26,200
+INBOM,IND,USNYC,east_coast,chokepoint25,Balabac Strait,0,4954.027,200
+INBOM,IND,USNYC,east_coast,chokepoint26,Bering Strait,0,6025.196,200
+INBOM,IND,USNYC,east_coast,chokepoint27,Mindoro Strait,0,5137.083,200
+INBOM,IND,USNYC,east_coast,chokepoint28,Kerch Strait,0,1525.639,200
+MXZLO,MEX,USLAX,west_coast,chokepoint1,Suez Canal,0,12239.577,200
+MXZLO,MEX,USLAX,west_coast,chokepoint2,Panama Canal,0,2736.123,200
+MXZLO,MEX,USLAX,west_coast,chokepoint3,Bosporus Strait,0,11052.5,200
+MXZLO,MEX,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,14489.459,200
+MXZLO,MEX,USLAX,west_coast,chokepoint5,Malacca Strait,0,14194.43,200
+MXZLO,MEX,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,13318.269,200
+MXZLO,MEX,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,14240.512,200
+MXZLO,MEX,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,9519.979,200
+MXZLO,MEX,USLAX,west_coast,chokepoint9,Dover Strait,0,8919.663,200
+MXZLO,MEX,USLAX,west_coast,chokepoint10,Oresund Strait,0,9070.994,200
+MXZLO,MEX,USLAX,west_coast,chokepoint11,Taiwan Strait,0,11062.802,200
+MXZLO,MEX,USLAX,west_coast,chokepoint12,Korea Strait,0,9689.735,200
+MXZLO,MEX,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,8426.766,200
+MXZLO,MEX,USLAX,west_coast,chokepoint14,Luzon Strait,0,11273.664,200
+MXZLO,MEX,USLAX,west_coast,chokepoint15,Lombok Strait,0,13806.12,200
+MXZLO,MEX,USLAX,west_coast,chokepoint16,Ombai Strait,0,12962.701,200
+MXZLO,MEX,USLAX,west_coast,chokepoint17,Bohai Strait,0,9928.697,200
+MXZLO,MEX,USLAX,west_coast,chokepoint18,Torres Strait,0,11468.897,200
+MXZLO,MEX,USLAX,west_coast,chokepoint19,Sunda Strait,0,14514.053,200
+MXZLO,MEX,USLAX,west_coast,chokepoint20,Makassar Strait,0,12914.017,200
+MXZLO,MEX,USLAX,west_coast,chokepoint21,Magellan Strait,0,8476.739,200
+MXZLO,MEX,USLAX,west_coast,chokepoint22,Yucatan Channel,0,1905.738,200
+MXZLO,MEX,USLAX,west_coast,chokepoint23,Windward Passage,0,3131.897,200
+MXZLO,MEX,USLAX,west_coast,chokepoint24,Mona Passage,0,3769.478,200
+MXZLO,MEX,USLAX,west_coast,chokepoint25,Balabac Strait,0,12590.307,200
+MXZLO,MEX,USLAX,west_coast,chokepoint26,Bering Strait,0,4703.805,200
+MXZLO,MEX,USLAX,west_coast,chokepoint27,Mindoro Strait,0,11948.383,200
+MXZLO,MEX,USLAX,west_coast,chokepoint28,Kerch Strait,0,10879.23,200
+MXZLO,MEX,USNYC,east_coast,chokepoint1,Suez Canal,0,9083.42,200
+MXZLO,MEX,USNYC,east_coast,chokepoint2,Panama Canal,1,0.248,200
+MXZLO,MEX,USNYC,east_coast,chokepoint3,Bosporus Strait,0,8084.643,200
+MXZLO,MEX,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,11272.54,200
+MXZLO,MEX,USNYC,east_coast,chokepoint5,Malacca Strait,0,15315.78,200
+MXZLO,MEX,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,11022.754,200
+MXZLO,MEX,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,11443.865,200
+MXZLO,MEX,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,5833.407,200
+MXZLO,MEX,USNYC,east_coast,chokepoint9,Dover Strait,0,5708.798,200
+MXZLO,MEX,USNYC,east_coast,chokepoint10,Oresund Strait,0,6227.698,200
+MXZLO,MEX,USNYC,east_coast,chokepoint11,Taiwan Strait,0,12621.674,200
+MXZLO,MEX,USNYC,east_coast,chokepoint12,Korea Strait,0,11385.031,200
+MXZLO,MEX,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,10283.3,200
+MXZLO,MEX,USNYC,east_coast,chokepoint14,Luzon Strait,0,13047.173,200
+MXZLO,MEX,USNYC,east_coast,chokepoint15,Lombok Strait,0,15664.18,200
+MXZLO,MEX,USNYC,east_coast,chokepoint16,Ombai Strait,0,14687.053,200
+MXZLO,MEX,USNYC,east_coast,chokepoint17,Bohai Strait,0,11117.714,200
+MXZLO,MEX,USNYC,east_coast,chokepoint18,Torres Strait,0,12915.338,200
+MXZLO,MEX,USNYC,east_coast,chokepoint19,Sunda Strait,0,16155.499,200
+MXZLO,MEX,USNYC,east_coast,chokepoint20,Makassar Strait,0,14940.793,200
+MXZLO,MEX,USNYC,east_coast,chokepoint21,Magellan Strait,0,6683.489,200
+MXZLO,MEX,USNYC,east_coast,chokepoint22,Yucatan Channel,0,1155.92,200
+MXZLO,MEX,USNYC,east_coast,chokepoint23,Windward Passage,1,21.243,200
+MXZLO,MEX,USNYC,east_coast,chokepoint24,Mona Passage,0,672.952,200
+MXZLO,MEX,USNYC,east_coast,chokepoint25,Balabac Strait,0,14557.166,200
+MXZLO,MEX,USNYC,east_coast,chokepoint26,Bering Strait,0,6025.196,200
+MXZLO,MEX,USNYC,east_coast,chokepoint27,Mindoro Strait,0,13934.607,200
+MXZLO,MEX,USNYC,east_coast,chokepoint28,Kerch Strait,0,8245.597,200
+CAWVR,CAN,USLAX,west_coast,chokepoint1,Suez Canal,0,10829.307,200
+CAWVR,CAN,USLAX,west_coast,chokepoint2,Panama Canal,0,4817.56,200
+CAWVR,CAN,USLAX,west_coast,chokepoint3,Bosporus Strait,0,9618.792,200
+CAWVR,CAN,USLAX,west_coast,chokepoint4,Bab el-Mandeb Strait,0,12998.765,200
+CAWVR,CAN,USLAX,west_coast,chokepoint5,Malacca Strait,0,12787.491,200
+CAWVR,CAN,USLAX,west_coast,chokepoint6,Strait of Hormuz,0,11629.443,200
+CAWVR,CAN,USLAX,west_coast,chokepoint7,Cape of Good Hope,0,16318.251,200
+CAWVR,CAN,USLAX,west_coast,chokepoint8,Gibraltar Strait,0,8731.075,200
+CAWVR,CAN,USLAX,west_coast,chokepoint9,Dover Strait,0,7708.728,200
+CAWVR,CAN,USLAX,west_coast,chokepoint10,Oresund Strait,0,7688.99,200
+CAWVR,CAN,USLAX,west_coast,chokepoint11,Taiwan Strait,0,9625.834,200
+CAWVR,CAN,USLAX,west_coast,chokepoint12,Korea Strait,0,8244.06,200
+CAWVR,CAN,USLAX,west_coast,chokepoint13,Tsugaru Strait,0,6987.012,200
+CAWVR,CAN,USLAX,west_coast,chokepoint14,Luzon Strait,0,9904.226,200
+CAWVR,CAN,USLAX,west_coast,chokepoint15,Lombok Strait,0,12800.318,200
+CAWVR,CAN,USLAX,west_coast,chokepoint16,Ombai Strait,0,12131.096,200
+CAWVR,CAN,USLAX,west_coast,chokepoint17,Bohai Strait,0,8368.239,200
+CAWVR,CAN,USLAX,west_coast,chokepoint18,Torres Strait,0,10930.914,200
+CAWVR,CAN,USLAX,west_coast,chokepoint19,Sunda Strait,0,13272.399,200
+CAWVR,CAN,USLAX,west_coast,chokepoint20,Makassar Strait,0,11806.095,200
+CAWVR,CAN,USLAX,west_coast,chokepoint21,Magellan Strait,0,10701.191,200
+CAWVR,CAN,USLAX,west_coast,chokepoint22,Yucatan Channel,0,3484.826,200
+CAWVR,CAN,USLAX,west_coast,chokepoint23,Windward Passage,0,4668.678,200
+CAWVR,CAN,USLAX,west_coast,chokepoint24,Mona Passage,0,5301.311,200
+CAWVR,CAN,USLAX,west_coast,chokepoint25,Balabac Strait,0,11334.075,200
+CAWVR,CAN,USLAX,west_coast,chokepoint26,Bering Strait,0,3009.541,200
+CAWVR,CAN,USLAX,west_coast,chokepoint27,Mindoro Strait,0,10670.724,200
+CAWVR,CAN,USLAX,west_coast,chokepoint28,Kerch Strait,0,9341.551,200
+CAWVR,CAN,USNYC,east_coast,chokepoint1,Suez Canal,0,9083.42,200
+CAWVR,CAN,USNYC,east_coast,chokepoint2,Panama Canal,1,0.248,200
+CAWVR,CAN,USNYC,east_coast,chokepoint3,Bosporus Strait,0,8084.643,200
+CAWVR,CAN,USNYC,east_coast,chokepoint4,Bab el-Mandeb Strait,0,11272.54,200
+CAWVR,CAN,USNYC,east_coast,chokepoint5,Malacca Strait,0,12787.491,200
+CAWVR,CAN,USNYC,east_coast,chokepoint6,Strait of Hormuz,0,11022.754,200
+CAWVR,CAN,USNYC,east_coast,chokepoint7,Cape of Good Hope,0,11443.865,200
+CAWVR,CAN,USNYC,east_coast,chokepoint8,Gibraltar Strait,0,5833.407,200
+CAWVR,CAN,USNYC,east_coast,chokepoint9,Dover Strait,0,5708.798,200
+CAWVR,CAN,USNYC,east_coast,chokepoint10,Oresund Strait,0,6227.698,200
+CAWVR,CAN,USNYC,east_coast,chokepoint11,Taiwan Strait,0,9625.834,200
+CAWVR,CAN,USNYC,east_coast,chokepoint12,Korea Strait,0,8244.06,200
+CAWVR,CAN,USNYC,east_coast,chokepoint13,Tsugaru Strait,0,6987.012,200
+CAWVR,CAN,USNYC,east_coast,chokepoint14,Luzon Strait,0,9904.226,200
+CAWVR,CAN,USNYC,east_coast,chokepoint15,Lombok Strait,0,12800.318,200
+CAWVR,CAN,USNYC,east_coast,chokepoint16,Ombai Strait,0,12131.096,200
+CAWVR,CAN,USNYC,east_coast,chokepoint17,Bohai Strait,0,8368.239,200
+CAWVR,CAN,USNYC,east_coast,chokepoint18,Torres Strait,0,10930.914,200
+CAWVR,CAN,USNYC,east_coast,chokepoint19,Sunda Strait,0,13272.399,200
+CAWVR,CAN,USNYC,east_coast,chokepoint20,Makassar Strait,0,11806.095,200
+CAWVR,CAN,USNYC,east_coast,chokepoint21,Magellan Strait,0,6683.489,200
+CAWVR,CAN,USNYC,east_coast,chokepoint22,Yucatan Channel,0,1155.92,200
+CAWVR,CAN,USNYC,east_coast,chokepoint23,Windward Passage,1,21.243,200
+CAWVR,CAN,USNYC,east_coast,chokepoint24,Mona Passage,0,672.952,200
+CAWVR,CAN,USNYC,east_coast,chokepoint25,Balabac Strait,0,11334.075,200
+CAWVR,CAN,USNYC,east_coast,chokepoint26,Bering Strait,0,3009.541,200
+CAWVR,CAN,USNYC,east_coast,chokepoint27,Mindoro Strait,0,10670.724,200
+CAWVR,CAN,USNYC,east_coast,chokepoint28,Kerch Strait,0,8245.597,200

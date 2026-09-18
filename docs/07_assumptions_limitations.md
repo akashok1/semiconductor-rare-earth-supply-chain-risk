@@ -158,6 +158,123 @@ the affected number appears.
 | Port classification by name keyword | Land border crossings fell into "Unclassified". CBP districts mix seaports with land crossings under one district number, so San Diego contains Otay Mesa and Seattle contains Blaine | Classify by official Schedule D port code with explicit overrides for mixed districts |
 | Chokepoint proximity measured to nearest route vertex | Vertex spacing on open ocean segments runs to hundreds of km, so a route can pass close to a chokepoint on a segment and register as a miss | Replaced with true nearest point on the route line, measured in an azimuthal equidistant projection centred on each chokepoint so planar distance from the centre equals great circle distance. No crossings changed on this route set |
 | Origin port coordinates entered by hand | Flagged in review as an unsourced input | Resolved from the UN/LOCODE dataset, fetched and cached, source documented in the script |
+| WCO correlation table names 851712 (cellular telephones) as sole predecessor of both 854151 and 854159 | Checked directly against the Conversions tab: 854150 never appears as a named predecessor for anything, and the sheet is structurally one-predecessor-per-code with zero merged cells, zero blank-predecessor continuation rows and no code listed twice, so this is the table's own automated matching failing, not a parse artifact | Resolved empirically by Census import-value continuity across the 2021/2022 break instead of trusting the table: 854150 at $825.9M in 2021 against 854151+854159 at $819.9M in 2022, a 0.7% gap |
+
+### 6.1 854150 to 854151/854159: the correlation table was wrong, resolved by value continuity
+
+854150 (HS2017, "other semiconductor devices") has no HS2022 successor in the
+UN Stats correlation workbook that a reasonable process would accept.
+
+Source: `HS2022toHS2017ConversionAndCorrelationTables.xlsx`, UN Stats
+Economic Statistics classifications page. Resolved download URL, verified
+with no redirect:
+`https://unstats.un.org/unsd/classifications/Econ/tables/HS2022toHS2017ConversionAndCorrelationTables.xlsx`.
+Fetched and cached 2026-09-18, `data/raw/un_hs2022_to_hs2017_correlation.xlsx`.
+
+The workbook ships two tabs. "HS2022-HS2017 Conversions" names exactly one
+HS2017 predecessor per current HS2022 code (5,613 rows, 5,613 distinct
+codes, verified). In that tab, HS2022 854151 and HS2022 854159 both name
+HS2017 **851712** (cellular telephones) as their sole predecessor. 854150
+does not appear as a named predecessor of anything, anywhere in the tab.
+"HS2022-HS2017 Correlations" (the broader overlap tab) shows 854150 only in
+six `n:n` rows against 854921/854929/854931/854939/854991/854999, the new
+HS2022 8549 heading ("electrical and electronic waste and scrap") -- noise
+from that heading's from-scratch automated matching, not a real relation.
+
+This was checked as a possible parsing artifact and ruled out. The
+Conversions tab was re-parsed with `openpyxl` (added as a dependency for
+this reason) after an initial hand-rolled zipfile/xml.etree parser was
+suspected of shifting rows around blank cells. The suspicion did not hold:
+the hand-rolled parser already tracked each cell's `r=` reference. The
+openpyxl re-parse returned the identical 851712 result. A further check for
+the specific failure mode of multi-predecessor entries spread across
+continuation rows (HS2022 code in column A, additional HS2017 predecessors
+on blank-column-A rows beneath it) found none: zero merged cell ranges in
+the Conversions tab, zero rows with a blank column A and populated column
+B, and zero HS2022 codes appearing on more than one row. The tab is
+structurally one predecessor per code by design. It cannot express two
+predecessors even if it wanted to, and for 854151/854159 it names the wrong
+one. This is the WCO's own automated nearest-match algorithm failing on a
+heavily restructured chapter, not anything on the ingest side.
+
+Resolved instead by US Census import value (`GEN_VAL_YR`, `SUMMARY_LVL ==
+'DET'` rows, December year-to-date, `-` sentinel excluded, same methodology
+as section 1):
+
+| Year | 854150 | 854151 | 854159 |
+|---|---|---|---|
+| 2018 | $426,101,475 | no data | no data |
+| 2019 | $399,686,598 | no data | no data |
+| 2020 | $403,983,599 | no data | no data |
+| 2021 | $825,916,060 | no data | no data |
+| 2022 | no data | $24,800,504 | $795,140,052 |
+| 2023 | no data | $21,096,047 | $1,137,743,658 |
+| 2024 | no data | $17,958,080 | $906,382,542 |
+| 2025 | no data | $178,763,927 | $994,153,849 |
+
+854150 goes to exactly zero after 2021; 854151 and 854159 are both exactly
+zero through 2021 and pick up in 2022. Combined 854151+854159 in 2022 is
+$819,940,556 against 854150's final year of $825,916,060, a 0.7% gap. HS
+nomenclature text supports the mechanism: 854159 keeps 854150's old "other
+semiconductor devices" title verbatim, and 854151 is new for
+"semiconductor-based transducers," added to the 8541 heading text in the
+HS2022 revision. 851712 has no plausible mechanism to be a predecessor of
+either. `hs_bridge.csv` records this resolution and its basis directly in
+the row notes, not as a WCO table finding.
+
+### 6.2 Vintage-break value continuity, all 22 basket codes
+
+Ran the same H5-2021-vs-H6-2022 continuity check used on 854150 against all
+22 basket codes, most of which did not change HS number across the
+2017/2022 revision:
+
+| H5 code | 2021 (H5) | 2022 (H6 sum) | Gap | Successors |
+|---|---|---|---|---|
+| 854110 | $531,246,612 | $750,719,127 | +41.3% | 854110 |
+| 854121 | $131,835,401 | $175,177,682 | +32.9% | 854121 |
+| 854129 | $1,514,664,868 | $1,936,021,907 | +27.8% | 854129 |
+| 854130 | $70,947,246 | $120,448,204 | +69.8% | 854130 |
+| 854140 | $9,137,638,899 | $12,403,236,792 | +35.7% | 854141+854142+854143+854149 |
+| 854150 | $825,916,060 | $819,940,556 | -0.7% | 854151+854159 |
+| 854160 | $339,135,164 | $417,731,505 | +23.2% | 854160 |
+| 854190 | $378,762,939 | $481,980,782 | +27.3% | 854190 |
+| 854231 | $27,344,302,869 | $24,326,886,346 | -11.0% | 854231 |
+| 854232 | $2,194,656,387 | $2,755,894,264 | +25.6% | 854232 |
+| 854233 | $644,023,397 | $886,809,727 | +37.7% | 854233 |
+| 854239 | $10,414,858,777 | $15,017,269,087 | +44.2% | 854239 |
+| 854290 | $310,056,969 | $380,081,272 | +22.6% | 854290 |
+| 848610 | $67,590,503 | $176,697,863 | +161.4% | 848610 |
+| 848620 | $4,284,479,839 | $6,414,677,975 | +49.7% | 848620 |
+| 848630 | $4,839,547 | $5,999,735 | +24.0% | 848630 |
+| 848640 | $581,503,681 | $925,984,109 | +59.2% | 848640 |
+| 848690 | $3,686,042,058 | $4,063,166,597 | +10.2% | 848690 |
+| 280530 | $17,256,523 | $17,687,095 | +2.5% | 280530 |
+| 284610 | $28,081,846 | $27,487,065 | -2.1% | 284610 |
+| 284690 | $105,192,401 | $160,803,240 | +52.9% | 284690 |
+| 850511 | $490,985,694 | $639,542,567 | +30.3% | 850511 |
+
+Control group argument, offered as an inference, not a proof: most codes in
+this table did not change HS number across the revision and still show a
++23% to +70% gap. That band is best read as the 2021-to-2022 semiconductor
+market (the chip shortage price and demand surge), not as evidence of
+bridge failure, because it appears just as strongly on codes with no
+classification event to explain it. On that reading, 854140's +35.7%
+combined gap sits inside the band its unchanged peers occupy and is not, by
+itself, a sign of a bad partition. This is an inference supported by the
+control group, not something proven here.
+
+Two things fall outside that reading and are flagged only, not
+investigated:
+
+- **848610 at +161.4%** sits well outside the +23% to +70% band the other
+  unchanged codes occupy. Unexplained.
+- **854231 fell 11.0% while 854239 rose 44.2%** across the same boundary,
+  an opposite-signed move between a specific code and what is normally a
+  residual "other" code in the same heading, consistent with classification
+  drift between the two rather than a market effect. Both codes are
+  unchanged self-maps per the correlation table (no HS number change), so
+  if there is drift it would be happening at the reporting/coding level, not
+  the classification-table level.
 
 ---
 
@@ -198,8 +315,9 @@ State these before anyone asks.
 
 ## 9. Open items
 
-- Verify that the HS2017 to HS2022 split of 854140 and 854150 is a clean partition, using the UN correlation tables. Check that summed H6 value for 2022 is continuous with H5 value for 2021.
+- ~~Verify that the HS2017 to HS2022 split of 854140 and 854150 is a clean partition, using the UN correlation tables. Check that summed H6 value for 2022 is continuous with H5 value for 2021.~~ Done, see sections 6.1 and 6.2. 854140 is a clean 4-way partition per the correlation table. 854150 is not resolvable via the correlation table at all (it names 851712 as predecessor of both successors); resolved empirically by value continuity instead.
 - Record the current DOJ and FTC Merger Guidelines version and its HHI threshold bands.
 - Build `basket_selection.csv` recording, per candidate code, the external list it appears on, the US net import reliance figure where published, and the decision to include or exclude.
 - Sensitivity test the 200km proximity threshold at the exposure mart, reporting whether the exposure ranking changes at 50, 100, 200 and 300km. This satisfies deliverable D-8 and requirement BR-10.
 - Run the concentration series across all years once the bridge table exists. No trend has been measured yet, so the question of whether concentration worsened after the 2025 Chinese export restrictions is still open.
+- Encode the vintage-break value-continuity check (section 6.2) as a dbt test once the dbt project exists: summed H6 value for a canonical product's first H6 year against its last H5 year, flagged past a tolerance. Satisfies BR-13.
