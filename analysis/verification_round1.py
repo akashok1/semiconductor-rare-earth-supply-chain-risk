@@ -1,4 +1,4 @@
-"""Day-1 data reality check (PROJECT_BRIEF.md section 15, charter section 8).
+"""Verification-phase data reality check (PROJECT_BRIEF.md section 15, charter section 8).
 
 Answers, using only live source data, before any dbt model is written:
 
@@ -12,9 +12,9 @@ Answers, using only live source data, before any dbt model is written:
 
 This is a verification pass only: it makes read-only GET requests, caches every
 raw response under data/raw/, and writes a findings report to
-analysis/verification_findings.md. It does not touch Postgres or dbt.
+analysis/verification_round1_findings.md. It does not touch Postgres or dbt.
 
-Usage: .venv/bin/python analysis/day1_verification.py
+Usage: .venv/bin/python analysis/verification_round1.py
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from ingest.config import CONFIG  # noqa: E402
 
 CACHE_DIR = REPO_ROOT / "data" / "raw"
-FINDINGS_PATH = REPO_ROOT / "analysis" / "verification_findings.md"
+FINDINGS_PATH = REPO_ROOT / "analysis" / "verification_round1_findings.md"
 
 COMTRADE_REFERENCE_LIST_URL = (
     "https://comtradeapi.un.org/files/v1/app/reference/ListofReferences.json"
@@ -57,7 +57,7 @@ NEGLIGIBLE_VALUE_USD = 1_000_000
 # layer endpoint); pagination must request no more than this per page.
 PORTWATCH_PAGE_SIZE = 1000
 # Strait of Malacca. Per PROJECT_BRIEF.md section 6, both baskets route
-# predominantly via the South China Sea and Malacca, not Hormuz -- this is
+# predominantly via the South China Sea and Malacca, not Hormuz, so this is
 # the chokepoint the pagination test should actually exercise.
 PORTWATCH_TEST_CHOKEPOINT = "chokepoint5"
 PORTWATCH_TEST_CHOKEPOINT_NAME = "Strait of Malacca"
@@ -86,7 +86,7 @@ class ComtradeAuthError(RuntimeError):
 def _comtrade_headers() -> dict:
     # Subscription key travels as a header, never as a query param, so it
     # can never end up in a cached URL, a raised exception's message, or a
-    # log line -- requests.Response.raise_for_status() echoes resp.url.
+    # log line. requests.Response.raise_for_status() echoes resp.url.
     return {"Ocp-Apim-Subscription-Key": CONFIG.comtrade_api_key}
 
 
@@ -114,7 +114,7 @@ def _fetch_json(
             raise ComtradeAuthError(
                 f"{context} failed with HTTP {resp.status_code}. "
                 "COMTRADE_API_KEY may be missing, invalid, expired, or "
-                "regenerated -- log into the Comtrade portal and check the "
+                "regenerated. Log into the Comtrade portal and check the "
                 "subscription. Nothing was written to disk for this call."
             )
         if resp.status_code == 429 and attempt < 2:
@@ -256,6 +256,9 @@ def pull_yearly_values(codes: list[str], years: list[int]) -> dict:
         rows = payload.get("data", [])
         for code in codes:
             code_rows = [r for r in rows if r["cmdCode"] == code]
+            # partnerCode 0 is Comtrade's World aggregate row, not a supplier.
+            # Left mixed into partner_rows it would double-count as a partner
+            # and inflate the record count, so it's split out here.
             world_row = next((r for r in code_rows if r["partnerCode"] == 0), None)
             partner_rows = [r for r in code_rows if r["partnerCode"] != 0]
             value = (
@@ -310,7 +313,7 @@ def check_portwatch_pagination() -> dict:
     else:
         raise RuntimeError(
             f"PortWatch pagination for {PORTWATCH_TEST_CHOKEPOINT} did not "
-            f"terminate within {max_pages} pages -- investigate before trusting "
+            f"terminate within {max_pages} pages. Investigate before trusting "
             "this as a bounded loop."
         )
     return {
@@ -337,11 +340,11 @@ def render_findings(
     years_pulled: list[int],
 ) -> str:
     lines: list[str] = []
-    lines.append("# Day 1 verification findings")
+    lines.append("# Verification round 1 findings")
     lines.append("")
     lines.append(f"Generated: {datetime.now(timezone.utc).isoformat(timespec='seconds')}")
     lines.append(
-        "Source: `analysis/day1_verification.py`, run against live Comtrade and "
+        "Source: `analysis/verification_round1.py`, run against live Comtrade and "
         "IMF PortWatch endpoints. Raw responses cached under `data/raw/`."
     )
     lines.append("")
@@ -356,10 +359,10 @@ def render_findings(
         for prefix, children in basket["families"].items():
             lines.append(f"- Heading `{prefix}`: {len(children)} HS6 leaf code(s) found")
             for c in children:
-                lines.append(f"  - `{c['code']}` -- {c['text']}")
+                lines.append(f"  - `{c['code']}`: {c['text']}")
         for code, info in basket["explicit_codes"].items():
             status = "EXISTS" if info["exists"] else "NOT FOUND"
-            desc = f" -- {info['text']}" if info["exists"] else ""
+            desc = f": {info['text']}" if info["exists"] else ""
             lines.append(f"- Explicit code `{code}`: **{status}**{desc}")
         lines.append("")
     missing = [
@@ -371,7 +374,7 @@ def render_findings(
     if missing:
         lines.append(
             f"**Codes named in the brief but not found in live HS2017 (H5): {', '.join(missing)}.** "
-            "Resolve before committing to `dim_product` -- either renumbered, retired, "
+            "Resolve before committing to `dim_product`: either renumbered, retired, "
             "or the brief has a typo."
         )
     else:
@@ -409,7 +412,7 @@ def render_findings(
             f"Years {availability['latest_h5_native_year'] + 1}-"
             f"{availability['latest_available_year']} are reported under a newer "
             "revision. Querying the H5-tagged endpoint for those later years "
-            "returns zero rows rather than converted data -- Comtrade does not "
+            "returns zero rows rather than converted data. Comtrade does not "
             "silently reclassify. This is the HS concordance problem named in "
             "PROJECT_BRIEF.md section 6, arriving one revision earlier than the "
             "brief's stated backward-only H4 enhancement anticipated. Extending "
@@ -426,7 +429,7 @@ def render_findings(
     )
     lines.append("")
     lines.append(
-        f"Pulled for {years_pulled[0]}-{years_pulled[-1]} only -- the overlap "
+        f"Pulled for {years_pulled[0]}-{years_pulled[-1]} only, the overlap "
         "between the brief's requested start year and the last year with "
         "native H5 data (see finding above). One batched Comtrade call per "
         "year covers every surviving code."
@@ -472,7 +475,7 @@ def render_findings(
     lines.append("")
     lines.append(
         f"Chokepoint tested: **{portwatch['chokepoint_name']}** "
-        f"(`{portwatch['chokepoint_id']}`) -- the chokepoint PROJECT_BRIEF.md "
+        f"(`{portwatch['chokepoint_id']}`), the chokepoint PROJECT_BRIEF.md "
         "section 6 identifies as most relevant to both baskets."
     )
     lines.append("")
@@ -482,7 +485,7 @@ def render_findings(
     )
     lines.append(f"- Total daily rows retrieved: {portwatch['total_rows']}")
     lines.append(
-        f"- Pagination confirmed working: yes -- layer `maxRecordCount` is "
+        f"- Pagination confirmed working: yes. Layer `maxRecordCount` is "
         f"{PORTWATCH_PAGE_SIZE}, and this chokepoint alone exceeds one page."
     )
     lines.append("")

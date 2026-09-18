@@ -1,41 +1,41 @@
-# Day 1 verification findings
+# Verification round 1 findings
 
-Generated: 2026-09-15T18:43:07+00:00
-Source: `analysis/day1_verification.py`, run against live Comtrade and IMF PortWatch endpoints. Raw responses cached under `data/raw/`.
+Generated: 2026-09-17T23:57:36+00:00
+Source: `analysis/verification_round1.py`, run against live Comtrade and IMF PortWatch endpoints. Raw responses cached under `data/raw/`.
 
 ## 1. Candidate HS6 codes vs. the live HS2017 (H5) code list
 
 ### Semiconductors and semiconductor manufacturing equipment (`semiconductors_and_sme`)
 
 - Heading `8541`: 8 HS6 leaf code(s) found
-  - `854110` -- 854110 - Electrical apparatus; diodes, other than photosensitive or light-emitting diodes (LED)
-  - `854121` -- 854121 - Electrical apparatus; transistors, (other than photosensitive), with a dissipation rate of less than 1W
-  - `854129` -- 854129 - Electrical apparatus; transistors, (other than photosensitive), with a dissipation rate of 1W or more
-  - `854130` -- 854130 - Electrical apparatus; thyristors, diacs and triacs, other than photosensitive devices
-  - `854140` -- 854140 - Electrical apparatus; photosensitive, including photovoltaic cells, whether or not assembled in modules or made up into panels, light-emitting diodes (LED)
-  - `854150` -- 854150 - Electrical apparatus; photosensitive semiconductor devices n.e.c. in heading no. 8541, including photovoltaic cells, whether or not assembled in modules or made up into panels
-  - `854160` -- 854160 - Crystals; mounted piezo-electric
-  - `854190` -- 854190 - Electrical apparatus; parts for diodes, transistors and similar semiconductor devices and photosensitive semiconductor devices
+  - `854110`: 854110 - Electrical apparatus; diodes, other than photosensitive or light-emitting diodes (LED)
+  - `854121`: 854121 - Electrical apparatus; transistors, (other than photosensitive), with a dissipation rate of less than 1W
+  - `854129`: 854129 - Electrical apparatus; transistors, (other than photosensitive), with a dissipation rate of 1W or more
+  - `854130`: 854130 - Electrical apparatus; thyristors, diacs and triacs, other than photosensitive devices
+  - `854140`: 854140 - Electrical apparatus; photosensitive, including photovoltaic cells, whether or not assembled in modules or made up into panels, light-emitting diodes (LED)
+  - `854150`: 854150 - Electrical apparatus; photosensitive semiconductor devices n.e.c. in heading no. 8541, including photovoltaic cells, whether or not assembled in modules or made up into panels
+  - `854160`: 854160 - Crystals; mounted piezo-electric
+  - `854190`: 854190 - Electrical apparatus; parts for diodes, transistors and similar semiconductor devices and photosensitive semiconductor devices
 - Heading `8542`: 5 HS6 leaf code(s) found
-  - `854231` -- 854231 - Electronic integrated circuits; processors and controllers, whether or not combined with memories, converters, logic circuits, amplifiers, clock and timing circuits, or other circuits
-  - `854232` -- 854232 - Electronic integrated circuits; memories
-  - `854233` -- 854233 - Electronic integrated circuits; amplifiers
-  - `854239` -- 854239 - Electronic integrated circuits; n.e.c. in heading no. 8542
-  - `854290` -- 854290 - Parts of electronic integrated circuits
+  - `854231`: 854231 - Electronic integrated circuits; processors and controllers, whether or not combined with memories, converters, logic circuits, amplifiers, clock and timing circuits, or other circuits
+  - `854232`: 854232 - Electronic integrated circuits; memories
+  - `854233`: 854233 - Electronic integrated circuits; amplifiers
+  - `854239`: 854239 - Electronic integrated circuits; n.e.c. in heading no. 8542
+  - `854290`: 854290 - Parts of electronic integrated circuits
 - Heading `8486`: 5 HS6 leaf code(s) found
-  - `848610` -- 848610 - Machines and apparatus of a kind used solely or principally for the manufacture of semiconductor boules or wafers
-  - `848620` -- 848620 - Machines and apparatus of a kind used solely or principally for the manufacture of semiconductor devices or of electronic integrated circuits
-  - `848630` -- 848630 - Machines and apparatus of a kind used solely or principally for the manufacture of flat panel displays
-  - `848640` -- 848640 - Machines and apparatus of a kind used solely or principally for the manufacture or repair of masks and reticles, assembling semiconductor devices or electronic integrated circuits, or for lifting, handling, loading or unloading items of heading 8486
-  - `848690` -- 848690 - Machines and apparatus of heading 8486; parts and accessories
+  - `848610`: 848610 - Machines and apparatus of a kind used solely or principally for the manufacture of semiconductor boules or wafers
+  - `848620`: 848620 - Machines and apparatus of a kind used solely or principally for the manufacture of semiconductor devices or of electronic integrated circuits
+  - `848630`: 848630 - Machines and apparatus of a kind used solely or principally for the manufacture of flat panel displays
+  - `848640`: 848640 - Machines and apparatus of a kind used solely or principally for the manufacture or repair of masks and reticles, assembling semiconductor devices or electronic integrated circuits, or for lifting, handling, loading or unloading items of heading 8486
+  - `848690`: 848690 - Machines and apparatus of heading 8486; parts and accessories
 
 ### Rare earths and permanent magnets (`rare_earths_and_magnets`)
 
 - Heading `2846`: 2 HS6 leaf code(s) found
-  - `284610` -- 284610 - Cerium compounds
-  - `284690` -- 284690 - Compounds, inorganic or organic (excluding cerium), of rare-earth metals, of yttrium, scandium or of mixtures of these metals
-- Explicit code `280530`: **EXISTS** -- 280530 - Earth-metals, rare; scandium and yttrium, whether or not intermixed or interalloyed
-- Explicit code `850511`: **EXISTS** -- 850511 - Magnets; permanent magnets and articles intended to become permanent magnets after magnetisation, of metal
+  - `284610`: 284610 - Cerium compounds
+  - `284690`: 284690 - Compounds, inorganic or organic (excluding cerium), of rare-earth metals, of yttrium, scandium or of mixtures of these metals
+- Explicit code `280530`: **EXISTS**: 280530 - Earth-metals, rare; scandium and yttrium, whether or not intermixed or interalloyed
+- Explicit code `850511`: **EXISTS**: 850511 - Magnets; permanent magnets and articles intended to become permanent magnets after magnetisation, of metal
 
 All explicitly named codes from PROJECT_BRIEF.md section 3 exist in the live HS2017 (H5) list. Family headings resolved to the leaf codes above.
 
@@ -46,11 +46,11 @@ All explicitly named codes from PROJECT_BRIEF.md section 3 exist in the live HS2
 
 - Classification vintage by year (reporter USA): H0: 1991-1995, H1: 1996-2001, H2: 2002-2006, H3: 2007-2011, H4: 2012-2016, H5: 2017-2021, H6: 2022-2025
 
-**Finding:** US import data under the project's chosen HS2017 (H5) classification runs through 2021 only. Years 2022-2025 are reported under a newer revision. Querying the H5-tagged endpoint for those later years returns zero rows rather than converted data -- Comtrade does not silently reclassify. This is the HS concordance problem named in PROJECT_BRIEF.md section 6, arriving one revision earlier than the brief's stated backward-only H4 enhancement anticipated. Extending this project's year range past 2021 requires the bridge table, not a wider H5 query.
+**Finding:** US import data under the project's chosen HS2017 (H5) classification runs through 2021 only. Years 2022-2025 are reported under a newer revision. Querying the H5-tagged endpoint for those later years returns zero rows rather than converted data. Comtrade does not silently reclassify. This is the HS concordance problem named in PROJECT_BRIEF.md section 6, arriving one revision earlier than the brief's stated backward-only H4 enhancement anticipated. Extending this project's year range past 2021 requires the bridge table, not a wider H5 query.
 
 ## 3. Import value and record count per surviving code, 2018-2021
 
-Pulled for 2018-2021 only -- the overlap between the brief's requested start year and the last year with native H5 data (see finding above). One batched Comtrade call per year covers every surviving code.
+Pulled for 2018-2021 only, the overlap between the brief's requested start year and the last year with native H5 data (see finding above). One batched Comtrade call per year covers every surviving code.
 
 | Code | Basket | 2018 | 2019 | 2020 | 2021 | Total value (USD) | Flag |
 |---|---|---|---|---|---|---|---|---|
@@ -81,11 +81,11 @@ No surviving code fell below the $1,000,000 cumulative-value floor.
 
 ## 4. PortWatch FeatureServer pagination
 
-Chokepoint tested: **Strait of Malacca** (`chokepoint5`) -- the chokepoint PROJECT_BRIEF.md section 6 identifies as most relevant to both baskets.
+Chokepoint tested: **Strait of Malacca** (`chokepoint5`), the chokepoint PROJECT_BRIEF.md section 6 identifies as most relevant to both baskets.
 
 - Pages fetched: 3 (rows per page: [1000, 1000, 806])
 - Total daily rows retrieved: 2806
-- Pagination confirmed working: yes -- layer `maxRecordCount` is 1000, and this chokepoint alone exceeds one page.
+- Pagination confirmed working: yes. Layer `maxRecordCount` is 1000, and this chokepoint alone exceeds one page.
 
 Columns returned:
 

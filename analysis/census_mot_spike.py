@@ -15,19 +15,19 @@ Two Census timeseries endpoints:
 Both endpoints are monthly (_MO fields) but also expose year-to-date (_YR)
 fields. Querying December of each year with the _YR fields gives the full
 calendar-year total in one row per code/country/port, instead of pulling and
-summing 12 months -- a standard Census API convention, not a shortcut
+summing 12 months, a standard Census API convention, not a shortcut
 specific to this script.
 
 This dataset has no explicit "land" or "truck" value field: only General
 (GEN, the total), Air (AIR), Vessel (VES), and Containerized-vessel (CNT, a
 subset of VES). Land-border and any other non-air/non-vessel mode is
-reported here as the residual GEN - AIR - VES, and labelled as such --
+reported here as the residual GEN - AIR - VES, and labelled as such:
 inferred, not measured directly.
 
 Two API gotchas, found by running this against the real endpoint (see
 verification_round2.md task 3 for the full trail):
   1. Comma-joined I_COMMODITY (batching multiple codes in one call, the way
-     Comtrade's cmdCode works) returns HTTP 204 here -- not supported. Each
+     Comtrade's cmdCode works) returns HTTP 204 here, not supported. Each
      code is pulled in its own call instead, over a full 2018-2025 time
      range rather than looping per year.
   2. Rows come back mixing real per-country/per-port detail (SUMMARY_LVL=
@@ -39,7 +39,7 @@ verification_round2.md task 3 for the full trail):
      downstream share/reconciliation number is wrong.
 
 This is a spike: read-only, no dbt/Postgres, does not touch ingest/comtrade.py
-(which doesn't exist yet) or day1_verification.py.
+(which doesn't exist yet) or verification_round1.py.
 
 Usage: .venv/bin/python analysis/census_mot_spike.py
 """
@@ -70,7 +70,7 @@ YEARS = list(range(2018, 2026))  # 2018 to 2025 inclusive
 AIR_SHARE_FLAG_THRESHOLD = 0.20
 
 # The 22 HS6 codes confirmed against the live HS2017 (H5) list in
-# analysis/day1_verification.py / analysis/verification_findings.md.
+# analysis/verification_round1.py / analysis/verification_round1_findings.md.
 CANDIDATE_CODES = [
     "280530", "284610", "284690",
     "848610", "848620", "848630", "848640", "848690",
@@ -80,7 +80,7 @@ CANDIDATE_CODES = [
 ]
 
 # Ports are classified by matching keywords against PORT_NAME (a readable
-# string like "Los Angeles, CA"), not by parsing the numeric PORT code --
+# string like "Los Angeles, CA"), not by parsing the numeric PORT code.
 # CBP port codes don't cleanly encode region the way a first-N-digits scheme
 # would suggest, and a name match is self-documenting and easy to audit.
 # Coverage is deliberately not exhaustive: anything that matches nothing
@@ -123,7 +123,7 @@ def region_for_port(port_name: str) -> str:
 # --------------------------------------------------------------------------
 # Corrections (see verification_round2.md "Corrections" section): PORT_NAME
 # keyword matching above put land-border crossings like Otay Mesa in
-# "Unclassified" -- their PORT_NAME strings don't reliably contain a state
+# "Unclassified": their PORT_NAME strings don't reliably contain a state
 # abbreviation or a matched city keyword the way "Los Angeles, CA" does, and
 # nothing in that scheme could tell a real coastal seaport apart from an
 # inland examination station that happens to share a district with one.
@@ -233,7 +233,7 @@ def _fetch_json(cache_name: str, url: str, params: dict) -> list:
     api_key = params.get("key", "")
     resp = requests.get(url, params=params, timeout=120)
     # Census puts the key in the query string (no header-auth option), and
-    # error bodies/URLs can echo the full request back -- redact before this
+    # error bodies/URLs can echo the full request back, so redact before this
     # ever reaches an exception message, a log, or stdout.
     safe_text = resp.text[:500].replace(api_key, "***REDACTED***") if api_key else resp.text[:500]
     if resp.status_code in (401, 403):
@@ -243,8 +243,8 @@ def _fetch_json(cache_name: str, url: str, params: dict) -> list:
         )
     if resp.status_code != 200:
         raise RuntimeError(
-            f"Census API call for {cache_name} failed: HTTP {resp.status_code} "
-            f"-- {safe_text}"
+            f"Census API call for {cache_name} failed: HTTP {resp.status_code}: "
+            f"{safe_text}"
         )
     payload = resp.json()
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -272,18 +272,18 @@ def _december_detail_rows(payload: list) -> list[dict]:
 
     Two layers of aggregate rows turned up, both needing exclusion:
 
-    1. SUMMARY_LVL='CGP' rows -- overlapping regional/grouping totals
+    1. SUMMARY_LVL='CGP' rows: overlapping regional/grouping totals
        ("ASIA", "EUROPEAN UNION", "PACIFIC RIM COUNTRIES", "USMCA (NAFTA)",
        etc.) that double- and triple-count individual countries. Excluded by
        requiring SUMMARY_LVL == 'DET'.
     2. A "TOTAL FOR ALL COUNTRIES" / "TOTAL FOR ALL PORTS" row that is
        *itself* tagged SUMMARY_LVL='DET' (CTY_CODE or PORT == '-',
-       SUMMARY_LVL2='HS' instead of the real rows' 'HSCY') -- summing DET
+       SUMMARY_LVL2='HS' instead of the real rows' 'HSCY'). Summing DET
        rows without excluding this sentinel silently doubles the total,
        since this one row's value already equals the sum of every other DET
        row. Confirmed live: for HS 854231 / 2018, the 96 real DET country
        rows summed to $21,556,458,087, and the CTY_CODE='-' row's own value
-       was also exactly $21,556,458,087 -- and that number reconciles to
+       was also exactly $21,556,458,087. That number reconciles to
        Comtrade's cached $21,619,335,521 for the same code/year within
        0.29%. Excluded by dropping CTY_CODE == '-' / PORT == '-'.
     """
@@ -299,7 +299,7 @@ def _december_detail_rows(payload: list) -> list[dict]:
 
 
 def pull_hs_annual(api_key: str) -> list[dict]:
-    """imports/hs, per code (comma-joined I_COMMODITY returns 204 -- doesn't
+    """imports/hs, per code (comma-joined I_COMMODITY returns 204, doesn't
     work for this endpoint, confirmed live), full 2018-2025 monthly range in
     one call per code, keeping December (year-to-date), detail-only rows."""
     all_rows = []
@@ -364,7 +364,7 @@ def compute_vessel_port_region_distribution(porths_vessel_rows: list[dict]) -> d
     """Per code, per year: share of VESSEL value (not total value) entering
     West Coast / East Coast / Gulf, using the official Schedule D port-code
     classifier. Land border, Interior/other, and Non-geographic buckets are
-    computed too (as a QA check -- ships shouldn't be arriving at a land
+    computed too (as a QA check, ships shouldn't be arriving at a land
     crossing) but are not part of the three columns the corrections asked for.
     """
     totals = defaultdict(lambda: defaultdict(float))
@@ -393,7 +393,7 @@ def compute_vessel_port_region_distribution(porths_vessel_rows: list[dict]) -> d
 def compute_official_land_border_share_of_gen(porths_rows: list[dict]) -> dict:
     """Per code: share of TOTAL (GEN_VAL_YR) import value entering through an
     officially-classified land-border port, using the same Schedule D
-    classifier -- for comparing against the mode-table residual (see
+    classifier, for comparing against the mode-table residual (see
     "Corrections" in verification_round2.md). Reuses the original
     GEN_VAL_YR-only porths pull (pull_porths_annual), just with the better
     classifier applied instead of the old PORT_NAME keyword match."""
@@ -416,7 +416,7 @@ def compute_official_land_border_share_of_gen(porths_rows: list[dict]) -> dict:
 def compute_residual_by_country(hs_rows: list[dict]) -> dict:
     """Per code: split the mode-table residual (GEN - AIR - VES) by whether
     it comes from Mexico/Canada (land-eligible) or every other country (not
-    land-eligible -- there is no other US land border). If the residual is
+    land-eligible: there is no other US land border). If the residual is
     genuinely land trade, it should be concentrated in Mexico/Canada; if it's
     spread across non-adjacent countries, it isn't land."""
     totals = defaultdict(lambda: defaultdict(float))
@@ -472,7 +472,7 @@ def check_porths_has_partner_country(api_key: str) -> tuple[bool, list[dict]]:
 
 def load_comtrade_world_values() -> dict[tuple[str, int], float]:
     """code,year -> Comtrade partnerCode=0 (World) primaryValue, from the
-    cached day1_verification.py pulls (2018-2021 only, H5-native years)."""
+    cached verification_round1.py pulls (2018-2021 only, H5-native years)."""
     values: dict[tuple[str, int], float] = {}
     for year in (2018, 2019, 2020, 2021):
         cache_file = CACHE_DIR / f"comtrade_final_C_A_HS_{year}.json"
