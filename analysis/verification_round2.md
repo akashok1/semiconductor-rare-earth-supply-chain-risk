@@ -1,6 +1,6 @@
 # Verification round 2
 
-Three verification tasks. Findings only -- no dbt, no Postgres, no pipeline changes.
+Three verification tasks. Findings only, no dbt, no Postgres, no pipeline changes.
 
 Generated: 2026-09-16, updated same day once `CENSUS_API_KEY` was added. All
 three tasks are fully measured below.
@@ -9,8 +9,8 @@ three tasks are fully measured below.
 
 ## Task 1: PortWatch vessel category aggregation
 
-**Method.** Pulled the full `Daily_Chokepoints_Data` table -- all 28
-chokepoints, all dates, not a sample -- via pagination (79 pages of up to
+**Method.** Pulled the full `Daily_Chokepoints_Data` table: all 28
+chokepoints, all dates, not a sample, via pagination (79 pages of up to
 1000 rows). 78,764 rows total, cached as `data/raw/portwatch_full_offset*.json`.
 Date range: 2019-01-01 to 2026-09-13 (today).
 
@@ -23,8 +23,8 @@ Date range: 2019-01-01 to 2026-09-13 (today).
 
 Zero nulls across any of the seven count fields, for all 78,764 rows. `n_cargo`
 is exactly the sum of the four non-tanker vessel types, and `n_total` is
-exactly `n_cargo + n_tanker`, with no exceptions anywhere in the dataset --
-no chokepoint and no date range breaks this.
+exactly `n_cargo + n_tanker`, with no exceptions anywhere in the dataset.
+No chokepoint and no date range breaks this.
 
 **capacity_* columns: not exact, but the gap is rounding noise, not a break.**
 
@@ -38,21 +38,21 @@ one-sided (the diff is never negative, and is bounded exactly as you'd expect
 from summing independently-rounded integers: up to +3 when summing four
 components, up to +1 when summing two). Median `capacity` value in the
 dataset is ~1.41 million; a diff of up to 3 against that is ~2x10⁻⁶ of the
-total -- consistent with each `capacity_*` subtype being rounded to the
+total, consistent with each `capacity_*` subtype being rounded to the
 nearest whole unit independently before the aggregate columns are also
 independently rounded, not a data quality problem. The mismatch rate is
 spread broadly across nearly every chokepoint at similar proportions (e.g.
 Dover, Gibraltar, Korea, Taiwan, Malacca Straits all show ~2,500-2,700
 mismatched rows out of ~2,813 total rows each) rather than concentrated in a
-specific chokepoint or date range -- another point against a schema break and
+specific chokepoint or date range, another point against a schema break and
 for rounding.
 
 **Does the vessel-type breakdown exist for the whole history?**
 
 Yes, for all 28 chokepoints, with no exception. For every chokepoint, the
 first date with a non-null `n_container` (and separately, `capacity_container`)
-is identical to that chokepoint's own earliest available date -- 2019-01-01
-across the board. There is no cutover date and no schema change: the
+is identical to that chokepoint's own earliest available date: 2019-01-01
+across the board. There is no cutover date and no schema change. The
 vessel-type breakdown has existed since day one of the PortWatch series, not
 added later. This was measured directly (`groupby(portid)` earliest
 non-null date vs. earliest date overall, for all 28 chokepoints), not assumed.
@@ -62,7 +62,7 @@ non-null date vs. earliest date overall, for all 28 chokepoints), not assumed.
 ## Task 2: Comtrade mode of transport for reporter USA
 
 **Method.** Queried Comtrade's combined `HS` classification endpoint
-(auto-resolves native vintage per year -- H5 for 2018-2021, H6 for 2022+),
+(auto-resolves native vintage per year: H5 for 2018-2021, H6 for 2022+),
 reporter USA (842), flow M (imports), for 5 codes (854231, 850511, 280530,
 848620, 854110) across 5 years spanning the full range (2018, 2020, 2022,
 2024, 2025).
@@ -77,10 +77,10 @@ reporter USA (842), flow M (imports), for 5 codes (854231, 850511, 280530,
   `1000` = Air, `2000/2100/2200/2900` = Water family, `3000/3100/3200/3900` =
   Land family, `9000`-series = other. Queried HS 854231, USA, 2023 with each
   of `motCode=1000` (Air), `2100` (Sea), `2000` (Water), `3000` (Land)
-  explicitly: **all four returned HTTP 200 with zero rows** -- a valid,
+  explicitly: **all four returned HTTP 200 with zero rows**, a valid,
   well-formed query, just no matching data. (An earlier attempt using
   `motCode=1` and `motCode=4`, guessed from memory rather than the reference
-  list, correctly came back HTTP 400 "the field motCode is invalid" -- those
+  list, correctly came back HTTP 400 "the field motCode is invalid": those
   aren't real codes at all, which is a different thing from "valid code, no
   data," and is why the reference list was checked before drawing any
   conclusion.)
@@ -89,7 +89,7 @@ reporter USA (842), flow M (imports), for 5 codes (854231, 850511, 280530,
 breakdown to Comtrade.** Every USA import record in this dataset, across
 every code, year, and partner tested, carries `motCode=0` (TOTAL modes of
 transport) only. Requesting a specific real mode returns a valid empty
-result, not an error and not hidden data -- the breakdown genuinely doesn't
+result, not an error and not hidden data. The breakdown genuinely doesn't
 exist at the reporter level for USA. This is a hard dead end for getting
 mode-of-transport from Comtrade directly, which is exactly why task 3 goes
 to the Census Bureau's own trade API instead.
@@ -100,11 +100,11 @@ to the Census Bureau's own trade API instead.
 
 **Method.** `analysis/census_mot_spike.py`, run against the live Census
 international trade timeseries API (`CENSUS_API_KEY` now set). Two real bugs
-surfaced and were fixed before these numbers are trustworthy -- both are
+surfaced and were fixed before these numbers are trustworthy, both are
 worth recording since they're easy to hit again:
 
 1. **Comma-joined `I_COMMODITY` doesn't work on this API** the way Comtrade's
-   `cmdCode` does -- a batched request for all 22 codes at once returned
+   `cmdCode` does. A batched request for all 22 codes at once returned
    HTTP 204 (no content), confirmed directly by testing a 3-code batch in
    isolation. Fixed by looping one call per code (22 calls), each covering
    the full 2018-2025 monthly range in one shot (`time=from 2018-01 to
@@ -123,7 +123,7 @@ worth recording since they're easy to hit again:
    that sentinel row alongside the real countries it's already the sum of.
    Caught by cross-checking: for HS 854231 / 2018, the naive unfiltered sum
    was $125.4B; `DET`-only (including the sentinel) was $43.1B, exactly 2x
-   a second number; the 96 real per-country `DET` rows excluding the `"-"`
+   a second number. The 96 real per-country `DET` rows excluding the `"-"`
    sentinel summed to exactly $21,556,458,087, matching both the sentinel
    row's own value *and* the `imports/porths` endpoint's independently
    computed total for the same code/year to the dollar, and reconciling
@@ -159,35 +159,35 @@ worth recording since they're easy to hit again:
 | 854239 | $77.34B | 85.6% | 1.1% | 0.1% | 13.2% | 2018-2025 |
 | 854290 | $2.54B | 90.9% | 6.3% | 0.5% | 2.3% | 2018-2025 |
 
-**All 22 candidate codes exceed 20% air share** -- from 284610 at 20.4% (just
+**All 22 candidate codes exceed 20% air share**, from 284610 at 20.4% (just
 over) up to 854150 at 98.4%. This is not a marginal finding: most of the
 semiconductor-basket codes clear 70-98% by air, and even the rare-earth/magnet
 basket (280530, 284610, 284690, 850511) runs 20-53%. Air freight doesn't
-transit a maritime chokepoint at all -- it flies over. **This bears directly
+transit a maritime chokepoint at all, it flies over. **This bears directly
 on the project's exposure model**: for codes at 90%+ air share, a
 Malacca/Suez/Panama-style chokepoint closure barely touches the actual
 physical flow of that product, whatever its concentration score says. Worth
 raising as a scope question before the exposure mart is built, not after.
 
-854140 and 854150 stop at 2021 -- consistent with the Day 1 finding that
-these two HS2017 codes were split into six new HS2022 subheadings
-(854141/142/143/149/151/159), so the old 6-digit codes genuinely have no
-2022+ data under Census's current classification either. Same break, seen
-independently through a second data source.
+854140 and 854150 stop at 2021, consistent with the verification round 1
+finding that these two HS2017 codes were split into six new HS2022
+subheadings (854141/142/143/149/151/159), so the old 6-digit codes genuinely
+have no 2022+ data under Census's current classification either. Same
+break, seen independently through a second data source.
 
 Per-year detail (not just the 2018-2025 combined figure above) is cached in
 `data/raw/census_hs_annual_<code>.json` and summarized in
-`data/raw/census_mot_spike_metrics.json` under `mode_shares_per_code_year` --
-worth a look before finalizing the exposure model, since a few codes swing
+`data/raw/census_mot_spike_metrics.json` under `mode_shares_per_code_year`.
+Worth a look before finalizing the exposure model, since a few codes swing
 a lot year to year (e.g. 854233 goes from ~48% air in 2018-2019 to 95-97%
 from 2021 on; 854190 drifts from 66% down to 15%).
 
 ### 2. Import value by US port-of-entry region, per code
 
 Ports classified by matching keywords against `PORT_NAME` (not the numeric
-port code -- confirmed live these don't cleanly encode region). "Unclassified"
+port code, confirmed live these don't cleanly encode region). "Unclassified"
 is explicit, not force-fitted, and this time it's a legitimate small-to-moderate
-residual, not a hidden aggregate row (see the bug note above) -- mostly
+residual, not a hidden aggregate row (see the bug note above): mostly
 interior US airports and inland customs stations (e.g. Chicago Midway,
 Denver, Dallas-Fort Worth) that don't belong to any of the four coastal/border
 buckets the task asked for. The full unclassified port-name list is in the
@@ -219,11 +219,11 @@ script's stdout / `data/raw/census_mot_spike_metrics.json`.
 | 854290 | 55.5% | 11.0% | 16.7% | 0.3% | 16.4% |
 
 West Coast dominates almost every code (30-77%), consistent with the air-share
-finding above -- LAX and SFO airports alone account for the two largest single
+finding above. LAX and SFO airports alone account for the two largest single
 port totals across the basket ($80B and $53B respectively, summed across
 codes), with Anchorage ($68B, a cargo-plane refueling/transfer hub) and
 Seattle-Tacoma airport ($21B) also in the top five. Land border is
-consistently under 2.2% for every code -- these two baskets essentially
+consistently under 2.2% for every code. These two baskets essentially
 don't cross by truck/rail, unlike the Mexico/Canada finding below, which is
 about specific *countries*, not these specific *products*.
 
@@ -238,7 +238,7 @@ cached). Gap = (Census - Comtrade) / Comtrade:
 | Min gap | -12.4% |
 | Max gap | +3.3% |
 
-Small and mostly slightly negative -- Census generally reads a little below
+Small and mostly slightly negative, Census generally reads a little below
 Comtrade. This is a tight enough band that it reads as ordinary
 cross-source noise (differing revision timing, minor customs-value vs.
 CIF-value conventions, rounding in Comtrade's own conversion) rather than a
@@ -257,7 +257,7 @@ Matched by `CTY_NAME` containing "CANADA" / "MEXICO" across all 22 codes,
 | Mexico | $15.52B | 4.3% | 0.17% | 95.5% |
 
 **Definitively land, for both.** Vessel share is essentially zero for each
-(0.04% and 0.17%) -- these two countries' trade in these 22 codes moves by
+(0.04% and 0.17%). These two countries' trade in these 22 codes moves by
 truck/rail or air, never by sea, which makes physical sense for contiguous
 land neighbors. Canada's meaningfully higher air share (25% vs. Mexico's 4%)
 is a secondary finding worth a second look later, not answered by this spike.
@@ -270,7 +270,7 @@ in live data (non-null real country names returned for HS 854231, 2023).
 ---
 
 All raw Census responses cached to `data/raw/` (`census_hs_annual_<code>.json`,
-`census_porths_annual_<code>.json`, one confirmatory partner-country check) --
+`census_porths_annual_<code>.json`, one confirmatory partner-country check),
 44 calls total, all now cached, so a re-run of the script costs nothing.
 Computed metrics (full per-year detail behind every table above) are in
 `data/raw/census_mot_spike_metrics.json`.
@@ -280,13 +280,13 @@ Computed metrics (full per-year detail behind every table above) are in
 ## Corrections (2026-09-17)
 
 Two problems in the task 3 sections above, found after review. Nothing
-above this line is changed -- these are additive fixes, computed by new
+above this line is changed. These are additive fixes, computed by new
 functions added to `analysis/census_mot_spike.py` (the original functions
 are untouched, so the numbers above still reproduce from their own cache).
 
 ### Problem 1: the port-of-entry table used total value, so airports dominated it
 
-Section 2 above ranks ports by `GEN_VAL_YR` -- total import value, every
+Section 2 above ranks ports by `GEN_VAL_YR`, total import value, every
 mode combined. Since task 1's finding was that most of this basket moves by
 air, that table was mostly measuring where planes land (LAX, SFO, Anchorage,
 Sea-Tac), not maritime routing. For a project about chokepoint exposure,
@@ -325,14 +325,14 @@ per code:
 
 West+East+Gulf now account for essentially all vessel value (land
 border and "other" both round to ~0.0% for every code, as physically
-expected -- ships don't dock at a truck crossing), so the three columns
+expected: ships don't dock at a truck crossing), so the three columns
 above are a clean, complete picture. West Coast still leads for most
 codes, but far less lopsidedly than the total-value table suggested, and a
 few codes actually skew East Coast or Gulf on a vessel basis (284690,
-854130, 854190, 854232) -- invisible in the original table because air
+854130, 854190, 854232), invisible in the original table because air
 volume swamped everything else there. Total vessel value per code is much
 smaller than total import value (e.g. 854231: $1.59B vessel vs. $196.73B
-total, ~0.8% -- consistent with the 0.8% combined vessel share task 1's
+total, ~0.8%, consistent with the 0.8% combined vessel share task 1's
 mode table already found for that code).
 
 ### Problem 2: port classification used PORT_NAME keywords; official codes needed for the residual question
@@ -343,8 +343,8 @@ from the official Census/CBP Schedule D port code list
 `data/raw/census_schedule_d_ports.txt`), keyed by the actual 4-digit `PORT`
 code rather than the free-text name. This matters for more than tidiness:
 a handful of CBP districts mix a coastal seaport with land-border crossings
-under the *same* district number, which no keyword scheme could resolve --
-district 25 (San Diego) contains the San Diego seaport itself, but also
+under the *same* district number, which no keyword scheme could resolve.
+District 25 (San Diego) contains the San Diego seaport itself, but also
 Otay Mesa, San Ysidro, Calexico, and Tecate (Mexico land crossings);
 district 30 (Seattle) contains the Seattle/Tacoma seaports and airport, but
 also Blaine, Sumas, Lynden, and eight other Canada crossings. Every port
@@ -353,13 +353,13 @@ suggested; specifically, `Otay Mesa` and the other land crossings under
 those two districts were falling into "Unclassified" in section 2's table
 above. The new classifier (`official_region_for_port_code()`) resolves each
 port by its own code first (explicit overrides for the mixed districts),
-falling back to its district's region otherwise -- full mapping and
+falling back to its district's region otherwise. Full mapping and
 per-district reasoning is in the script.
 
 **Reconciling the residual.** The mode table (task 3, section 1 above)
 reports `GEN - AIR - VES` as a residual and labels it "land/other,
 inferred." Section 2's old table showed land-border ports capturing under
-2.2% of value for every code, while some codes' residuals ran past 20% --
+2.2% of value for every code, while some codes' residuals ran past 20%,
 a real contradiction if the residual is supposed to be land trade. With
 the corrected classifier, applied to the same `GEN_VAL_YR` port data used in
 section 2 (no new pulls needed, just a better classifier over what was
@@ -392,7 +392,7 @@ already cached):
 
 **Conclusion: the residual is genuinely land, for every code.** The gap
 between the mode-table residual and the official land-border port share is
-under 2 percentage points for all 22 codes, most under 1 -- the two
+under 2 percentage points for all 22 codes, most under 1. The two
 independent measurements (one from country-level mode fields, one from
 port-of-entry geography) agree almost exactly. The earlier apparent
 contradiction was entirely the old port classifier's fault (`Otay Mesa` and
@@ -409,14 +409,14 @@ elsewhere (Asia, per the basket's dominant supplier countries) moving by
 sea to a Mexican or Canadian port, then completing the final leg into the
 US by truck or rail, with Census attributing the value to the true country
 of origin rather than the transshipment point. That's a real, useful
-finding for the routing matrix -- "land border" as an entry mode doesn't
+finding for the routing matrix: "land border" as an entry mode doesn't
 mean "Mexico/Canada" as the supplying country, and the two shouldn't be
 conflated when the exposure model gets built.
 
 ---
 
 `data/reference/mode_shares.csv` and `data/reference/port_entry_shares.csv`
-are committed -- the routing matrix's Census inputs. 168 rows each (22
+are committed, the routing matrix's Census inputs. 168 rows each (22
 codes x 8 years, minus 854140/854150's 4 missing years x 2 codes). New raw
 pulls cached: `census_porths_vessel_<code>.json` (22 calls, `VES_VAL_YR`
 added) and `census_schedule_d_ports.txt` (the official port list, 1 call).

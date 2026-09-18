@@ -4,7 +4,7 @@ This is the other half of the routing-matrix problem named in PROJECT_BRIEF.md
 section 6 ("Product-to-chokepoint routing"): Comtrade gives us origin
 countries, PortWatch gives us chokepoint traffic, but nothing links a specific
 shipment to a specific chokepoint. This spike tests whether `searoute` (a
-shortest-sea-route library) can supply that link -- compute a route between a
+shortest-sea-route library) can supply that link: compute a route between a
 real origin and US destination port, then check which PortWatch chokepoints
 that route passes near.
 
@@ -12,7 +12,7 @@ Method: for each origin/destination pair, compute the shortest sea route with
 `searoute`, then for every PortWatch chokepoint compute the haversine distance
 from the chokepoint to the NEAREST VERTEX on the route polyline. A chokepoint
 "crosses" the route if that nearest-vertex distance is <= 200km. This is a
-coarse proxy -- vertex spacing on long open-ocean segments can be hundreds of
+coarse proxy. Vertex spacing on long open-ocean segments can be hundreds of
 km, so a route can pass close to a chokepoint between two vertices without
 either vertex itself being within 200km. See the caveat in the findings file.
 
@@ -43,7 +43,7 @@ CHOKEPOINTS_LAYER_URL = (
 PROXIMITY_THRESHOLD_KM = 200
 EARTH_RADIUS_KM = 6371.0088
 
-# [lon, lat] -- searoute's coordinate order. Port-area coordinates from
+# [lon, lat], searoute's coordinate order. Port-area coordinates from
 # general geographic knowledge, not pulled from a ports database; precision
 # to a few km is well inside the 200km proximity threshold used below.
 ORIGIN_PORTS = {
