@@ -110,6 +110,53 @@ by a measurement.
 | The unexplained residual in Census mode data might not be land trade | Compared the residual against land border port share computed from official Schedule D codes | The two independent measurements agree within 2 percentage points for all 22 codes | Residual confirmed as land trade. Accounting closes: air plus vessel plus land equals total |
 | Port coordinates entered by hand are good enough inside a 200km threshold | Replaced with coordinates resolved from the UN/LOCODE dataset for all 15 origins and both US destinations | Coordinates now sourced and citable | No hand entered coordinate remains in the project. Which port represents each country is still an editorial choice, recorded in the script |
 
+### 3.1 Proximity threshold sensitivity, geometric half (D-8, BR-10)
+
+A-7's 200km proximity threshold was re-tested at 50, 100, 200 and 300km
+against the existing `routing_matrix.csv` (15 origins x 2 US coasts x 28
+chokepoints, 840 rows), using only the `min_distance_km` column already
+computed there. No re-run of `searoute`, no network calls.
+
+Chokepoints crossed by at least one of the 30 routes, by threshold:
+
+| Chokepoint | 50km | 100km | 200km | 300km |
+|---|---|---|---|---|
+| Panama Canal | 10 | 10 | 10 | 10 |
+| Gibraltar Strait | 7 | 7 | 7 | 7 |
+| Windward Passage | 7 | 7 | 7 | 7 |
+| Malacca Strait | 5 | 5 | 6 | 7 |
+| Suez Canal | 5 | 5 | 5 | 5 |
+| Bab el-Mandeb Strait | 5 | 5 | 5 | 5 |
+| Taiwan Strait | 2 | 4 | 4 | 7 |
+| Korea Strait | 0 | 4 | 4 | 4 |
+| Tsugaru Strait | 4 | 4 | 4 | 4 |
+| Luzon Strait | 0 | 3 | 3 | 5 |
+| Mona Passage | 3 | 3 | 3 | 3 |
+| Mindoro Strait | 0 | 0 | 2 | 2 |
+| Dover Strait | 1 | 1 | 1 | 1 |
+| Oresund Strait | 0 | 0 | 0 | 2 |
+| Total chokepoints crossed | 10 | 12 | 13 | 14 |
+
+Panama Canal, Gibraltar Strait, Windward Passage, Suez Canal and Bab
+el-Mandeb Strait are stable across the whole 50 to 300km range: same crossing
+count at every threshold tested. Taiwan Strait (2, 4, 4, 7), Korea Strait (0,
+4, 4, 4) and Luzon Strait (0, 3, 3, 5) are threshold sensitive, moving in and
+out of the crossing set as the radius changes.
+
+Those three are exactly the Pacific chokepoints on East Asia to US West
+Coast routes (see §3's routing table above), which is where the
+photovoltaic value in this project's baskets travels. The threshold
+parameter therefore matters most precisely where the modelled exposure is
+largest, which is the opposite of a case where the parameter choice would be
+immaterial.
+
+This is the geometric half of D-8 only: which chokepoints a route crosses at
+each threshold. No exposure weighting (partner share, vessel share, coast
+share) has been applied to these counts, so this table cannot yet say
+whether or how the exposure *ranking* changes across thresholds, only which
+chokepoints enter or leave the crossing set. That ranking question stays
+open until `fct_exposure` exists.
+
 ---
 
 ## 4. Assumptions still standing
@@ -317,7 +364,7 @@ State these before anyone asks.
 
 - ~~Verify that the HS2017 to HS2022 split of 854140 and 854150 is a clean partition, using the UN correlation tables. Check that summed H6 value for 2022 is continuous with H5 value for 2021.~~ Done, see sections 6.1 and 6.2. 854140 is a clean 4-way partition per the correlation table. 854150 is not resolvable via the correlation table at all (it names 851712 as predecessor of both successors); resolved empirically by value continuity instead.
 - Record the current DOJ and FTC Merger Guidelines version and its HHI threshold bands.
-- Build `basket_selection.csv` recording, per candidate code, the external list it appears on, the US net import reliance figure where published, and the decision to include or exclude.
+- Populate `candidate_source`, `us_net_import_reliance_pct` and `decision_basis` in `basket_selection.csv`, recording per candidate code the external list it appears on, the US net import reliance figure where published, and the basis for the decision to include or exclude.
 - Sensitivity test the 200km proximity threshold at the exposure mart, reporting whether the exposure ranking changes at 50, 100, 200 and 300km. This satisfies deliverable D-8 and requirement BR-10.
 - Run the concentration series across all years once the bridge table exists. No trend has been measured yet, so the question of whether concentration worsened after the 2025 Chinese export restrictions is still open.
 - Encode the vintage-break value-continuity check (section 6.2) as a dbt test once the dbt project exists: summed H6 value for a canonical product's first H6 year against its last H5 year, flagged past a tolerance. Satisfies BR-13.

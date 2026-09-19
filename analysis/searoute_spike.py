@@ -54,6 +54,7 @@ import csv
 import io
 import json
 import math
+import sys
 from pathlib import Path
 
 import pyproj
@@ -62,6 +63,10 @@ import searoute as sr
 from shapely.geometry import LineString, Point
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
+from ingest.reference import DEFAULT_THRESHOLD_KM  # noqa: E402
+
 CACHE_DIR = REPO_ROOT / "data" / "raw"
 FINDINGS_PATH = REPO_ROOT / "analysis" / "searoute_spike_findings.md"
 
@@ -74,7 +79,7 @@ UN_LOCODE_IMPROVED_URL = (
     "data/code-list-improved.csv"
 )
 
-PROXIMITY_THRESHOLD_KM = 200
+PROXIMITY_THRESHOLD_KM = DEFAULT_THRESHOLD_KM
 EARTH_RADIUS_KM = 6371.0088
 
 # (UN/LOCODE country, UN/LOCODE location, display label). The five original

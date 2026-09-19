@@ -96,14 +96,29 @@ responses to `data/raw/` and writes a findings report to `analysis/`):
 .venv/bin/python analysis/census_mot_spike.py       # mode of transport, port of entry
 ```
 
+Or run the two committed pipeline steps directly, which write to
+`data/reference/` rather than to a findings report:
+
+```bash
+.venv/bin/python -m ingest.reference    # port/chokepoint coordinates, routing_matrix.csv
+.venv/bin/python -m ingest.hs_bridge    # HS2017/HS2022 bridge table, hs_bridge.csv
+```
+
 The two Jupyter notebooks under `notebooks/` (`01_first_look.ipynb` for
 Comtrade, `02_portwatch_look.ipynb` for PortWatch) are exploratory scratchpads,
 not part of the pipeline; open them with the `.venv` kernel to follow the same
 exploration path interactively.
 
 `data/reference/mode_shares.csv` and `data/reference/port_entry_shares.csv`
-are committed outputs of the Census spike, the inputs the routing matrix will
-consume. `data/raw/` is gitignored and rebuilds from source on first run.
+are committed outputs of the Census spike. `data/reference/routing_matrix.csv`,
+`port_coordinates.csv`, and `chokepoint_coordinates.csv` are committed outputs
+of `ingest/reference.py` (`.venv/bin/python -m ingest.reference`), and
+`data/reference/hs_bridge.csv` is a committed output of `ingest/hs_bridge.py`
+(`.venv/bin/python -m ingest.hs_bridge`). `data/reference/basket_selection.csv`
+is a hand-added scaffold, not yet produced by any script; its
+`candidate_source`, `us_net_import_reliance_pct`, and `decision_basis` columns
+are still blank. `data/raw/` is gitignored and rebuilds from source on first
+run.
 
 ## What this cannot support
 
@@ -115,8 +130,8 @@ consume. `data/raw/` is gitignored and rebuilds from source on first run.
   exists is per-code, per-year Comtrade pulls in the verification scripts.
 - **Chokepoint exposure is a geometric proxy, not a measured route.** It
   checks proximity between a computed shortest sea route and a chokepoint's
-  coordinates, coarsened further by using the route's nearest vertex rather
-  than the nearest point on the route line. A miss doesn't prove a route
+  coordinates, measured as the true nearest point on the route line (not just
+  its vertices), against a 200km threshold. A miss doesn't prove a route
   doesn't pass near a chokepoint.
 - **Mode-of-transport and port-of-entry data won't reconcile exactly to
   Comtrade.** The two sources track a few percent apart (see
