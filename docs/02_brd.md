@@ -4,7 +4,7 @@
 |---|---|
 | Project name | Import Concentration Risk |
 | Document ID | `docs/02_brd.md` |
-| Version | 1.1 |
+| Version | 1.2 |
 | Status | Rebaselined post-Verification |
 | Author | Akash A, Business Analyst |
 | Date | 2026-09-18 |
@@ -17,6 +17,7 @@
 | 0.1 | 2026-09-13 | Draft from project brief | Akash A |
 | 1.0 | 2026-09-14 | Baselined ahead of the Verification phase | Akash A |
 | 1.1 | 2026-09-18 | Rebaselined against Verification findings. BR-08 and BR-10 changed subject: routing is computed rather than assigned, and the sensitivity test now targets the proximity threshold. BR-06's hypothesis recorded as disproven. DR-5 retraced from BR-15 to BR-05, BR-12 and BR-13. BR-31 to BR-33 added for vessel share disclosure, concordance validation, and structural absence. Section 14 open questions OQ-1 to OQ-4 closed | Akash A |
+| 1.2 | 2026-09-18 | Basket asymmetry restated on value-weighted mode shares. BR-34 and BRULE-12 added: exposure is computed at commodity code grain because 854140's successors span 2.75 to 95.2 percent containerized vessel and a blended coverage figure would defeat BR-31. BR-07 and BR-24 amended to match. OQ-9 opened on photovoltaic scope | Akash A |
 
 > This document states **what the business needs and why**. It does not state how the solution is built. Models, tests, endpoints, and schemas live in the FRD. Every requirement here carries an ID that the traceability matrix uses to connect a business need to a functional specification, a test case, and a shipped artefact.
 >
@@ -32,13 +33,13 @@ This project delivers a measured concentration and exposure model for two produc
 
 The distinction that runs through this document: concentration is **measured**, exposure is **modelled**. Requirements are written so a reader can always tell which is which. Verification narrowed the modelled part considerably. Routing is now computed from shortest sea routes rather than assigned by judgement, and the mode and coast shares that scale it are measured from Census data. One free parameter remains, the 200km proximity threshold, and BR-10 exists for it.
 
-Verification also established that the two baskets behave differently. Semiconductors and semiconductor manufacturing equipment move 70 to 98 percent by air. Rare earths and permanent magnets move 57 to 75 percent by containerized vessel. Exposure is therefore a substantive measure for one basket and a marginal one for the other, and BR-31 exists so that a near zero exposure figure reads as a finding rather than as a defect.
+Verification also established that the baskets do not behave as assumed. Semiconductors and semiconductor manufacturing equipment are 75.1 percent air by value, 83.5 percent excluding photovoltaics, while the two photovoltaic codes inside that basket are 90.8 percent containerized vessel and account for $54.6B, more than ten times the rare earths and magnets basket at $5.0B. Exposure is therefore a substantive measure for some codes and a marginal one for others inside the same basket. BR-31 exists so that a near zero exposure figure reads as a finding rather than as a defect, and BR-34 exists so that exposure is computed at the grain its coverage is measured at.
 
 ## 2. Business context
 
 The committee buys two categories where supply is known anecdotally to be geographically narrow: semiconductors with their manufacturing equipment, and rare earths with permanent magnets. Both categories moved sharply in the trade policy environment of the last several years.
 
-How they travel was assumed in version 1.0 and measured during Verification. The assumption was that both baskets route predominantly through the South China Sea and the Strait of Malacca. That is wrong. Most semiconductor value flies. Of the value that sails, East Asia to US West Coast routes cross the open Pacific rather than Malacca. Across 30 tested origin and destination pairs, Panama is the most crossed chokepoint at 10, then Gibraltar and Windward Passage at 7, then Malacca at 6. The Pacific chokepoints that matter for these baskets are Taiwan Strait, Korea Strait, Tsugaru and Luzon. The Strait of Hormuz, which dominates chokepoint discussion in the trade press, is crossed by none of the 30 routes and is overwhelmingly tanker traffic.
+How they travel was assumed in version 1.0 and measured during Verification. The assumption was that both baskets route predominantly through the South China Sea and the Strait of Malacca. That is wrong twice over. Most semiconductor value flies, but not all of it: solar cells and modules are $54.6B at 90.8 percent containerized vessel, and they sit inside the semiconductor basket. And of the value that sails, East Asia to US West Coast routes cross the open Pacific rather than Malacca. Across 30 tested origin and destination pairs, Panama is the most crossed chokepoint at 10, then Gibraltar and Windward Passage at 7, then Malacca at 6. The Pacific chokepoints that matter for these baskets are Taiwan Strait, Korea Strait, Tsugaru and Luzon. The Strait of Hormuz, which dominates chokepoint discussion in the trade press, is crossed by none of the 30 routes and is overwhelmingly tanker traffic.
 
 The committee's existing view is limited to its own purchase orders. Purchase orders show the immediate vendor, not the upstream production base. A contract with a diversified distributor can sit on top of a single country of origin.
 
@@ -105,7 +106,7 @@ Priority uses MoSCoW. **M** must have for this release, **S** should have, **C**
 
 | ID | Requirement | Priority | Rationale | Acceptance criteria | Traces to |
 |---|---|---|---|---|---|
-| BR-07 | The solution shall produce an exposure score for each product against each in scope maritime chokepoint | M | The committee needs to connect a dependency to a physical route | Score present for every product and chokepoint pair in scope, including pairs where no route crosses. A computed zero is published as a finding, not omitted | BO-2, SN-2 |
+| BR-07 | The solution shall produce an exposure score for each commodity code against each in scope maritime chokepoint | M | The committee needs to connect a dependency to a physical route. **Changed in 1.2:** the grain is commodity code rather than canonical product, per BR-34 | Score present for every code and chokepoint pair in scope, including pairs where no route crosses. A computed zero is published as a finding, not omitted | BO-2, SN-2 |
 | BR-08 | The solution shall compute routing from shortest sea routes between sourced port coordinates and published chokepoint coordinates, and commit the result as inspectable reference data | M | **Changed in 1.1.** Version 1.0 required a hand assigned routing assumption matrix with a stated basis per row, on the grounds that no source links products to routes. Verification established that routes can be computed, which removes the project's largest subjective input. The requirement to make it inspectable and editable without touching logic is unchanged | `routing_matrix.csv` committed with one row per origin, destination and chokepoint combination including non-crossings, carrying the measured distance and the threshold applied. Port and chokepoint coordinates committed with their source recorded per row | BO-2, SN-5 |
 | BR-09 | The solution shall state explicitly that exposure is a modelled estimate, naming what it ignores | M | Presenting a modelled figure as a measured one destroys the credibility of the measured figures next to it | Statement present on the dashboard, in the README, and in the assumptions and limitations document. It names, at minimum: routing substitution and carrier behaviour, transshipment, air freight which is not routed, land trade which has no maritime exposure, and the use of one representative port per country | BO-2, SN-5 |
 | BR-10 | The solution shall report how much the exposure ranking changes when the proximity threshold is varied | M | **Changed in 1.1.** Version 1.0 varied the routing weights, which no longer exist as a free input. The threshold is now the only free parameter in the routing computation, and a ranking that flips under a small change in it is not a basis for spending money | Sensitivity result published showing the exposure ranking at 50, 100, 200 and 300km, with any change in rank order named explicitly | BO-2, SN-5 |
@@ -137,7 +138,7 @@ Priority uses MoSCoW. **M** must have for this release, **S** should have, **C**
 |---|---|---|---|---|---|
 | BR-22 | The solution shall deliver findings through an interactive dashboard reachable at a public URL without a login | M | Committee members and finance do not hold BI licences | URL loads for an anonymous visitor and renders all required views | BO-5, SN-6 |
 | BR-23 | The solution shall provide a spreadsheet scenario workbook allowing a user to vary key parameters and see the effect | M | The committee's own modelling happens in spreadsheets; a leave behind gets used, a dashboard gets looked at once | Workbook contains named parameter cells, input validation, a two variable data table, lookup driven outputs, and conditional formatting | BO-5, SN-4 |
-| BR-24 | The solution shall present the top exposed products in a single view answering the renewal decision directly | M | The committee has one decision; the default view should answer it without configuration | Landing view ranks products by concentration and exposure without the user changing a filter, and shows vessel share coverage beside each exposure figure so the two baskets are not compared on a measure that applies unequally | BO-1, BO-2, SN-3, SN-7 |
+| BR-24 | The solution shall present the top exposed products in a single view answering the renewal decision directly | M | The committee has one decision; the default view should answer it without configuration | Landing view ranks by concentration and exposure without the user changing a filter, and shows vessel share coverage beside each exposure figure so codes are not compared on a measure that applies unequally. Where a canonical product's codes differ materially in vessel coverage, the view shows them separately rather than blended | BO-1, BO-2, SN-3, SN-7 |
 | BR-25 | The solution shall provide an interactive scenario tool allowing the proximity threshold to be varied live | C | Useful in a meeting, not necessary for the decision. Subject changed in 1.1 in line with BR-10 | Tool deployed and linked | BO-2 |
 
 ### 8.6 Operation and reproducibility
@@ -154,9 +155,10 @@ Priority uses MoSCoW. **M** must have for this release, **S** should have, **C**
 
 | ID | Requirement | Priority | Rationale | Acceptance criteria | Traces to |
 |---|---|---|---|---|---|
-| BR-31 | The solution shall state, beside every exposure figure, what share of that product's import value travels by containerized vessel | M | Exposure covers only the seaborne share. Semiconductor codes run 70 to 98 percent air, one at 99.2 percent, so an exposure figure near zero is a correct finding about air freight and not a model failure. Without the coverage figure a reader cannot tell the two apart | Vessel share coverage present in the exposure mart and displayed wherever an exposure score is shown. The asymmetry between the two baskets stated on the dashboard and in the README | BO-2, BO-4, SN-7 |
+| BR-31 | The solution shall state, beside every exposure figure, what share of that commodity code's import value travels by containerized vessel | M | Exposure covers only the seaborne share, and that share ranges from 0.3 percent for 854159 to 95.2 percent for 854143. An exposure figure near zero for an air freighted code is a correct finding about air freight and not a model failure, and without the coverage figure a reader cannot tell the two apart | Vessel share coverage present in the exposure mart at commodity code grain and displayed wherever an exposure score is shown. The distribution across codes stated on the dashboard and in the README | BO-2, BO-4, SN-7 |
 | BR-32 | The solution shall validate every external concordance or reference mapping against trade value continuity before relying on it | M | Published concordances are not authoritative. The UN Stats HS2022 to HS2017 correlation table names an unrelated telephone code as sole predecessor of both HS2022 successors of 854150, which if trusted would have removed a $825M code from the series after 2021. It was caught only by checking the values | Every mapping in the bridge table carries its basis. Where a published table was overridden, the row states that the resolution is empirical and names the evidence. A continuity test across the vintage boundary runs as part of the build | BO-4, SN-5 |
 | BR-33 | The solution shall distinguish a structurally absent code from missing data | M | A code that retired in 2021 has no 2022 value, and a code introduced in 2022 has no 2018 value. Neither is a gap. Rendering them as gaps makes a complete series look broken and invites interpolation, which BRULE-7 forbids | A status field distinguishing active, retired and introduced codes is present in the bridge and carried into the marts. No dashboard view renders a structurally absent year as missing data | BO-3, BO-4, SN-7 |
+| BR-34 | The solution shall compute exposure at commodity code grain, not canonical product grain, and shall not blend vessel share coverage across codes whose measured mode shares diverge | M | **New in 1.2.** Mode share is measured per commodity code. 854140's four HS2022 successors range from 2.75 percent to 95.2 percent containerized vessel, so a single coverage figure for that canonical product would describe no physical object and would defeat BR-31. Concentration is unaffected: who supplies a product survives aggregation, how it travels does not | Exposure mart carries commodity code as a grain column. Vessel share coverage is never averaged across codes. A canonical product whose codes differ materially in vessel coverage displays exposure per code rather than as a single figure | BO-2, BO-4, SN-7 |
 
 ## 9. Data requirements
 
@@ -168,9 +170,9 @@ Priority uses MoSCoW. **M** must have for this release, **S** should have, **C**
 | DR-4 | A committed product basket definition mapping commodity codes to canonical products, with an include or exclude decision per candidate code | Required for BR-05 and BR-30 |
 | DR-5 | A committed concordance bridge between classification vintages, with a status field and a stated basis per row | **Retraced in 1.1.** Previously traced to BR-15 at priority C. US import data is HS2017 through 2021 and HS2022 from 2022, so without the bridge the series stops in 2021. Now required for BR-05, BR-12, BR-13, BR-32 and BR-33, all M |
 | DR-6 | A committed routing matrix with computed crossing results and measured distances, covering every origin, destination and chokepoint combination | **Changed in 1.1.** Previously a hand assigned matrix with a stated basis per row. Required for BR-07, BR-08 and BR-10 |
+| DR-9 | Measured mode of transport shares and port of entry shares per commodity code per year, covering air, vessel, containerized vessel, and the land residual | **New in 1.1.** Required for BR-07, BR-09, BR-31 and BR-34. Comtrade reports total mode of transport only for the US, so this must come from a second trade source. Held at commodity code grain and never averaged up |
 | DR-7 | Raw landed data held immutable and never edited in place | Required for BR-21 and BR-26 |
 | DR-8 | Threshold reference values with source and version recorded | Required for BR-04 |
-| DR-9 | Measured mode of transport shares and port of entry shares per commodity code per year, covering air, vessel, containerized vessel, and the land residual | **New in 1.1.** Required for BR-07, BR-09 and BR-31. Comtrade reports total mode of transport only for the US, so this must come from a second trade source |
 | DR-10 | Sourced geographic coordinates for origin ports, US destination ports, and chokepoints, each carrying its source | **New in 1.1.** Required for BR-08. No coordinate may be entered by hand without a recorded source |
 
 ## 10. Business rules
@@ -188,6 +190,7 @@ Priority uses MoSCoW. **M** must have for this release, **S** should have, **C**
 | BRULE-9 | A year in which a commodity code did not exist, or had already retired, is not a missing year and is not subject to BRULE-7 |
 | BRULE-10 | No external concordance or reference mapping is used without validation against the data it claims to describe. Where a published table conflicts with measured value continuity, the measurement wins and the override is recorded |
 | BRULE-11 | HHI for a canonical product spanning several commodity codes is computed on summed partner values across those codes. It is never the average of the component codes' HHIs |
+| BRULE-12 | Concentration aggregates to canonical product. Exposure does not. Vessel share coverage and coast share are measured per commodity code and are never averaged across codes within a canonical product |
 
 ## 11. Assumptions and constraints
 
@@ -248,6 +251,7 @@ Still open:
 | OQ-6 | Which threshold guideline version is current, and what are its bands? | Analyst | Measures | BR-04 |
 | OQ-7 | Does the exposure ranking hold at 50, 100 and 300km? | Analyst | Analysis and BI | BR-10 |
 | OQ-8 | Is 854151's jump from $18M to $179M in 2025 a real shift or a classification migration? | Analyst | Post release | BR-13, informational |
+| OQ-9 | Do photovoltaic codes 854142 and 854143 belong in the semiconductor basket for this stakeholder, or should they be a named third sub basket? They entered by exhaustive HS family enumeration, are $54.6B, and carry most of the project's seaborne exposure | Analyst | Analysis and BI | BR-24, BR-31, BR-34 |
 
 ## 15. Traceability
 
@@ -255,11 +259,13 @@ Every requirement ID in section 8 appears in `docs/05_traceability_matrix.md`, l
 
 BR-08, BR-10 and BR-25 changed subject at version 1.1 and kept their IDs. Any traceability link written against their 1.0 wording must be reread against the 1.1 wording before the matrix is closed.
 
+BR-07 and BR-24 changed grain at version 1.2, from canonical product to commodity code. Any traceability link written against their 1.1 wording must be reread against the 1.2 wording, and any test case asserting one exposure row per canonical product must be rewritten.
+
 ## 16. Approval
 
 | Role | Name | Date | Decision |
 |---|---|---|---|
-| Analyst and author | Akash A | 2026-09-18 | Rebaselined |
+| Analyst and author | Akash A | 2026-09-18 | Rebaselined at 1.2 |
 | Sponsor (simulated) | Supply chain risk committee | 2026-09-18 | Approved |
 
 > Simulated sign off. The stakeholder is a constructed scenario used to keep scope disciplined, stated plainly so nothing in this repository misrepresents itself as client work.

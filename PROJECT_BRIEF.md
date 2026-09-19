@@ -1,4 +1,4 @@
-# PROJECT BRIEF — Import Concentration Risk
+# PROJECT BRIEF: Import Concentration Risk
 
 **Owner:** Akash A
 **Repo:** `import-concentration-risk`
@@ -20,7 +20,7 @@ For a defined set of critical imported products, which ones does the United Stat
 
 The output is a supplier concentration and chokepoint exposure model, delivered as a tested data pipeline, a public dashboard, and a full set of business analysis artifacts.
 
-The two baskets answer different halves of that question. Semiconductors and SME move 70 to 98 percent by air, so their story is concentration, and their exposure figure covers a small minority of physical flow and is labelled as such wherever it appears. Rare earths and magnets move 57 to 75 percent by containerized vessel, so they carry the concentration and exposure story together. The asymmetry is a measured finding, not a gap in the build.
+The two baskets answer different halves of that question, with one large exception inside the first. Semiconductors and SME are 75.1 percent air by value, rising to 83.5 percent once photovoltaic codes are set aside, so their story is concentration. The exception is 854142 and 854143, solar cells and modules, which are 11 percent of that basket's value but 90.8 percent containerized vessel, and 854143 alone is $49.0B and the most vessel dominant code in the project. Rare earths and magnets are 58.4 percent containerized vessel on $5.0B. So the seaborne exposure story is solar first at $54.6B, magnets second at $5.0B, and integrated circuits barely at all: 854231 moves 0.8 percent by vessel against $196.73B total. The asymmetry is a measured finding, not a gap in the build.
 
 ## 2. Stakeholder framing (fictional, but treated as real)
 
@@ -42,7 +42,7 @@ Every requirement traces back to this decision. If something in the build does n
 | Dimension | In scope | Out of scope |
 |---|---|---|
 | Reporter (importer) | United States only | All other importers |
-| Partner (exporter) | All partners | — |
+| Partner (exporter) | All partners | None |
 | Products | 2 baskets, 22 verified HS6 codes, listed in `data/reference/basket_selection.csv` | All other HS codes |
 | Classification | HS2017 (H5) for 2018 to 2021 and HS2022 (H6) for 2022 onward, both required in the first release | Vintages before 2017 |
 | Years | 2018 to 2025 | Partial year 2026 |
@@ -51,8 +51,8 @@ Every requirement traces back to this decision. If something in the build does n
 
 **Baskets:**
 
-1. **Semiconductors and semiconductor manufacturing equipment** — HS 8541, 8542, 8486 families. 18 codes. Carries the concentration story. Exposure is published but covers the seaborne minority of its flow.
-2. **Rare earths and permanent magnets** — HS 280530, 284610, 284690, 850511. 4 codes. Carries both concentration and exposure.
+1. **Semiconductors and semiconductor manufacturing equipment.** HS 8541, 8542, 8486 families. 18 codes. Carries the concentration story. Exposure is published but covers the seaborne minority of its flow.
+2. **Rare earths and permanent magnets.** HS 280530, 284610, 284690, 850511. 4 codes. Carries both concentration and exposure.
 
 The original estimate of roughly 35 codes was arithmetic error, not a filter. The 8541, 8542, 8486 and 2846 families are exhaustively enumerated at HS6 and total 22 with 280530 and 850511. No candidate code was dropped for low value. All 22 were verified against the live Comtrade code list and cleared the value floor.
 
@@ -96,13 +96,13 @@ The original estimate of roughly 35 codes was arithmetic error, not a filter. Th
 - **Used for:** Determining which chokepoints a route between two ports passes near
 
 ### Reference data
-- **UN/LOCODE, improved republication** — origin and destination port coordinates. Official UN/LOCODE has no coordinates for several ports including Kaohsiung; the republication fills those gaps from OpenStreetMap and the fill is recorded per row.
-- **Census Schedule D port and district codes** — classifying US ports of entry into coastal regions and land borders. Classification by port name fails, because CBP districts mix seaports with land crossings under one district number.
-- **UN Stats HS correlation tables** — source for the concordance bridge. **Not authoritative.** See section 6.
-- **USGS Mineral Commodity Summaries / US Critical Minerals List** — grounds the rare earth basket selection
-- **DOE Critical Materials Assessment** — same purpose
-- **Commerce semiconductor supply chain review** — grounds the semiconductor basket selection
-- **US DOJ/FTC Merger Guidelines** — source for HHI concentration thresholds. Cite the version and year used.
+- **UN/LOCODE, improved republication**: origin and destination port coordinates. Official UN/LOCODE has no coordinates for several ports including Kaohsiung; the republication fills those gaps from OpenStreetMap and the fill is recorded per row.
+- **Census Schedule D port and district codes**: classifying US ports of entry into coastal regions and land borders. Classification by port name fails, because CBP districts mix seaports with land crossings under one district number.
+- **UN Stats HS correlation tables**: source for the concordance bridge. **Not authoritative.** See section 6.
+- **USGS Mineral Commodity Summaries / US Critical Minerals List**: grounds the rare earth basket selection
+- **DOE Critical Materials Assessment**: same purpose
+- **Commerce semiconductor supply chain review**: grounds the semiconductor basket selection
+- **US DOJ/FTC Merger Guidelines**: source for HHI concentration thresholds. Cite the version and year used.
 
 All API responses cache under `data/raw/` on first pull and are read from cache on rerun. `data/raw/` is immutable and gitignored. A rerun costs zero API calls.
 
@@ -147,6 +147,8 @@ canonical_product_id, hs_version, hs6_code, code_status, basket, notes, vintage_
 One canonical product maps to many HS codes across vintages. `code_status` is `active`, `retired_2021` or `introduced_2022`, so a mart can tell a structural non-event apart from a data quality gap. A retired or not-yet-introduced code's missing years must never render as missing data.
 
 **Marts group by `canonical_product_id`, never by raw HS code.** This is what makes backward extension cheap: add rows to the CSV, widen the year range, `dbt build`. Zero SQL changes.
+
+**Concentration rolls up, exposure does not.** Concentration is computed per canonical product, because who supplies a product survives aggregation. Exposure is computed per commodity code, because the vessel share and coast share multipliers are measured per code and can diverge sharply between successors of the same canonical product. 854140's four HS2022 successors range from 2.75 percent to 95.2 percent containerized vessel, so a blended coverage figure for that canonical product would describe no physical object. Exposure is published per code, grouped for display under its canonical product. 854150's two successors differ by 0.02 percentage points and would not have required this, but the rule is stated once and applied everywhere rather than case by case.
 
 **Never hardcode** classification vintage or year range in SQL.
 
@@ -220,9 +222,9 @@ import-concentration-risk/
 `data/reference/` committed: `basket_selection.csv`, `hs_bridge.csv`, `routing_matrix.csv`, `mode_shares.csv`, `port_entry_shares.csv`, `port_coordinates.csv`, `chokepoint_coordinates.csv`
 
 **dbt layer rules:**
-- `staging/` — one model per source table. Rename, cast, unpivot. No joins, no aggregation. Prefix `stg_`.
-- `intermediate/` — joins and business logic. Not consumed directly. Prefix `int_`.
-- `marts/` — what BI reads. Prefix `fct_` and `dim_`.
+- `staging/`: one model per source table. Rename, cast, unpivot. No joins, no aggregation. Prefix `stg_`.
+- `intermediate/`: joins and business logic. Not consumed directly. Prefix `int_`.
+- `marts/`: what BI reads. Prefix `fct_` and `dim_`.
 
 ---
 
@@ -266,7 +268,7 @@ Malacca is demoted from the shortlist: 6 of 30 crossings and a known 2021 receiv
 **Must ship:**
 - Working ingest for all three API sources, reproducible from cold start
 - Postgres landing schema
-- dbt project: staging, intermediate, marts, 12–15 tests, generated lineage docs
+- dbt project: staging, intermediate, marts, 12 to 15 tests, generated lineage docs
 - HHI and exposure marts
 - Computed routing matrix, committed with every non-crossing included
 - One event study
@@ -326,6 +328,7 @@ Pitch commercially (corporate supply chain risk), not geopolitically. Geopolitic
 | 2026-09-18 | Baskets framed asymmetrically | Symmetric concentration plus exposure for both | Semis move 70 to 98 percent by air. Reporting their exposure as comparable to the magnet basket would misrepresent a measured finding as a model failure |
 | 2026-09-18 | All 28 chokepoints ingested, filtered in staging | Narrow scope to the 13 crossed chokepoints | Raw stays faithful to source. Zero crossings is a published finding, not an exclusion |
 | 2026-09-18 | Land trade excluded from exposure, retained in concentration | Exclude land origin countries entirely | Mexico and Canada are real suppliers with real concentration. Only their maritime exposure is undefined |
+| 2026-09-18 | Exposure computed at HS6 grain, concentration at canonical product grain | Blend successor mode shares into one canonical coverage figure, or split 854140 into two canonical products from 2022 | 854140's successors span 2.75 to 95.2 percent containerized vessel. A blended figure violates BR-31, which exists so a coverage number means something. Splitting the canonical product would break the pre-2022 series, since the H5 parent cannot be split retroactively |
 
 ---
 
@@ -346,3 +349,4 @@ Still open:
 - [ ] Choose the event study after inspecting PortWatch series for the shortlisted chokepoints
 - [ ] Run the concentration series across all years now that the bridge exists. Whether concentration worsened after the 2025 Chinese export restrictions is still unmeasured
 - [ ] Investigate 854151's jump from $18M to $179M in 2025: real shift or classification migration
+- [ ] Decide whether photovoltaic codes 854142 and 854143 stay inside the semiconductor basket or become a named third sub basket. They entered by exhaustive HS family enumeration, are $54.6B, and carry most of the project's seaborne exposure

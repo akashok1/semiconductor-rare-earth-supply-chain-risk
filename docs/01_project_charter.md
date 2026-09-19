@@ -5,11 +5,11 @@
 | Project name | Import Concentration Risk |
 | Repository | `import-concentration-risk` |
 | Document ID | `docs/01_project_charter.md` |
-| Version | 1.1 |
+| Version | 1.2 |
 | Status | Amended post-Verification, approved for build |
 | Author | Akash A, Business Analyst |
 | Date | 2026-09-18 |
-| Supersedes | 1.0 (2026-09-14) |
+| Supersedes | 1.1 (2026-09-18), 1.0 (2026-09-14) |
 
 **Version history**
 
@@ -17,6 +17,7 @@
 |---|---|---|---|
 | 1.0 | 2026-09-14 | Approved for build | Akash A |
 | 1.1 | 2026-09-18 | Amended to match Verification findings. Routing changed from assumed to computed. Census added as a third source. HS bridge promoted to first release requirement. Basket framing made asymmetric. Assumptions and risks rewritten around the weaknesses that remain rather than the ones removed | Akash A |
+| 1.2 | 2026-09-18 | Basket asymmetry restated on value-weighted mode shares rather than per-code ranges, after 854140's successors were found to span 2.75 to 95.2 percent containerized vessel. Exposure grain moved from canonical product to commodity code. OBJ-2 and R-8 amended | Akash A |
 
 > Scope, stakeholder framing, and architecture decisions in this charter derive from `PROJECT_BRIEF.md`. Where the two disagree, `PROJECT_BRIEF.md` wins and this document gets a version bump. Where either disagrees with `docs/07_assumptions_limitations.md` on a matter of fact, the assumptions document wins, because it records what was measured.
 
@@ -38,7 +39,7 @@ The second is physical routing risk. Concentration in a distant country only mat
 
 Neither risk is measured today. Committee discussion is anecdotal and driven by whatever was in the news that quarter.
 
-Verification changed the shape of the second risk. The two baskets do not move the same way. Semiconductors and semiconductor manufacturing equipment travel 70 to 98 percent by air, with 854231 moving 0.8 percent by vessel, $1.59B against $196.73B total. Rare earths and permanent magnets travel 57 to 75 percent by containerized vessel. Physical routing risk is therefore a live concern for one basket and close to irrelevant for the other. That asymmetry is a finding this project reports, not a gap it apologises for, and it is the reason the two baskets are framed differently in section 5.
+Verification changed the shape of the second risk, and not in the direction expected. Measured by value, semiconductors and semiconductor manufacturing equipment travel 75.1 percent by air, and 83.5 percent once photovoltaic codes are set aside. 854231, the largest code in the project at $196.73B, moves 0.8 percent by vessel. But two codes inside that basket invert the pattern: 854142 and 854143, solar cells and modules, are 90.8 percent containerized vessel and $54.6B of value, larger than the rare earth and magnet basket by a factor of ten. Rare earths and permanent magnets are 58.4 percent containerized vessel on $5.0B. Physical routing risk is therefore concentrated in solar, present for magnets, and close to irrelevant for integrated circuits. That distribution is a finding this project reports, not a gap it apologises for, and it is why exposure is computed per commodity code rather than per canonical product.
 
 ## 3. Decision supported
 
@@ -57,7 +58,7 @@ Three questions follow from the decision:
 | ID | Objective | Success criterion | Measured by |
 |---|---|---|---|
 | OBJ-1 | Quantify supplier concentration for every in scope input | HHI, top supplier share, top three share, and supplier count produced for 100% of canonical products for every year in range | `fct_concentration` row count reconciles to product count multiplied by year count |
-| OBJ-2 | Quantify maritime chokepoint exposure for every in scope input, and state honestly how much of each basket's physical flow that figure covers | Exposure score produced per canonical product per chokepoint, computed from measured mode shares, measured coast shares, and computed route crossings. Every score traceable to a committed reference file. Vessel share coverage stated beside every exposure figure | `routing_matrix.csv`, `mode_shares.csv`, `port_entry_shares.csv`, `fct_exposure` |
+| OBJ-2 | Quantify maritime chokepoint exposure for every in scope input, and state honestly how much of each product's physical flow that figure covers | Exposure score produced per commodity code per chokepoint, computed from measured mode shares, measured coast shares, and computed route crossings, and displayed grouped under its canonical product. Every score traceable to a committed reference file. Vessel share coverage stated beside every exposure figure and never averaged across codes | `routing_matrix.csv`, `mode_shares.csv`, `port_entry_shares.csv`, `fct_exposure` |
 | OBJ-3 | Show how concentration and exposure have changed | Continuous series 2018 to 2025 across both classification vintages, with the bridge table resolving every code that split or retired, and comparability breaks flagged rather than silently smoothed | `hs_bridge.csv`, dashboard trend view, `vintage_break_year` and `code_status` flags |
 | OBJ-4 | Make the numbers trustworthy enough to argue with | Every published data quality anomaly encoded as a dbt test; the build fails when an excluded date appears in the clean mart | `dbt test` result, 12 to 15 tests minimum |
 | OBJ-5 | Make the analysis reproducible from cold start | A reader with the repo, Docker, and the two API keys reproduces the marts using documented commands only | `README.md` runbook, verified once on a clean clone |
@@ -80,9 +81,11 @@ Success criteria are deliberately mechanical. None of them is "stakeholder is sa
 
 The 22 codes are the verified set, recorded in `data/reference/basket_selection.csv` with an include or exclude decision per code. Version 1.0 estimated roughly 35 codes. That estimate was arithmetic error rather than a filter: the 8541, 8542, 8486 and 2846 families are exhaustively enumerated at HS6 and total 22 with 280530 and 850511. No candidate code was dropped for low value.
 
-**Basket 1: semiconductors and semiconductor manufacturing equipment.** HS 8541, 8542 and 8486 families, 18 codes. This basket carries the concentration analysis. Its exposure figures are computed and published, but they cover the minority of physical flow that moves by sea, and every exposure figure for this basket states its vessel share coverage. An exposure score near zero here means the goods fly, not that the model failed.
+**Basket 1: semiconductors and semiconductor manufacturing equipment.** HS 8541, 8542 and 8486 families, 18 codes. This basket carries the concentration analysis, and its exposure figures are dominated by two photovoltaic codes rather than being uniformly marginal. Every exposure figure states its vessel share coverage, which ranges from 0.8 percent for integrated circuits to 95.2 percent for solar modules. An exposure score near zero for a code at low vessel coverage means the goods fly, not that the model failed.
 
-**Basket 2: rare earths and permanent magnets.** HS 280530, 284610, 284690, 850511, 4 codes. This basket carries both the concentration and the exposure analysis, since 57 to 75 percent of its value moves by containerized vessel.
+**Basket 2: rare earths and permanent magnets.** HS 280530, 284610, 284690, 850511, 4 codes. This basket carries both the concentration and the exposure analysis, since 58.4 percent of its value moves by containerized vessel. Per code the containerized share runs from 42.3 percent for 280530 to 75.3 percent for 284610.
+
+**Exposure grain.** Concentration aggregates to canonical product, because who supplies a product survives aggregation. Exposure does not, because mode of travel is measured per commodity code and can diverge sharply between successors of the same canonical product. 854140's four HS2022 successors range from 2.75 percent to 95.2 percent containerized vessel, so a single coverage figure for that canonical product would describe no physical object. Exposure is therefore computed per commodity code and displayed grouped under its canonical product.
 
 **Explicitly excluded, with reasons**
 
@@ -193,7 +196,7 @@ A per-chokepoint threshold scaled to each strait's real width was considered and
 | R-5 | Scope creep into ports, more baskets, or more reporters | High | Medium | Scope table in section 5 is the test. Additions require a decision log entry |
 | R-6 | Documentation volume outpaces analytical substance | Medium | High | The event study and sensitivity test ship before any document other than this charter, the BRD, and the assumptions record |
 | R-7 | Five day window slips | High | Low | Priority order on slip: D-1 to D-6, then D-9, then D-11, then D-7 and D-8, then D-10 |
-| R-8 | An exposure figure near zero for the semiconductor basket is read as a broken model rather than as air freight | Medium | Medium | Vessel share coverage published beside every exposure figure. Basket asymmetry stated in section 5, in the BRD, and on the dashboard landing view |
+| R-8 | An exposure figure near zero for an air freighted code is read as a broken model rather than as air freight | Medium | Medium | Vessel share coverage published beside every exposure figure and never averaged across codes. Exposure computed at commodity code grain. The distribution stated in section 5, in the BRD, and on the dashboard landing view |
 
 R-2 is still the one that decides how this project is received, but its surface has narrowed. Concentration numbers are computed from measured trade values and are hard to dispute. Routing is now computed rather than assigned, which removes the "why these weights" argument. What a logistics reviewer can still challenge is whether a shortest sea route resembles a sailed route at all, and whether a single point coordinate plus a radius represents a strait. Those are A-3 and A-7, and neither is defended, only stated.
 
