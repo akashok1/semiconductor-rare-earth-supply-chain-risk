@@ -12,3 +12,4 @@ dbt/logs/
 dbt/dbt_packages/
 .DS_Store
 .ipynb_checkpoints/
+.obsidian/

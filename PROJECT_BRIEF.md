@@ -5,12 +5,14 @@
 **Status:** Verification complete, build in progress
 **Last updated:** 2026-09-18
 
-> This file is the source of truth. Anything not written here does not exist.
-> Update the Decision Log every time a real choice gets made. Section 14 is this
-> document's change history; it does not carry a separate version table.
-> Where this file disagrees with `docs/07_assumptions_limitations.md` on a matter
-> of fact, the assumptions document wins, because it records what was measured.
-> **Never put API keys in this file.** Keys live in `.env` only.
+> Planning phase: this file was the source of truth.
+> Build phase (current): the repo is the source of truth. This document is
+> reconciled to it at milestone boundaries, not continuously. A build finding
+> that contradicts this document does not block the build. It gets a line in
+> docs/FINDINGS.md and the code proceeds.
+> Update the Decision Log when a real choice gets made. Section 14 is this
+> document's change history.
+> Never put API keys in this file. Keys live in .env only.
 
 ---
 
@@ -210,6 +212,8 @@ import-concentration-risk/
 ├── data/
 │   ├── raw/                # gitignored, immutable
 │   └── reference/          # committed
+├── db/
+│   └── schema.sql          # raw landing DDL, applied to Postgres before dbt runs
 ├── dbt/
 │   ├── models/{staging,intermediate,marts}/
 │   ├── tests/
