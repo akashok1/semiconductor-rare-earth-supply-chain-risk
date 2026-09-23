@@ -46,15 +46,34 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
 - 2026-09-22 census_porths_vessel was pulled without CTY_CODE, so coast share exists per code only, not per country. Supersedes the earlier suggestion of a per-country port_coast_map seed. Code wins.
 - 2026-09-22 Census raw data and 2018-2021 Comtrade were pulled by analysis/ scripts, not ingest/. CLAUDE.md lists ingest/census.py and ingest/portwatch.py as the ingest layer. Code wins, README runbook must say so.
 
-- 2026-09-22 01:00 mode_shares.csv, port_entry_shares.csv and
-  basket_selection.csv have no generating script in the repo. The
-  PortWatch daily transit cache and the Census caches for the six
-  HS2022 successor codes were pulled by commands never saved to a
-  file. verification_round2.md and CLAUDE.md imply
-  census_mot_spike.py produced them; it covers 22 codes and writes no
-  CSV. Code wins: these artifacts are unreproducible until census.py
-  and portwatch.py exist.
-- 2026-09-22 01:00 CLAUDE.md scopes out the PortWatch ports database as
-  "the 2,065-port dataset." Port coordinates will come from it instead
-  of the improved-un-locodes GitHub republication. The scope line
-  covered port traffic analysis, not coordinates. Refactor wins.
+- 2026-09-23 01:15 mode_shares.csv, port_entry_shares.csv and
+  basket_selection.csv have no generating script in the repo. The two
+  share CSVs predate all retained session transcripts; basket_selection
+  was written by an inline heredoc (2026-09-18 23:08 UTC). CLAUDE.md
+  and verification_round2.md imply census_mot_spike.py produced them;
+  it covers 22 codes and writes no CSV. Code wins: unreproducible until
+  dbt recomputes the shares and basket codes become a manual CSV.
+- 2026-09-23 01:15 PortWatch daily transit cache (78,764 rows, pulled
+  2026-09-16) has no surviving fetch code; it predates all retained
+  transcripts. Census caches for the six HS2022 successor codes were
+  pulled by uncommitted scratch scripts (fetch_854151_854159.py,
+  2026-09-18 22:47 UTC). Code wins: portwatch.py and census.py rebuild
+  both against the existing cache.
+- 2026-09-23 01:15 CLAUDE.md scoped out the PortWatch ports database as
+  "the 2,065-port dataset." Port coordinates move to it from the
+  improved-un-locodes GitHub republication. The scope line covered port
+  traffic analysis, not coordinates. Refactor wins.
+- 2026-09-23 01:15 census_porths_annual covers 22 codes, none of the six
+  HS2022 successors, and has no staging model. Exploration only.
+  Dropped from ingest and load.
+- 2026-09-23 01:15 census_schedule_d_ports.txt is cached but never read;
+  the port classifier's district dicts were hand-copied from it. Wired
+  in as the source for the district to coast map in the refactor.
+- 2026-09-23 01:15 CLAUDE.md exposure formula used Comtrade partner
+  share times code-level containerized share, assigning maritime
+  exposure to land-dominant partners. Replaced with Census country-level
+  containerized value. CLAUDE.md updated. Refactor wins.
+- - 2026-09-23 01:31 CLAUDE.md said Comtrade world totals were verified
+  "within 0.68 percent of the reported World row." Raw checks show
+  partner 0 equals the sum of partner rows exactly; 0.68% was the Census
+  vs Comtrade gap for 854231 2023. CLAUDE.md corrected. Data wins.
