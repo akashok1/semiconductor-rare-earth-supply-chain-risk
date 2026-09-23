@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Raw landing tables, loaded verbatim from data/raw/ by ingest/load.py.
+      Every column lands as text; casting happens in staging. See
+      db/schema.sql for the DDL these tables are created from.
+    schema: raw
+    tables:
+      - name: comtrade_imports
+        description: >
+          UN Comtrade bilateral trade data (annual US imports by partner and
+          HS6), loaded from data/raw/comtrade_final_C_A_*.json.
+      - name: census_hs_annual
+        description: >
+          US Census international trade, HS6 x country annual import value
+          with air/vessel/containerized-vessel splits, loaded from
+          data/raw/census_hs_annual_*.json.
+      - name: census_porths_annual
+        description: >
+          US Census international trade, HS6 x port-of-entry annual general
+          import value, loaded from data/raw/census_porths_annual_*.json.
+          No vessel split -- not to be used for coast shares.
+      - name: census_porths_vessel
+        description: >
+          US Census international trade, HS6 x port-of-entry annual import
+          value with vessel value, loaded from
+          data/raw/census_porths_vessel_*.json. Source of coast shares for
+          the exposure formula.
+      - name: portwatch_chokepoint_transits
+        description: >
+          IMF PortWatch daily vessel transit counts and vessel-type/capacity
+          mix per chokepoint, loaded from data/raw/portwatch_full_offset*.json.
+      - name: portwatch_chokepoints
+        description: >
+          IMF PortWatch chokepoint point coordinates (28 chokepoints), loaded
+          from data/raw/portwatch_chokepoints_geometry.json.

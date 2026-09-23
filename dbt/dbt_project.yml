@@ -1,0 +1,25 @@
+name: 'import_concentration_risk'
+version: '1.0.0'
+config-version: 2
+
+profile: 'import_concentration_risk'
+
+model-paths: ["models"]
+seed-paths: ["../data/reference"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  import_concentration_risk:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
