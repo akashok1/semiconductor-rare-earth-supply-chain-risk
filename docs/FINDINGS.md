@@ -22,7 +22,8 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
 - 2026-09-19 Census SUMMARY_LVL CGP rows (36,621) confirmed present
   alongside DET (93,385), and the '-' sentinel (2,304 rows) is tagged
   DET. Staging must filter on both conditions.
-- - 2026-09-22 17:25 Census _YR columns are year-to-date cumulative reported
+
+- 2026-09-22 17:25 Census _YR columns are year-to-date cumulative reported
   monthly, not annual. The 2026-09-19 entry calling the cache annual is
   wrong. Mode and coast shares must be taken from the December row per code
   per year, never summed across months. Code wins.
@@ -40,3 +41,20 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
 - 2026-09-22 17:00 Mode shares will be computed in dbt from stg_census_hs
   rather than read from the seed. The seed becomes a test fixture asserting
   the pipeline reproduces the verified figures.
+
+- 2026-09-22 routing_matrix has no Gulf destination; Gulf vessel share (up to 45.9 percent for 854130 in 2025) has no route and reads as zero exposure. Brief and CLAUDE.md describe coast share as fully routed. Code wins until Houston is added.
+- 2026-09-22 census_porths_vessel was pulled without CTY_CODE, so coast share exists per code only, not per country. Supersedes the earlier suggestion of a per-country port_coast_map seed. Code wins.
+- 2026-09-22 Census raw data and 2018-2021 Comtrade were pulled by analysis/ scripts, not ingest/. CLAUDE.md lists ingest/census.py and ingest/portwatch.py as the ingest layer. Code wins, README runbook must say so.
+
+- 2026-09-22 01:00 mode_shares.csv, port_entry_shares.csv and
+  basket_selection.csv have no generating script in the repo. The
+  PortWatch daily transit cache and the Census caches for the six
+  HS2022 successor codes were pulled by commands never saved to a
+  file. verification_round2.md and CLAUDE.md imply
+  census_mot_spike.py produced them; it covers 22 codes and writes no
+  CSV. Code wins: these artifacts are unreproducible until census.py
+  and portwatch.py exist.
+- 2026-09-22 01:00 CLAUDE.md scopes out the PortWatch ports database as
+  "the 2,065-port dataset." Port coordinates will come from it instead
+  of the improved-un-locodes GitHub republication. The scope line
+  covered port traffic analysis, not coordinates. Refactor wins.
