@@ -16,6 +16,32 @@
 
 ---
 
+## 0. Current state
+
+Updated: 2026-09-22
+Phase: build, dbt transform
+
+Done: 7 reference CSVs committed and loaded as seeds. Docker + Postgres 16
+  on port 5433 (a system Postgres owns 5432, leave it alone). Raw layer
+  loaded: comtrade 9,142, census_hs 130,006, porths_annual 119,900,
+  porths_vessel 137,080, pw_transits 78,764, pw_geo 28. dbt scaffolded,
+  5 staging models built clean: stg_comtrade 8,950, stg_census_hs 91,081,
+  stg_census_porths_vessel 134,776, stg_portwatch_transits 78,764,
+  stg_portwatch_chokepoints 28.
+
+Next: intermediate models (hs_bridge join, mode shares, partner shares),
+  then fct_concentration and fct_exposure, then CSV export for Tableau,
+  then dashboard, then README.
+
+Open: port coast classification lives in analysis/census_mot_spike.py as a
+  documented district map with per-port overrides. Content is sound and
+  verified. Moving it to a committed CSV seed is a pending inspectability
+  improvement, not a correctness fix.
+
+Deadline: tonight, 2026-09-22.
+
+---
+
 ## 1. Thesis
 
 For a defined set of critical imported products, which ones does the United States depend on a small number of foreign suppliers for, and how exposed is that supply to a maritime chokepoint disruption?

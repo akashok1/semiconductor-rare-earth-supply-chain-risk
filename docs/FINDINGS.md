@@ -26,3 +26,17 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   monthly, not annual. The 2026-09-19 entry calling the cache annual is
   wrong. Mode and coast shares must be taken from the December row per code
   per year, never summed across months. Code wins.
+- 2026-09-22 17:00 Census _YR columns are year-to-date cumulative reported
+  monthly. December holds the annual total. The 2026-09-19 entry calling
+  the cache "annual" is imprecise and is superseded by this line. Summing
+  across months inflates by ~6.2x. Verified: 854231 2023 December
+  $20.14B against Comtrade World $20.28B, a 0.68 percent gap.
+- 2026-09-22 17:00 census_mot_spike.py and both committed seeds already
+  filter to December. All four headline figures reproduce independently
+  within 0.03 points. No correction needed.
+- 2026-09-22 17:00 mode_shares.csv and port_entry_shares.csv are 192 rows,
+  28 codes x 8 years, including the HS2022 successors.
+  verification_round2.md's 168 row figure predates the split codes.
+- 2026-09-22 17:00 Mode shares will be computed in dbt from stg_census_hs
+  rather than read from the seed. The seed becomes a test fixture asserting
+  the pipeline reproduces the verified figures.
