@@ -1,7 +1,7 @@
 """Comtrade ingest: US annual imports, 2022-2025, HS2022 (H6), all basket codes.
 
 Four calls, one per year, each covering every H6 code in
-data/reference/hs_bridge.csv at once (comma-joined cmdCode, per
+data/reference/generated/hs_bridge.csv at once (comma-joined cmdCode, per
 docs/07_assumptions_limitations.md and CLAUDE.md this is a single call per
 year, not per code). 2018-2021 (H5) is already cached from
 analysis/verification_round1.py; this script only extends the range forward
@@ -44,7 +44,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from ingest.config import COMTRADE_DATA_BASE, require_comtrade_api_key  # noqa: E402
 
 CACHE_DIR = REPO_ROOT / "data" / "raw"
-HS_BRIDGE_PATH = REPO_ROOT / "data" / "reference" / "hs_bridge.csv"
+HS_BRIDGE_PATH = REPO_ROOT / "data" / "reference" / "generated" / "hs_bridge.csv"
 
 REPORTER_USA = "842"
 FLOW_IMPORT = "M"
@@ -71,9 +71,7 @@ def _comtrade_headers() -> dict:
 
 
 def _load_h6_codes() -> list[str]:
-    """Distinct HS6 codes for hs_version == H6, from hs_bridge.csv. Not from
-    data/reference/basket_selection.csv -- that file predates the bridge and
-    does not reflect the 2022 classification split."""
+    """Distinct HS6 codes for hs_version == H6, from hs_bridge.csv."""
     codes: set[str] = set()
     with HS_BRIDGE_PATH.open(newline="") as f:
         for row in csv.DictReader(f):
@@ -135,7 +133,7 @@ def _validate_code_coverage(year: int, payload: dict, expected_codes: list[str])
     if seen_count != expected_count:
         raise ComtradeCodeCountError(
             f"{year}: response covers {seen_count} distinct cmdCode value(s), "
-            f"expected {expected_count} from data/reference/hs_bridge.csv "
+            f"expected {expected_count} from data/reference/generated/hs_bridge.csv "
             f"(hs_version={HS_VERSION}). Seen: {sorted(seen_codes)}. "
             f"Expected: {expected_codes}."
         )

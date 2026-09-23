@@ -96,3 +96,8 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   CLAUDE.md planned a weekly GitHub Actions refresh. Comtrade and Census
   are annual, the decision is annual, and no mart reads the weekly
   PortWatch transits, so no scheduler. Refactor wins.
+- - 2026-09-23 02:50 No exclusion reason for 850519, 253090, 360690 or
+  903082 is recorded anywhere (PROJECT_BRIEF.md §3 names the codes, not
+  why they were dropped; basket_selection.csv's decision_basis was
+  empty). Reasons written into basket_codes.csv now; 903082 marked
+  deferred pending an SME scope decision after the refactor merges.

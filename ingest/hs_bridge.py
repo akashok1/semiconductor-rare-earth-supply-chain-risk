@@ -1,18 +1,16 @@
 """HS classification bridge: canonical products across the HS2017/HS2022 split.
 
 US import data is native H5 (HS2017) through 2021 and H6 (HS2022) from 2022
-onward (see CLAUDE.md, "The core architectural rule"). A canonical product
-must map to every HS6 code that ever represented it, across classification
-vintages, so marts can group by `canonical_product_id` instead of raw HS
-code. This module builds that bridge for the 22 candidate codes verified in
-`analysis/verification_round1_findings.md` (the live HS2017 leaf-code check)
-and `analysis/verification_round2.md` (the Census mode-of-transport spike,
-which independently confirmed 854140/854150 have no 2022+ data).
+onward. A canonical product must map to every HS6 code that ever represented
+it, across classification vintages, so marts can group by
+`canonical_product_id` instead of raw HS code. This module builds that
+bridge for every H5 code marked `include` in
+`data/reference/manual/basket_codes.csv`.
 
 Source of truth for the HS2017-to-HS2022 correlation itself is the UN Stats
 correlation table (unstats.un.org/unsd/classifications/Econ), not guesswork:
-`HS2022toHS2017ConversionAndCorrelationTables.xlsx`, cached under
-`data/raw/`. That workbook ships two tabs, read together:
+the workbook at `config.UN_HS_CORRELATION_URL`, cached under `data/raw/`.
+That workbook ships two tabs, read together:
 
 - "HS2022-HS2017 Conversions": exactly one row per current HS2022 code,
   naming the single HS2017 code the WCO treats as its predecessor. A code
@@ -20,52 +18,20 @@ correlation table (unstats.un.org/unsd/classifications/Econ), not guesswork:
   never appears in this tab. This is the candidate-successor list.
 - "HS2022-HS2017 Correlations": every HS2022/HS2017 code pair that overlaps
   at all (thousands more rows than Conversions), each tagged with a
-  relationship type (1:1, n:1, 1:n, n:n). Heading 8549 ("electrical and
-  electronic waste and scrap", new in HS2022) shows up as an n:n predecessor
-  of nearly every old code in this bridge, and 8524 ("flat panel display
-  modules", also new in HS2022) does the same to the 8486 subset, so this
-  tab alone is too noisy to resolve against directly. Used here only to
-  look up the relationship tag for the specific (new, old) pairs Conversions
-  already named as candidates.
+  relationship type (1:1, n:1, 1:n, n:n). Used here only to look up the
+  relationship tag for the specific (new, old) pairs Conversions already
+  named as candidates.
 
 A code's forward mapping is treated as clean only when: (a) at least one
 current HS2022 code names it as predecessor in Conversions, and (b) every
 one of those (new, old) pairs is tagged 1:1 or n:1 in Correlations. Anything
 else (no successor at all, or any 1:n/n:n tag on a Conversions-named pair)
 is written with `hs6_code` blank and flagged UNRESOLVED, never guessed from
-this table alone -- see EMPIRICAL_OVERRIDES below for the one case (854150)
-where the table's own answer was checked against trade data and rejected.
-This is computed generically from the two tabs, not hardcoded per code,
-since the point of the bridge is to catch cases where an assumption (like
-the "854140/854150 both split six ways" note in verification_round2.md)
-turns out not to hold up against the real table.
+this table alone.
 
-Both tabs are read with openpyxl, not the hand-rolled zipfile/xml.etree
-parser this module used originally. The original parser did track each
-cell's r= reference and was not, on inspection, actually misaligning rows;
-the real surprises were structural: the Conversions tab carries four always-
-blank trailing columns (explaining the four Nones seen in its header row),
-and the Correlations tab has two header rows -- a merged "Between" title
-over columns A:B, then the real "HS2022"/"HS2017"/"Relationship" header
-below it -- not one. openpyxl exposes both directly (iter_rows,
-ws.merged_cells.ranges) instead of requiring that structure to be inferred
-from raw XML.
-
-EMPIRICAL_OVERRIDES exists because the correlation table can name a
-predecessor/successor that trade data flatly contradicts. Checked directly
-against the workbook: HS2022 854151 and 854159 each name HS2017 851712
-(cellular telephones) as their sole Conversions predecessor -- not 854150,
-and not because of a missed continuation row (the Conversions tab has zero
-merged cells, zero blank-predecessor continuation rows, and zero codes
-listed twice; it is structurally one predecessor per current code, and for
-854151/854159 it names the wrong one). Census import value settles it
-instead: 854150 (H5) runs $400-826M/yr from 2018-2021 then goes to exactly
-zero from 2022; 854151+854159 (H6) are exactly zero through 2021 then pick
-up at $819.9M in 2022, a 0.7% gap from 854150's final year. 854151 is new
-in HS2022 for "semiconductor-based transducers" (added to the 8541 heading
-text that revision); 854159 keeps 854150's old "other semiconductor
-devices" title verbatim. That is a real split with no plausible mechanism
-running through mobile telephones.
+`data/reference/manual/bridge_overrides.csv` holds the cases where the
+table's own answer is checked against trade data and rejected instead of
+taken as given -- see that file for the basis and evidence per override.
 
 Usage: .venv/bin/python -m ingest.hs_bridge
 """
@@ -74,19 +40,23 @@ from __future__ import annotations
 
 import csv
 import io
+import sys
 from pathlib import Path
 
 import openpyxl
 import requests
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
+from ingest.config import UN_HS_CORRELATION_URL  # noqa: E402
+
 CACHE_DIR = REPO_ROOT / "data" / "raw"
 REFERENCE_DIR = REPO_ROOT / "data" / "reference"
+BASKET_CODES_PATH = REFERENCE_DIR / "manual" / "basket_codes.csv"
+BRIDGE_OVERRIDES_PATH = REFERENCE_DIR / "manual" / "bridge_overrides.csv"
+OUTPUT_PATH = REFERENCE_DIR / "generated" / "hs_bridge.csv"
 
-CORRELATION_URL = (
-    "https://unstats.un.org/unsd/classifications/Econ/tables/"
-    "HS2022toHS2017ConversionAndCorrelationTables.xlsx"
-)
 CORRELATION_CACHE_NAME = "un_hs2022_to_hs2017_correlation.xlsx"
 
 CONVERSIONS_SHEET = "HS2022-HS2017 Conversions"
@@ -95,57 +65,11 @@ CLEAN_RELATIONSHIPS = {"1:1", "n:1"}
 
 VINTAGE_BREAK_YEAR = 2022
 
-# The 22 candidate HS6 codes verified live against the HS2017 (H5) code list
-# in analysis/verification_round1_findings.md section 1.
-CODES_BY_BASKET = {
-    "semiconductors_and_sme": [
-        "854110", "854121", "854129", "854130", "854140", "854150", "854160", "854190",
-        "854231", "854232", "854233", "854239", "854290",
-        "848610", "848620", "848630", "848640", "848690",
-    ],
-    "rare_earths_and_magnets": [
-        "280530", "284610", "284690", "850511",
-    ],
-}
-BASKET_BY_CODE = {
-    code: basket for basket, codes in CODES_BY_BASKET.items() for code in codes
-}
 
-# Codes where the WCO correlation table's own answer is checked against
-# Census import value and rejected, rather than taken as given. Currently
-# just 854150: the table names HS2017 851712 (cellular telephones) as sole
-# Conversions predecessor for both HS2022 854151 and 854159, which has no
-# plausible mechanism and no trade-value support. Verified empirically instead (see
-# analysis notes and the module docstring): 854150 (H5) is $400-826M/yr
-# 2018-2021 then exactly zero from 2022; 854151+854159 (H6) are exactly
-# zero through 2021 then $819.9M in 2022, a 0.7% gap from 854150's final
-# year. This is a hardcoded, one-off override, not a generic algorithm --
-# each entry here must carry its own verified evidence in EMPIRICAL_NOTE.
-EMPIRICAL_OVERRIDES: dict[str, list[str]] = {
-    "854150": ["854151", "854159"],
-}
-EMPIRICAL_NOTE = {
-    "854150": (
-        "Resolved empirically via US Census import-value continuity across the "
-        "2021/2022 classification break, not via the WCO correlation table: "
-        "854150 (H5) = $825,916,060 in 2021; 854151 + 854159 (H6) = $819,940,556 "
-        "in 2022 (-0.7%). The WCO HS2022-to-HS2017 correlation table names "
-        "851712 (cellular telephones) as the Conversions-tab predecessor for "
-        "both 854151 and 854159; that attribution is not corroborated by trade "
-        "value and is not used here."
-    ),
-}
-# Per-successor-code asides layered onto the row for that specific hs6_code,
-# independent of which H5 code it resolved from. Observational only -- not
-# investigated further here.
-PER_SUCCESSOR_NOTE = {
-    "854151": (
-        "854151 US import value: $24,800,504 (2022), $21,096,047 (2023), "
-        "$17,958,080 (2024), then $178,763,927 (2025), roughly an 8-9x jump "
-        "in the final year. Possible series break, flagged for later "
-        "investigation, not investigated here."
-    ),
-}
+class HsBridgeConfigError(RuntimeError):
+    """Raised when the manual reference CSVs are inconsistent with each
+    other (a duplicate code, or an override naming a code that isn't an
+    included basket code)."""
 
 
 def fetch_correlation_workbook() -> bytes:
@@ -155,21 +79,55 @@ def fetch_correlation_workbook() -> bytes:
     if cache_file.exists():
         return cache_file.read_bytes()
 
-    resp = requests.get(CORRELATION_URL, timeout=60, headers={"User-Agent": "Mozilla/5.0"})
+    resp = requests.get(UN_HS_CORRELATION_URL, timeout=60, headers={"User-Agent": "Mozilla/5.0"})
     resp.raise_for_status()
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_file.write_bytes(resp.content)
     return resp.content
 
 
+def load_basket_codes() -> dict[str, list[str]]:
+    """Read basket_codes.csv, returning {basket: [h5_code, ...]} for rows
+    with decision == include, in file order. Fails loudly on a duplicate
+    hs6_code: the file is one row per H5 code, include or exclude alike."""
+    seen: set[str] = set()
+    codes_by_basket: dict[str, list[str]] = {}
+    with BASKET_CODES_PATH.open(newline="") as f:
+        for row in csv.DictReader(f):
+            code = row["hs6_code"]
+            if code in seen:
+                raise HsBridgeConfigError(
+                    f"duplicate hs6_code {code!r} in {BASKET_CODES_PATH.relative_to(REPO_ROOT)}"
+                )
+            seen.add(code)
+            if row["decision"] == "include":
+                codes_by_basket.setdefault(row["basket"], []).append(code)
+    return codes_by_basket
+
+
+def load_bridge_overrides(included_codes: set[str]) -> dict[str, list[str]]:
+    """Read bridge_overrides.csv, returning {h5_code: [h6_code, ...]}. Fails
+    loudly if an override names an h5_code that basket_codes.csv does not
+    mark include."""
+    overrides: dict[str, list[str]] = {}
+    with BRIDGE_OVERRIDES_PATH.open(newline="") as f:
+        for row in csv.DictReader(f):
+            h5_code = row["h5_code"]
+            if h5_code not in included_codes:
+                raise HsBridgeConfigError(
+                    f"{BRIDGE_OVERRIDES_PATH.relative_to(REPO_ROOT)} references h5_code "
+                    f"{h5_code!r}, which is not an included code in "
+                    f"{BASKET_CODES_PATH.relative_to(REPO_ROOT)}"
+                )
+            overrides.setdefault(h5_code, []).append(row["h6_code"])
+    return overrides
+
+
 def load_primary_successors(workbook_bytes: bytes) -> dict[str, list[str]]:
     """Invert the "HS2022-HS2017 Conversions" tab: hs2017_code -> every
     current hs2022_code that names it as predecessor. Exactly one row per
-    hs2022_code in that tab (verified: 5,613 rows, 5,613 distinct hs2022
-    codes, zero merged cells, zero blank-predecessor continuation rows), so
-    this is the WCO's own candidate-successor list, not derived. One header
-    row (columns C-F always blank in this tab -- formatting only, verified
-    against all 5,613 data rows)."""
+    hs2022_code in that tab, so this is the WCO's own candidate-successor
+    list, not derived. One header row."""
     wb = openpyxl.load_workbook(io.BytesIO(workbook_bytes), read_only=True, data_only=True)
     ws = wb[CONVERSIONS_SHEET]
 
@@ -186,9 +144,9 @@ def load_relationship_by_pair(workbook_bytes: bytes) -> dict[tuple[str, str], st
     """Every (hs2022_code, hs2017_code) -> relationship tag (1:1/n:1/1:n/n:n)
     from the "HS2022-HS2017 Correlations" tab, used to check the pairs
     Conversions names as candidates, not to enumerate candidates itself.
-    Two header rows here, not one: a merged "Between" title over columns
-    A:B (row 1), then the real "HS2022"/"HS2017"/"Relationship" header
-    (row 2); data starts row 3."""
+    Two header rows: a merged "Between" title over columns A:B (row 1), then
+    the real "HS2022"/"HS2017"/"Relationship" header (row 2); data starts
+    row 3."""
     wb = openpyxl.load_workbook(io.BytesIO(workbook_bytes), read_only=True, data_only=True)
     ws = wb[CORRELATIONS_SHEET]
 
@@ -215,20 +173,15 @@ def resolve_successors(
     - The code survives under its own number (a Conversions candidate equal
       to itself, tagged 1:1/n:1 in Correlations): that self-mapping is the
       continuation, taken as clean regardless of what else the Conversions
-      tab also names as its (possibly unrelated, possibly messy) other
-      candidates. This matters in practice: 8549 ("electrical and electronic
-      waste and scrap", new in HS2022) is a from-scratch heading with no
-      real ancestor, and the Conversions tab's single-predecessor-per-new-
-      code algorithm sometimes names a completely unrelated old code (e.g.
-      854231) as its nearest match for one of these new subheadings, tagged
-      n:n in Correlations. That ambiguity is about the NEW code's forced,
-      meaningless "predecessor" pick, not about whether 854231 itself still
-      means what it meant in HS2017, so it is recorded as an aside rather
-      than blanking the clean self-mapping.
+      tab also names as its other candidates. A new-in-HS2022 heading can be
+      forced to name an unrelated old code as its nearest match, tagged n:n
+      in Correlations; that ambiguity is about the NEW code's meaningless
+      "predecessor" pick, not about whether the old code itself still means
+      what it meant in HS2017.
     - The code does not survive under its own number (no self-candidate):
       every one of its Conversions candidates must be clean (1:1/n:1) to
-      accept the split (e.g. 854140 -> 854141/142/143/149). Any messy
-      candidate, or no candidate at all, comes back unresolved.
+      accept the split. Any messy candidate, or no candidate at all, comes
+      back unresolved.
     """
     candidates = sorted(set(primary_successors.get(hs2017_code, [])))
     self_relationship = relationship_by_pair.get((hs2017_code, hs2017_code))
@@ -276,6 +229,8 @@ def resolve_successors(
 
 
 def build_bridge_rows(
+    codes_by_basket: dict[str, list[str]],
+    overrides: dict[str, list[str]],
     primary_successors: dict[str, list[str]],
     relationship_by_pair: dict[tuple[str, str], str],
 ) -> tuple[list[dict], list[dict]]:
@@ -292,15 +247,13 @@ def build_bridge_rows(
     rows: list[dict] = []
     unresolved: list[dict] = []
 
-    for basket, codes in CODES_BY_BASKET.items():
+    for basket, codes in codes_by_basket.items():
         for h5_code in codes:
-            if h5_code in EMPIRICAL_OVERRIDES:
-                successors = EMPIRICAL_OVERRIDES[h5_code]
-                is_unchanged = False
+            if h5_code in overrides:
+                successors = overrides[h5_code]
+                is_unchanged = successors == [h5_code]
                 note_h5 = "Native HS2017 (H5) code."
-                base_note = EMPIRICAL_NOTE[h5_code]
-                per_successor_note = {c: (" " + PER_SUCCESSOR_NOTE[c]) if c in PER_SUCCESSOR_NOTE else "" for c in successors}
-                h6_notes = {c: base_note + per_successor_note[c] for c in successors}
+                h6_notes = {c: "override, see bridge_overrides.csv" for c in successors}
             else:
                 resolution = resolve_successors(h5_code, primary_successors, relationship_by_pair)
                 rel_str = "/".join(resolution["relationships"]) if resolution["relationships"] else "none"
@@ -336,23 +289,12 @@ def build_bridge_rows(
 
                 successors = resolution["successors"]
                 is_unchanged = successors == [h5_code]
-                aside = ""
-                if resolution["ambiguous_extra"]:
-                    aside = (
-                        f" Also named by the Conversions tab as a partial (n:n, not attributed here) "
-                        f"predecessor of {', '.join(resolution['ambiguous_extra'])}; not a clean split, "
-                        "so no value is routed there."
-                    )
                 note_h5 = "Native HS2017 (H5) code."
                 h6_notes = {
                     h6_code: (
-                        f"UN Stats HS2022-to-HS2017 correlation table: relationship {rel_str}"
-                        + (
-                            ""
-                            if is_unchanged
-                            else f" ({len(successors)}-way split of {h5_code}: {', '.join(successors)})."
-                        )
-                        + aside
+                        f"relationship {rel_str}"
+                        if is_unchanged
+                        else f"relationship {rel_str}, split of {h5_code} into {', '.join(successors)}"
                     )
                     for h6_code in successors
                 }
@@ -387,20 +329,25 @@ def build_bridge_rows(
 
 
 def write_bridge(rows: list[dict]) -> Path:
-    path = REFERENCE_DIR / "hs_bridge.csv"
-    path.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
         "canonical_product_id", "hs_version", "hs6_code", "code_status",
         "basket", "notes", "vintage_break_year",
     ]
-    with path.open("w", newline="") as f:
+    with OUTPUT_PATH.open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
-    return path
+    return OUTPUT_PATH
 
 
 def main() -> None:
+    print("Loading basket_codes.csv and bridge_overrides.csv...")
+    codes_by_basket = load_basket_codes()
+    included_codes = {code for codes in codes_by_basket.values() for code in codes}
+    overrides = load_bridge_overrides(included_codes)
+    print(f"  {len(included_codes)} included H5 code(s) across {len(codes_by_basket)} basket(s)")
+
     print("Fetching UN Stats HS2022-to-HS2017 correlation table...")
     workbook_bytes = fetch_correlation_workbook()
 
@@ -412,8 +359,8 @@ def main() -> None:
         f"{len(relationship_by_pair)} correlation pairs"
     )
 
-    print(f"Resolving {sum(len(v) for v in CODES_BY_BASKET.values())} candidate H5 codes...")
-    rows, unresolved = build_bridge_rows(primary_successors, relationship_by_pair)
+    print(f"Resolving {len(included_codes)} candidate H5 codes...")
+    rows, unresolved = build_bridge_rows(codes_by_basket, overrides, primary_successors, relationship_by_pair)
 
     path = write_bridge(rows)
     print(f"Wrote {path.relative_to(REPO_ROOT)}: {len(rows)} rows")
