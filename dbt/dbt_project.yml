@@ -15,6 +15,11 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+vars:
+  # First year US Census/Comtrade data is native HS2022 (H6) rather than
+  # HS2017 (H5). Years before this are H5. See CLAUDE.md's HS bridge section.
+  h6_boundary_year: 2022
+
 models:
   import_concentration_risk:
     staging:

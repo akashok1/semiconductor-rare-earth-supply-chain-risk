@@ -49,3 +49,18 @@ def require_census_api_key() -> str:
     Scripts that actually need the Census key call this explicitly instead.
     """
     return _require_env("CENSUS_API_KEY")
+
+
+def require_postgres_dsn() -> str:
+    """Fail-fast accessor for a psycopg connection string, built from the same
+    POSTGRES_* variables docker-compose.yml uses. Deliberately not folded into
+    ``CONFIG`` for the same reason as ``require_census_api_key``: only scripts
+    that actually touch Postgres (currently just ``ingest/load.py``) should be
+    forced to have these variables set.
+    """
+    user = _require_env("POSTGRES_USER")
+    password = _require_env("POSTGRES_PASSWORD")
+    dbname = _require_env("POSTGRES_DB")
+    host = os.environ.get("POSTGRES_HOST", "").strip() or "localhost"
+    port = os.environ.get("POSTGRES_PORT", "").strip() or "5432"
+    return f"host={host} port={port} dbname={dbname} user={user} password={password}"
