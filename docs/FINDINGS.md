@@ -22,3 +22,7 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
 - 2026-09-19 Census SUMMARY_LVL CGP rows (36,621) confirmed present
   alongside DET (93,385), and the '-' sentinel (2,304 rows) is tagged
   DET. Staging must filter on both conditions.
+- - 2026-09-22 17:25 Census _YR columns are year-to-date cumulative reported
+  monthly, not annual. The 2026-09-19 entry calling the cache annual is
+  wrong. Mode and coast shares must be taken from the December row per code
+  per year, never summed across months. Code wins.
