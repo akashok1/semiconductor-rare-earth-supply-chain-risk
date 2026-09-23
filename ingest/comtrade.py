@@ -41,12 +41,11 @@ import requests
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from ingest.config import CONFIG  # noqa: E402
+from ingest.config import COMTRADE_DATA_BASE, require_comtrade_api_key  # noqa: E402
 
 CACHE_DIR = REPO_ROOT / "data" / "raw"
 HS_BRIDGE_PATH = REPO_ROOT / "data" / "reference" / "hs_bridge.csv"
 
-COMTRADE_DATA_BASE = "https://comtradeapi.un.org/data/v1"
 REPORTER_USA = "842"
 FLOW_IMPORT = "M"
 CUSTOMS_ALL = "C00"
@@ -68,7 +67,7 @@ def _comtrade_headers() -> dict:
     # Subscription key travels as a header, never as a query param, so it
     # can never end up in a cached URL, a raised exception's message, or a
     # log line.
-    return {"Ocp-Apim-Subscription-Key": CONFIG.comtrade_api_key}
+    return {"Ocp-Apim-Subscription-Key": require_comtrade_api_key()}
 
 
 def _load_h6_codes() -> list[str]:

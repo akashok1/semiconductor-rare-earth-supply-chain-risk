@@ -77,3 +77,22 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   "within 0.68 percent of the reported World row." Raw checks show
   partner 0 equals the sum of partner rows exactly; 0.68% was the Census
   vs Comtrade gap for 854231 2023. CLAUDE.md corrected. Data wins.
+- 2026-09-23 02:05 Vessel count and export share pick different #1
+  ports for 5 of 16 countries; the difference only matters where a
+  country ships from more than one coast (Canada: Halifax vs Vancouver).
+  Routing weights all container ports within a country by maritime
+  export share instead of one representative port. Brief, charter and
+  the old reference.py assume one port per country. Refactor wins.
+- 2026-09-23 02:05 PortWatch ports database LOCODEs are null for 28.3%
+  of ports and use a different format (CC LLL) from UN/LOCODE; 4 of 17
+  old ports have no LOCODE match. Routing keys on PortWatch portid and
+  ISO3, never LOCODE. Old coordinates all within 17km of PortWatch.
+- - 2026-09-23 02:25 PortWatch disruptions database (132 events) is
+  natural hazards (72 cyclones, 32 earthquakes, 14 floods) plus one
+  manual rollup, "RED SEA TENSIONS" (eventid 1000000). No separate
+  Suez, Bab el-Mandeb or Houthi events. Future case study uses that
+  rollup for event dating and transits for effect.
+- 2026-09-23 02:25 Refresh is manual via --refresh on ingest scripts.
+  CLAUDE.md planned a weekly GitHub Actions refresh. Comtrade and Census
+  are annual, the decision is annual, and no mart reads the weekly
+  PortWatch transits, so no scheduler. Refactor wins.
