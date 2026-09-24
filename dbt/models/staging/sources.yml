@@ -3,7 +3,8 @@ version: 2
 sources:
   - name: raw
     description: >
-      Raw landing tables, loaded verbatim from data/raw/ by ingest/load.py.
+      Raw landing tables, loaded verbatim from data/raw/ and
+      data/reference/generated/ by ingest/load.py.
       Every column lands as text; casting happens in staging. See
       db/schema.sql for the DDL these tables are created from.
     schema: raw
@@ -17,11 +18,6 @@ sources:
           US Census international trade, HS6 x country annual import value
           with air/vessel/containerized-vessel splits, loaded from
           data/raw/census_hs_annual_*.json.
-      - name: census_porths_annual
-        description: >
-          US Census international trade, HS6 x port-of-entry annual general
-          import value, loaded from data/raw/census_porths_annual_*.json.
-          No vessel split -- not to be used for coast shares.
       - name: census_porths_vessel
         description: >
           US Census international trade, HS6 x port-of-entry annual import
@@ -36,3 +32,24 @@ sources:
         description: >
           IMF PortWatch chokepoint point coordinates (28 chokepoints), loaded
           from data/raw/portwatch_chokepoints_geometry.json.
+      - name: portwatch_ports
+        description: >
+          IMF PortWatch ports database (ISO3, LOCODE, vessel counts by type,
+          share of country maritime trade), loaded from
+          data/raw/portwatch_ports_database_offset*.json. Source of port
+          weights for the exposure formula.
+      - name: portwatch_disruptions
+        description: >
+          IMF PortWatch disruptions database (event type, dates, alert level,
+          affected ports), loaded from
+          data/raw/portwatch_disruptions_offset*.json. Event polygons are
+          in payload only. No mart reads it yet.
+      - name: routes
+        description: >
+          One row per origin port x US destination coast, loaded from
+          data/reference/generated/routes.csv (written by ingest/routing.py).
+      - name: routing_matrix
+        description: >
+          Minimum distance from each computed route to each chokepoint,
+          loaded from data/reference/generated/routing_matrix.csv (written by
+          ingest/routing.py).

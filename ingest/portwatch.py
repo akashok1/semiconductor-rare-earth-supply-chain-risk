@@ -75,7 +75,9 @@ CACHE_DIR = REPO_ROOT / "data" / "raw"
 PAGE_SIZE = 1000
 MAX_PAGES = 500  # hard cap; largest known pull (daily transits) is 79 pages
 CHOKEPOINTS_CACHE_FILE = CACHE_DIR / "portwatch_chokepoints_geometry.json"
+TRANSITS_CACHE_PREFIX = "portwatch_full"
 PORTS_CACHE_PREFIX = "portwatch_ports_database"
+DISRUPTIONS_CACHE_PREFIX = "portwatch_disruptions"
 
 
 class PortwatchError(RuntimeError):
@@ -276,9 +278,10 @@ def _paginated_pull(
     return final_paths, api_calls
 
 
-def read_cached_features(cache_prefix: str) -> list[dict]:
-    """Every feature across a paginated pull's cached pages, validated as a
-    cached rerun validates them. No network: raises if nothing is cached."""
+def read_cached_page_features(cache_prefix: str) -> list[tuple[str, dict]]:
+    """(page filename, feature) for every feature across a paginated pull's
+    cached pages, in page order, validated as a cached rerun validates them.
+    No network: raises if nothing is cached."""
     pages = _cached_pages(cache_prefix)
     if not pages:
         raise PortwatchError(
@@ -286,7 +289,13 @@ def read_cached_features(cache_prefix: str) -> list[dict]:
             "`python -m ingest.portwatch` first."
         )
     _validate_cached_pages(cache_prefix, pages)
-    return [f for path in pages for f in json.loads(path.read_text())["features"]]
+    return [(path.name, f) for path in pages for f in json.loads(path.read_text())["features"]]
+
+
+def read_cached_features(cache_prefix: str) -> list[dict]:
+    """Every feature across a paginated pull's cached pages, validated as a
+    cached rerun validates them. No network: raises if nothing is cached."""
+    return [feature for _, feature in read_cached_page_features(cache_prefix)]
 
 
 # ---------------------------------------------------------------------------
@@ -296,7 +305,7 @@ def read_cached_features(cache_prefix: str) -> list[dict]:
 
 def fetch_daily_transits(force: bool = False) -> tuple[list[Path], int]:
     return _paginated_pull(
-        "portwatch_full",
+        TRANSITS_CACHE_PREFIX,
         _service_url(PORTWATCH_DAILY_TRANSITS_SERVICE),
         {"where": "1=1", "outFields": "*", "orderByFields": "portid ASC,date ASC", "f": "json"},
         force=force,
@@ -330,7 +339,7 @@ def fetch_ports_database(force: bool = False) -> tuple[list[Path], int]:
 
 def fetch_disruptions(force: bool = False) -> tuple[list[Path], int]:
     return _paginated_pull(
-        "portwatch_disruptions",
+        DISRUPTIONS_CACHE_PREFIX,
         _service_url(PORTWATCH_DISRUPTIONS_SERVICE),
         {
             "where": "1=1",
