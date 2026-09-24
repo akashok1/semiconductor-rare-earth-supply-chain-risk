@@ -41,6 +41,7 @@ from __future__ import annotations
 import csv
 import io
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 import openpyxl
@@ -70,6 +71,12 @@ class HsBridgeConfigError(RuntimeError):
     """Raised when the manual reference CSVs are inconsistent with each
     other (a duplicate code, or an override naming a code that isn't an
     included basket code)."""
+
+
+class HsBridgeVintageError(RuntimeError):
+    """Raised when the generated hs_bridge.csv does not define an unambiguous
+    vintage split: exactly one distinct non-null vintage_break_year and
+    exactly two hs_versions."""
 
 
 def fetch_correlation_workbook() -> bytes:
@@ -339,6 +346,49 @@ def write_bridge(rows: list[dict]) -> Path:
         writer.writeheader()
         writer.writerows(rows)
     return OUTPUT_PATH
+
+
+@dataclass(frozen=True)
+class VintagePlan:
+    """The vintage split hs_bridge.csv defines: years before break_year use
+    old_version's codes, years from break_year onward new_version's."""
+
+    break_year: int
+    old_version: str
+    new_version: str
+    codes_by_version: dict[str, frozenset[str]]
+
+
+def read_vintage_plan() -> VintagePlan:
+    """Read the generated hs_bridge.csv and return its vintage split. Raises
+    HsBridgeVintageError unless the bridge has exactly one distinct non-null
+    vintage_break_year and exactly two hs_versions."""
+    with OUTPUT_PATH.open(newline="") as f:
+        rows = list(csv.DictReader(f))
+
+    breaks = {r["vintage_break_year"] for r in rows if r["vintage_break_year"].strip()}
+    if len(breaks) != 1:
+        raise HsBridgeVintageError(
+            f"hs_bridge.csv has {len(breaks)} distinct non-null "
+            f"vintage_break_year value(s) {sorted(breaks)}, expected exactly one."
+        )
+
+    codes_by_version: dict[str, set[str]] = {}
+    for r in rows:
+        codes_by_version.setdefault(r["hs_version"], set()).add(r["hs6_code"])
+    if len(codes_by_version) != 2:
+        raise HsBridgeVintageError(
+            f"hs_bridge.csv has hs_version values {sorted(codes_by_version)}, "
+            "expected exactly two (one each side of the vintage break)."
+        )
+    old_version, new_version = sorted(codes_by_version)
+
+    return VintagePlan(
+        break_year=int(breaks.pop()),
+        old_version=old_version,
+        new_version=new_version,
+        codes_by_version={v: frozenset(c) for v, c in codes_by_version.items()},
+    )
 
 
 def main() -> None:

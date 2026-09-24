@@ -35,7 +35,6 @@ Usage: .venv/bin/python -m ingest.comtrade [--refresh {YEAR,all}]
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import sys
 import time
@@ -52,9 +51,10 @@ from ingest.config import (  # noqa: E402
     YEAR_START,
     require_comtrade_api_key,
 )
+from ingest.hs_bridge import OUTPUT_PATH as HS_BRIDGE_PATH  # noqa: E402
+from ingest.hs_bridge import read_vintage_plan  # noqa: E402
 
 CACHE_DIR = REPO_ROOT / "data" / "raw"
-HS_BRIDGE_PATH = REPO_ROOT / "data" / "reference" / "generated" / "hs_bridge.csv"
 
 REPORTER_USA = "842"
 FLOW_IMPORT = "M"
@@ -65,10 +65,6 @@ YEARS = range(YEAR_START, YEAR_END + 1)
 
 class ComtradeAuthError(RuntimeError):
     """Raised on HTTP 401/403 from the Comtrade API. Never includes the key."""
-
-
-class ComtradeBridgeError(RuntimeError):
-    """Raised when hs_bridge.csv does not define an unambiguous vintage split."""
 
 
 class ComtradeValidationError(RuntimeError):
@@ -88,34 +84,14 @@ def _cache_file(year: int) -> Path:
 
 
 def load_year_plan() -> dict[int, tuple[str, list[str]]]:
-    """Map each project year to (hs_version, sorted code list), from
-    hs_bridge.csv. Raises unless the bridge has exactly one distinct non-null
-    vintage_break_year and exactly two hs_versions."""
-    with HS_BRIDGE_PATH.open(newline="") as f:
-        rows = list(csv.DictReader(f))
-
-    breaks = {r["vintage_break_year"] for r in rows if r["vintage_break_year"].strip()}
-    if len(breaks) != 1:
-        raise ComtradeBridgeError(
-            f"hs_bridge.csv has {len(breaks)} distinct non-null "
-            f"vintage_break_year value(s) {sorted(breaks)}, expected exactly one."
-        )
-    break_year = int(breaks.pop())
-
-    codes_by_version: dict[str, set[str]] = {}
-    for r in rows:
-        codes_by_version.setdefault(r["hs_version"], set()).add(r["hs6_code"])
-    if len(codes_by_version) != 2:
-        raise ComtradeBridgeError(
-            f"hs_bridge.csv has hs_version values {sorted(codes_by_version)}, "
-            "expected exactly two (one each side of the vintage break)."
-        )
-    old_version, new_version = sorted(codes_by_version)
-
+    """Map each project year to (hs_version, sorted code list), from the
+    vintage split in hs_bridge.csv (read_vintage_plan, which raises
+    HsBridgeVintageError if the split is ambiguous)."""
+    vintage = read_vintage_plan()
     plan = {}
     for year in YEARS:
-        version = old_version if year < break_year else new_version
-        plan[year] = (version, sorted(codes_by_version[version]))
+        version = vintage.old_version if year < vintage.break_year else vintage.new_version
+        plan[year] = (version, sorted(vintage.codes_by_version[version]))
     return plan
 
 
