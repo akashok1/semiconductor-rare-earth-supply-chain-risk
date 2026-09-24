@@ -110,52 +110,111 @@ by a measurement.
 | The unexplained residual in Census mode data might not be land trade | Compared the residual against land border port share computed from official Schedule D codes | The two independent measurements agree within 2 percentage points for all 22 codes | Residual confirmed as land trade. Accounting closes: air plus vessel plus land equals total |
 | Port coordinates entered by hand are good enough inside a 200km threshold | Replaced with coordinates resolved from the UN/LOCODE dataset for all 15 origins and both US destinations | Coordinates now sourced and citable | No hand entered coordinate remains in the project. Which port represents each country is still an editorial choice, recorded in the script |
 
-### 3.1 Proximity threshold sensitivity, geometric half (D-8, BR-10)
+### 3.1 Routing method (A-3, A-7, D-8, BR-10)
 
-A-7's 200km proximity threshold was re-tested at 50, 100, 200 and 300km
-against the existing `routing_matrix.csv` (15 origins x 2 US coasts x 28
-chokepoints, 840 rows), using only the `min_distance_km` column already
-computed there. No re-run of `searoute`, no network calls.
+Routing is computed, not hand assigned, and replaces the verification
+phase's 15 representative ports x 2 US coasts (30 routes, kept in
+`docs/verification/03_routing_method.md` as a historical record).
 
-Chokepoints crossed by at least one of the 30 routes, by threshold:
+**Origins.** Every foreign port in the PortWatch ports database with
+`vessel_count_container > 0`: 1,253 ports in 174 countries. There is no
+representative port per country. Ports are keyed on PortWatch `portid` and
+ISO3, never LOCODE. Within a country, each port is weighted by its
+`share_country_maritime_export`, normalized over that country's container
+ports. The weights are computed in dbt, not in `ingest/routing.py`.
+
+**Countries without PortWatch ports.** Landlocked or portless countries are
+routed through a gateway country's port weights, one row each with a reason
+in `data/reference/manual/landlocked_gateways.csv` (13 gateways, e.g. Laos
+via Thailand, Ethiopia via Djibouti, Switzerland via the Netherlands).
+Territories with no plausible gateway (British Indian Ocean Territory,
+Tokelau) carry a blank gateway and are reported as unrouted, never silently
+zeroed.
+
+**Destinations.** One US port per coast, in
+`data/reference/manual/us_destination_ports.csv`: Los Angeles-Long Beach
+(west), New York-New Jersey (east), Houston (gulf). Each is the largest
+Census port on its coast by 2018-2025 basket vessel value. Coast shares come
+from Census vessel value by port of entry, per HS6 code.
+
+**Geometry.** `searoute` (Eurostat marnet, local, no API) gives the shortest
+sea route for every origin x coast pair: 3,759 routes, all computed, none
+failed. For each route and each of the 28 PortWatch chokepoints,
+`routing_matrix` stores `min_distance_km`: the distance from the chokepoint
+to the nearest point on the route line, measured in an azimuthal
+equidistant projection centred on the chokepoint. It stores distance only.
+There is no crossing flag in the generated file.
+
+**Thresholds.** `crosses = min_distance_km <= threshold` is computed in dbt
+at 50, 100, 200 and 300km. 200km is the headline; the others are the
+sensitivity test.
+
+Routes (of 3,759) passing within each threshold of each chokepoint, from
+`raw.routing_matrix`:
 
 | Chokepoint | 50km | 100km | 200km | 300km |
 |---|---|---|---|---|
-| Panama Canal | 10 | 10 | 10 | 10 |
-| Gibraltar Strait | 7 | 7 | 7 | 7 |
-| Windward Passage | 7 | 7 | 7 | 7 |
-| Malacca Strait | 5 | 5 | 6 | 7 |
-| Suez Canal | 5 | 5 | 5 | 5 |
-| Bab el-Mandeb Strait | 5 | 5 | 5 | 5 |
-| Taiwan Strait | 2 | 4 | 4 | 7 |
-| Korea Strait | 0 | 4 | 4 | 4 |
-| Tsugaru Strait | 4 | 4 | 4 | 4 |
-| Luzon Strait | 0 | 3 | 3 | 5 |
-| Mona Passage | 3 | 3 | 3 | 3 |
-| Mindoro Strait | 0 | 0 | 2 | 2 |
-| Dover Strait | 1 | 1 | 1 | 1 |
-| Oresund Strait | 0 | 0 | 0 | 2 |
-| Total chokepoints crossed | 10 | 12 | 13 | 14 |
+| Panama Canal | 1,486 | 1,493 | 1,493 | 1,493 |
+| Gibraltar Strait | 943 | 949 | 955 | 958 |
+| Mona Passage | 590 | 605 | 663 | 674 |
+| Windward Passage | 406 | 532 | 539 | 546 |
+| Yucatan Channel | 489 | 489 | 495 | 495 |
+| Suez Canal | 361 | 364 | 370 | 376 |
+| Tsugaru Strait | 306 | 306 | 333 | 342 |
+| Bab el-Mandeb Strait | 319 | 319 | 319 | 322 |
+| Oresund Strait | 225 | 231 | 279 | 309 |
+| Korea Strait | 18 | 234 | 261 | 285 |
+| Malacca Strait | 161 | 167 | 182 | 186 |
+| Bosporus Strait | 159 | 162 | 174 | 174 |
+| Taiwan Strait | 120 | 129 | 141 | 242 |
+| Dover Strait | 99 | 99 | 123 | 151 |
+| Luzon Strait | 0 | 101 | 101 | 104 |
+| Strait of Hormuz | 78 | 87 | 87 | 87 |
+| Bohai Strait | 45 | 48 | 60 | 69 |
+| Sunda Strait | 41 | 41 | 48 | 48 |
+| Cape of Good Hope | 45 | 45 | 45 | 51 |
+| Kerch Strait | 39 | 39 | 42 | 48 |
+| Torres Strait | 0 | 39 | 39 | 39 |
+| Balabac Strait | 32 | 32 | 34 | 36 |
+| Makassar Strait | 28 | 28 | 33 | 33 |
+| Ombai Strait | 19 | 26 | 26 | 28 |
+| Magellan Strait | 22 | 22 | 25 | 25 |
+| Lombok Strait | 3 | 8 | 14 | 14 |
+| Mindoro Strait | 0 | 0 | 11 | 18 |
+| Bering Strait | 0 | 0 | 0 | 6 |
+| Chokepoints crossed by at least one route | 24 | 26 | 27 | 28 |
 
-Panama Canal, Gibraltar Strait, Windward Passage, Suez Canal and Bab
-el-Mandeb Strait are stable across the whole 50 to 300km range: same crossing
-count at every threshold tested. Taiwan Strait (2, 4, 4, 7), Korea Strait (0,
-4, 4, 4) and Luzon Strait (0, 3, 3, 5) are threshold sensitive, moving in and
-out of the crossing set as the radius changes.
+Panama, Gibraltar, Yucatan, Bab el-Mandeb and Hormuz barely move across
+the range. Korea Strait (18 to 234 between 50 and 100km), Luzon Strait (0
+to 101), Windward Passage (406 to 532) and Taiwan Strait (141 to 242
+between 200 and 300km) are threshold sensitive. The East Asian ones sit on
+the transpacific routes, so the parameter matters most where Asian vessel
+value is largest. Hormuz is crossed by 87 routes at 200km, all from Persian
+Gulf origins; no other origin crosses it.
 
-Those three are exactly the Pacific chokepoints on East Asia to US West
-Coast routes (see §3's routing table above), which is where the
-photovoltaic value in this project's baskets travels. The threshold
-parameter therefore matters most precisely where the modelled exposure is
-largest, which is the opposite of a case where the parameter choice would be
-immaterial.
+These are unweighted route counts. They say which chokepoints enter or leave
+the crossing set at each threshold, not how the exposure ranking changes.
+That question stays open until `fct_exposure` exists.
 
-This is the geometric half of D-8 only: which chokepoints a route crosses at
-each threshold. No exposure weighting (partner share, vessel share, coast
-share) has been applied to these counts, so this table cannot yet say
-whether or how the exposure *ranking* changes across thresholds, only which
-chokepoints enter or leave the crossing set. That ranking question stays
-open until `fct_exposure` exists.
+**Known limitations.** Disclosed, not fixed.
+
+- Chokepoints are points while straits are hundreds of km long. Port Klang
+  to New York sails the Malacca Strait but passes 219.6km from its point,
+  so it misses at the 200km headline and crosses only at 300km.
+- Ports near a chokepoint count as crossing it. Kaohsiung sits 77km from the
+  Taiwan Strait point, so every Kaohsiung route crosses it at 100km and
+  above whichever way it sails.
+- Routes are static shortest paths. Red Sea diversions via the Cape of Good
+  Hope from late 2023 are not modelled.
+- Goods shipped to Mexican or Canadian ports and trucked into the US count
+  as land and are never routed.
+- searoute snaps each port to its network before routing. 101 ports snap
+  more than 100km, including four Brazilian river ports at 520 to 1,078km.
+  The skipped leg is inland or coastal and passes no chokepoint, so
+  chokepoint distances are unaffected.
+- coast_share is per code only, because Census vessel value by port carries
+  no country. A German and a Chinese shipment of the same code get the same
+  coast split.
 
 ---
 

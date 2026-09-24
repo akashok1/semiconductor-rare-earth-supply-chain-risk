@@ -1,3 +1,5 @@
+Historical record from the verification phase. Current figures live in docs/07 and the marts.
+
 # Verification round 1 findings
 
 Generated: 2026-09-17T23:57:36+00:00

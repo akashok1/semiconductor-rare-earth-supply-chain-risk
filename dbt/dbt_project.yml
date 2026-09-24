@@ -56,8 +56,8 @@ seeds:
         +column_types: {port_code: text}
       country_crosswalk_overrides:
         +column_types: {cty_code: text, iso3: text}
-    # Legacy seeds from the retired ingest/reference.py, removed in step 8.
-    mode_shares:
-      +column_types: {hs6_code: text}
-    port_entry_shares:
-      +column_types: {hs6_code: text}
+    # Test fixtures from the verification phase, compared against models by
+    # tests. Never read by a model as an input.
+    fixtures:
+      mode_shares_expected:
+        +column_types: {hs6_code: text}

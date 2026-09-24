@@ -1,3 +1,5 @@
+Historical record from the verification phase. Current figures live in docs/07 and the marts.
+
 # Verification round 2
 
 Three verification tasks. Findings only, no dbt, no Postgres, no pipeline changes.

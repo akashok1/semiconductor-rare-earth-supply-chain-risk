@@ -48,12 +48,12 @@ at all (confirmed directly: querying any real, non-zero mode code returns a
 valid, empty result), so this came from the Census Bureau's own international
 trade API instead. This matters for the project's core premise: a maritime
 chokepoint closure has limited bearing on a product that mostly moves by
-plane. See `analysis/verification_round2.md` task 3 for the full breakdown,
+plane. See `docs/verification/02_mode_and_port_of_entry.md` task 3 for the full breakdown,
 per code and per year.
 
 Full findings, including the PortWatch data-quality checks and the searoute
-chokepoint-crossing spike, are in `analysis/verification_round1_findings.md`,
-`analysis/verification_round2.md`, and `analysis/searoute_spike_findings.md`.
+chokepoint-crossing spike, are in `docs/verification/01_sources_and_hs_codes.md`,
+`docs/verification/02_mode_and_port_of_entry.md`, and `docs/verification/03_routing_method.md`.
 
 ## Method
 
@@ -87,38 +87,39 @@ cp .env.example .env
 # edit .env: set COMTRADE_API_KEY and CENSUS_API_KEY
 ```
 
-Then run any of the verification scripts (each caches its own raw API
-responses to `data/raw/` and writes a findings report to `analysis/`):
+Start Postgres (Docker, port 5433), then run the pipeline in order with the
+Makefile targets:
 
 ```bash
-.venv/bin/python analysis/verification_round1.py   # HS codes, year coverage, PortWatch pagination
-.venv/bin/python analysis/searoute_spike.py         # sea routes vs. chokepoint crossings
-.venv/bin/python analysis/census_mot_spike.py       # mode of transport, port of entry
+docker compose up -d
+make bridge      # HS2017/HS2022 bridge, data/reference/generated/hs_bridge.csv
+make comtrade    # UN Comtrade, US imports by partner, 2018-2025
+make census      # Census imports by country and mode, vessel imports by port
+make portwatch   # PortWatch chokepoints, daily transits, ports, disruptions
+make routing     # sea routes, generated/routes.csv and routing_matrix.csv
+make load        # data/raw and generated routing into Postgres raw.*
+make dbt-build   # seeds, staging models and tests
 ```
 
-Or run the two committed pipeline steps directly, which write to
-`data/reference/` rather than to a findings report:
-
-```bash
-.venv/bin/python -m ingest.routing      # sea routes, generated/routes.csv and routing_matrix.csv
-.venv/bin/python -m ingest.hs_bridge    # HS2017/HS2022 bridge table, hs_bridge.csv
-```
+`make all` runs the same sequence. Every ingest target is cache-first: API
+responses cache under `data/raw/` on first pull, and a rerun with the cache
+on disk costs zero calls. Pass flags through `ARGS`, e.g.
+`make comtrade ARGS="--refresh 2025"` to re-pull one year. After a seed's
+columns or types change, run `make dbt-seed-full` (`dbt seed
+--full-refresh`) before `make dbt-build`. `make dbt-seed`, `make dbt-test`,
+`make dbt-run`, `make dbt-debug` and `make dbt-docs` run the single dbt
+command.
 
 The two Jupyter notebooks under `notebooks/` (`01_first_look.ipynb` for
 Comtrade, `02_portwatch_look.ipynb` for PortWatch) are exploratory scratchpads,
 not part of the pipeline; open them with the `.venv` kernel to follow the same
 exploration path interactively.
 
-`data/reference/mode_shares.csv` and `data/reference/port_entry_shares.csv`
-are committed outputs of the Census spike.
-`data/reference/generated/routes.csv` and `routing_matrix.csv` are committed
-outputs of `ingest/routing.py` (`.venv/bin/python -m ingest.routing`), and
-`data/reference/hs_bridge.csv` is a committed output of `ingest/hs_bridge.py`
-(`.venv/bin/python -m ingest.hs_bridge`). `data/reference/basket_selection.csv`
-is a hand-added scaffold, not yet produced by any script; its
-`candidate_source`, `us_net_import_reliance_pct`, and `decision_basis` columns
-are still blank. `data/raw/` is gitignored and rebuilds from source on first
-run.
+`data/reference/manual/` holds hand-owned decisions, each row with a reason.
+`data/reference/generated/` is written only by `ingest/` scripts.
+`data/reference/fixtures/mode_shares_expected.csv` is a verification-phase
+test fixture, not a pipeline input. `data/raw/` is gitignored and rebuilds
+from source on first run.
 
 ## What this cannot support
 
@@ -135,7 +136,7 @@ run.
   doesn't pass near a chokepoint.
 - **Mode-of-transport and port-of-entry data won't reconcile exactly to
   Comtrade.** The two sources track a few percent apart (see
-  `verification_round2.md` task 3), consistent with ordinary cross-source
+  `docs/verification/02_mode_and_port_of_entry.md` task 3), consistent with ordinary cross-source
   differences, not a resolved discrepancy.
 - **No tier-2 or tier-3 supplier visibility.** Comtrade measures country of
   record, not ultimate producer. A concentration score can miss a shared

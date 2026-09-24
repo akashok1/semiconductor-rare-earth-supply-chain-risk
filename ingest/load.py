@@ -290,7 +290,7 @@ def _load_portwatch_features(
 
 def load_portwatch_chokepoint_transits(cur: psycopg.Cursor) -> tuple[int, list[str]]:
     # portwatch_chokepoint5_offset*.json are the single-chokepoint pagination
-    # test files from analysis/verification_round1.py, a subset already
+    # test files from the removed verification_round1.py spike, a subset already
     # covered here; the TRANSITS_CACHE_PREFIX pages never include them.
     return _load_portwatch_features(
         cur,
