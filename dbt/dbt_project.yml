@@ -28,3 +28,37 @@ models:
       +materialized: view
     marts:
       +materialized: table
+
+seeds:
+  import_concentration_risk:
+    # Every code column is text: HS, port, district and country codes carry
+    # leading zeros ("0101", "01") or must never be treated as numbers.
+    generated:
+      hs_bridge:
+        +column_types: {canonical_product_id: text, hs_version: text, hs6_code: text}
+      census_ports:
+        +column_types: {port_code: text, district_code: text}
+      census_country_crosswalk:
+        +column_types: {cty_code: text, iso2: text, iso3: text}
+    manual:
+      basket_codes:
+        +column_types: {hs6_code: text, hs_version: text}
+      bridge_overrides:
+        +column_types: {h5_code: text, h6_code: text}
+      district_coast_map:
+        +column_types: {district_code: text}
+      port_coast_overrides:
+        +column_types: {port_code: text}
+      country_crosswalk_overrides:
+        +column_types: {cty_code: text, iso3: text}
+    # Legacy seeds from ingest/reference.py, retired in steps 6 and 8.
+    mode_shares:
+      +column_types: {hs6_code: text}
+    port_entry_shares:
+      +column_types: {hs6_code: text}
+    chokepoint_coordinates:
+      +column_types: {portid: text}
+    port_coordinates:
+      +column_types: {locode: text, country_iso3: text}
+    routing_matrix:
+      +column_types: {origin_locode: text, origin_country_iso3: text, destination_locode: text, portid: text}

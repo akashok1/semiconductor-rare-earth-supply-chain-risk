@@ -88,6 +88,9 @@ CENSUS_IMPORTS_PORTHS_URL = "https://api.census.gov/data/timeseries/intltrade/im
 # Official Census/CBP Schedule D port and district code list.
 CENSUS_SCHEDULE_D_PORTS_URL = "https://www.census.gov/foreign-trade/schedules/d/dist2.txt"
 
+# Official Census Schedule C country code list. Carries ISO alpha-2 only.
+CENSUS_SCHEDULE_C_COUNTRIES_URL = "https://www.census.gov/foreign-trade/schedules/c/country.txt"
+
 # UN Stats HS2022-to-HS2017 conversion and correlation workbook.
 UN_HS_CORRELATION_URL = (
     "https://unstats.un.org/unsd/classifications/Econ/tables/"

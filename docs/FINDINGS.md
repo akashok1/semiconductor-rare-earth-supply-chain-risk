@@ -87,7 +87,7 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   of ports and use a different format (CC LLL) from UN/LOCODE; 4 of 17
   old ports have no LOCODE match. Routing keys on PortWatch portid and
   ISO3, never LOCODE. Old coordinates all within 17km of PortWatch.
-- - 2026-09-23 02:25 PortWatch disruptions database (132 events) is
+- 2026-09-23 02:25 PortWatch disruptions database (132 events) is
   natural hazards (72 cyclones, 32 earthquakes, 14 floods) plus one
   manual rollup, "RED SEA TENSIONS" (eventid 1000000). No separate
   Suez, Bab el-Mandeb or Houthi events. Future case study uses that
@@ -96,8 +96,10 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   CLAUDE.md planned a weekly GitHub Actions refresh. Comtrade and Census
   are annual, the decision is annual, and no mart reads the weekly
   PortWatch transits, so no scheduler. Refactor wins.
-- - 2026-09-23 02:50 No exclusion reason for 850519, 253090, 360690 or
+- 2026-09-23 02:50 No exclusion reason for 850519, 253090, 360690 or
   903082 is recorded anywhere (PROJECT_BRIEF.md §3 names the codes, not
   why they were dropped; basket_selection.csv's decision_basis was
   empty). Reasons written into basket_codes.csv now; 903082 marked
   deferred pending an SME scope decision after the refactor merges.
+- 2026-09-23 20:53 Schedule C (country.txt, produced 31JAN14) carries ISO alpha-2 only, and PortWatch_countries_database has ISO3 with no ISO2, so there is no source-backed Schedule C to ISO3 join without a manual map or a new dependency. CLAUDE.md refactor step 5b assumes a direct Schedule C to ISO3 crosswalk. The code wins; step 5b Part 3 is blocked pending a decision.
+- 2026-09-23 20:53 District 18 (Tampa) holds Atlantic ports Jacksonville, Fernandina Beach and Port Canaveral, and the spike's district map labels them Gulf (Jacksonville is $1.58B, 1.5% of 2018-2025 vessel value). CLAUDE.md's coast shares (sum 0.948-1.000) were derived from that map. The data wins; the coast shares include this misassignment until a 1803 override is approved.

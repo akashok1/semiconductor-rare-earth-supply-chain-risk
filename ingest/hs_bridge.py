@@ -342,7 +342,7 @@ def write_bridge(rows: list[dict]) -> Path:
         "basket", "notes", "vintage_break_year",
     ]
     with OUTPUT_PATH.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     return OUTPUT_PATH

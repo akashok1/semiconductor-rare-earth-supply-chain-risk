@@ -1,0 +1,242 @@
+cty_code,cty_name,iso2,iso3,basis
+1000,United States of America,US,USA,iso3166
+1010,Greenland,GL,GRL,iso3166
+1220,Canada,CA,CAN,iso3166
+1610,Saint Pierre and Miquelon,PM,SPM,iso3166
+2010,Mexico,MX,MEX,iso3166
+2050,Guatemala,GT,GTM,iso3166
+2080,Belize,BZ,BLZ,iso3166
+2110,El Salvador,SV,SLV,iso3166
+2150,Honduras,HN,HND,iso3166
+2190,Nicaragua,NI,NIC,iso3166
+2230,Costa Rica,CR,CRI,iso3166
+2250,Panama,PA,PAN,iso3166
+2320,Bermuda,BM,BMU,iso3166
+2360,Bahamas,BS,BHS,iso3166
+2390,Cuba,CU,CUB,iso3166
+2410,Jamaica,JM,JAM,iso3166
+2430,Turks and Caicos Islands,TC,TCA,iso3166
+2440,Cayman Islands,KY,CYM,iso3166
+2450,Haiti,HT,HTI,iso3166
+2470,Dominican Republic,DO,DOM,iso3166
+2481,Anguilla,AI,AIA,iso3166
+2482,British Virgin Islands,VG,VGB,iso3166
+2483,Saint Kitts and Nevis,KN,KNA,iso3166
+2484,Antigua and Barbuda,AG,ATG,iso3166
+2485,Montserrat,MS,MSR,iso3166
+2486,Dominica,DM,DMA,iso3166
+2487,Saint Lucia,LC,LCA,iso3166
+2488,Saint Vincent and the Grenadines,VC,VCT,iso3166
+2489,Grenada,GD,GRD,iso3166
+2720,Barbados,BB,BRB,iso3166
+2740,Trinidad and Tobago,TT,TTO,iso3166
+2774,Sint Maarten,SX,SXM,iso3166
+2777,Curacao,CW,CUW,iso3166
+2779,Aruba,AW,ABW,iso3166
+2831,Guadeloupe,GP,GLP,iso3166
+2839,Martinique,MQ,MTQ,iso3166
+3010,Colombia,CO,COL,iso3166
+3070,Venezuela,VE,VEN,iso3166
+3120,Guyana,GY,GUY,iso3166
+3150,Suriname,SR,SUR,iso3166
+3170,French Guiana,GF,GUF,iso3166
+3310,Ecuador,EC,ECU,iso3166
+3330,Peru,PE,PER,iso3166
+3350,Bolivia,BO,BOL,iso3166
+3370,Chile,CL,CHL,iso3166
+3510,Brazil,BR,BRA,iso3166
+3530,Paraguay,PY,PRY,iso3166
+3550,Uruguay,UY,URY,iso3166
+3570,Argentina,AR,ARG,iso3166
+3720,Falkland Islands (Islas Malvinas),FK,FLK,iso3166
+4000,Iceland,IS,ISL,iso3166
+4010,Sweden,SE,SWE,iso3166
+4031,Svalbard and Jan Mayen,SJ,SJM,iso3166
+4039,Norway,NO,NOR,iso3166
+4050,Finland,FI,FIN,iso3166
+4091,Faroe Islands,FO,FRO,iso3166
+4099,"Denmark, except Greenland",DK,DNK,iso3166
+4120,United Kingdom,GB,GBR,iso3166
+4190,Ireland,IE,IRL,iso3166
+4210,Netherlands,NL,NLD,iso3166
+4231,Belgium,BE,BEL,iso3166
+4239,Luxembourg,LU,LUX,iso3166
+4271,Andorra,AD,AND,iso3166
+4272,Monaco,MC,MCO,iso3166
+4279,France,FR,FRA,iso3166
+4280,Germany (Federal Republic of Germany),DE,DEU,iso3166
+4330,Austria,AT,AUT,iso3166
+4351,Czech Republic,CZ,CZE,iso3166
+4359,Slovakia,SK,SVK,iso3166
+4370,Hungary,HU,HUN,iso3166
+4411,Liechtenstein,LI,LIE,iso3166
+4419,Switzerland,CH,CHE,iso3166
+4470,Estonia,EE,EST,iso3166
+4490,Latvia,LV,LVA,iso3166
+4510,Lithuania,LT,LTU,iso3166
+4550,Poland,PL,POL,iso3166
+4621,Russia,RU,RUS,iso3166
+4622,Belarus,BY,BLR,iso3166
+4623,Ukraine,UA,UKR,iso3166
+4631,Armenia,AM,ARM,iso3166
+4632,Azerbaijan,AZ,AZE,iso3166
+4633,Georgia,GE,GEO,iso3166
+4634,Kazakhstan,KZ,KAZ,iso3166
+4635,Kyrgyzstan,KG,KGZ,iso3166
+4641,Moldova (Republic of Moldova),MD,MDA,iso3166
+4642,Tajikistan,TJ,TJK,iso3166
+4643,Turkmenistan,TM,TKM,iso3166
+4644,Uzbekistan,UZ,UZB,iso3166
+4700,Spain,ES,ESP,iso3166
+4710,Portugal,PT,PRT,iso3166
+4720,Gibraltar,GI,GIB,iso3166
+4730,Malta,MT,MLT,iso3166
+4751,San Marino,SM,SMR,iso3166
+4752,Holy See (Vatican City),VA,VAT,iso3166
+4759,Italy,IT,ITA,iso3166
+4791,Croatia,HR,HRV,iso3166
+4792,Slovenia,SI,SVN,iso3166
+4793,Bosnia and Herzegovina,BA,BIH,iso3166
+4794,North Macedonia,MK,MKD,iso3166
+4801,Serbia,RS,SRB,iso3166
+4803,Kosovo,KV,,manual_override
+4804,Montenegro,ME,MNE,iso3166
+4810,Albania,AL,ALB,iso3166
+4840,Greece,GR,GRC,iso3166
+4850,Romania,RO,ROU,iso3166
+4870,Bulgaria,BG,BGR,iso3166
+4890,Turkey,TR,TUR,iso3166
+4910,Cyprus,CY,CYP,iso3166
+5020,Syria (Syrian Arab Republic),SY,SYR,iso3166
+5040,Lebanon,LB,LBN,iso3166
+5050,Iraq,IQ,IRQ,iso3166
+5070,Iran,IR,IRN,iso3166
+5081,Israel,IL,ISR,iso3166
+5082,Gaza Strip administered by Israel,GZ,,unmatched
+5083,West Bank administered by Israel,WE,,unmatched
+5110,Jordan,JO,JOR,iso3166
+5130,Kuwait,KW,KWT,iso3166
+5170,Saudi Arabia,SA,SAU,iso3166
+5180,Qatar,QA,QAT,iso3166
+5200,United Arab Emirates,AE,ARE,iso3166
+5210,Yemen (Republic of Yemen),YE,YEM,iso3166
+5230,Oman,OM,OMN,iso3166
+5250,Bahrain,BH,BHR,iso3166
+5310,Afghanistan,AF,AFG,iso3166
+5330,India,IN,IND,iso3166
+5350,Pakistan,PK,PAK,iso3166
+5360,Nepal,NP,NPL,iso3166
+5380,Bangladesh,BD,BGD,iso3166
+5420,Sri Lanka,LK,LKA,iso3166
+5460,Burma (Myanmar),MM,MMR,iso3166
+5490,Thailand,TH,THA,iso3166
+5520,Vietnam,VN,VNM,iso3166
+5530,Laos (Lao People's Democratic Republic),LA,LAO,iso3166
+5550,Cambodia,KH,KHM,iso3166
+5570,Malaysia,MY,MYS,iso3166
+5590,Singapore,SG,SGP,iso3166
+5600,Indonesia,ID,IDN,iso3166
+5601,Timor-Leste,TL,TLS,iso3166
+5610,Brunei,BN,BRN,iso3166
+5650,Philippines,PH,PHL,iso3166
+5660,Macao,MO,MAC,iso3166
+5682,Bhutan,BT,BTN,iso3166
+5683,Maldives,MV,MDV,iso3166
+5700,China,CN,CHN,iso3166
+5740,Mongolia,MN,MNG,iso3166
+5790,North Korea (Democratic People's Republic of Korea),KP,PRK,iso3166
+5800,South Korea (Republic of Korea),KR,KOR,iso3166
+5820,Hong Kong,HK,HKG,iso3166
+5830,Taiwan,TW,TWN,iso3166
+5880,Japan,JP,JPN,iso3166
+6021,Australia,AU,AUS,iso3166
+6022,Norfolk Island,NF,NFK,iso3166
+6023,Cocos (Keeling) Islands,CC,CCK,iso3166
+6024,Christmas Island (in the Indian Ocean),CX,CXR,iso3166
+6029,Heard Island and McDonald Islands,HM,HMD,iso3166
+6040,Papua New Guinea,PG,PNG,iso3166
+6141,New Zealand,NZ,NZL,iso3166
+6142,Cook Islands,CK,COK,iso3166
+6143,Tokelau,TK,TKL,iso3166
+6144,Niue,NU,NIU,iso3166
+6150,Samoa (Western Samoa),WS,WSM,iso3166
+6223,Solomon Islands,SB,SLB,iso3166
+6224,Vanuatu,VU,VUT,iso3166
+6225,Pitcairn Islands,PN,PCN,iso3166
+6226,Kiribati,KI,KIR,iso3166
+6227,Tuvalu,TV,TUV,iso3166
+6412,New Caledonia,NC,NCL,iso3166
+6413,Wallis and Futuna,WF,WLF,iso3166
+6414,French Polynesia,PF,PYF,iso3166
+6810,Marshall Islands,MH,MHL,iso3166
+6820,"Micronesia, Federated States of",FM,FSM,iso3166
+6830,Palau,PW,PLW,iso3166
+6862,Naoero,NR,NRU,iso3166
+6863,Fiji,FJ,FJI,iso3166
+6864,Tonga,TO,TON,iso3166
+7140,Morocco,MA,MAR,iso3166
+7210,Algeria,DZ,DZA,iso3166
+7230,Tunisia,TN,TUN,iso3166
+7250,Libya,LY,LBY,iso3166
+7290,Egypt,EG,EGY,iso3166
+7321,Sudan,SD,SDN,iso3166
+7323,South Sudan,SS,SSD,iso3166
+7370,Western Sahara,EH,ESH,iso3166
+7380,Equatorial Guinea,GQ,GNQ,iso3166
+7410,Mauritania,MR,MRT,iso3166
+7420,Cameroon,CM,CMR,iso3166
+7440,Senegal,SN,SEN,iso3166
+7450,Mali,ML,MLI,iso3166
+7460,Guinea,GN,GIN,iso3166
+7470,Sierra Leone,SL,SLE,iso3166
+7480,Cote d'Ivoire,CI,CIV,iso3166
+7490,Ghana,GH,GHA,iso3166
+7500,Gambia,GM,GMB,iso3166
+7510,Niger,NE,NER,iso3166
+7520,Togo,TG,TGO,iso3166
+7530,Nigeria,NG,NGA,iso3166
+7540,Central African Republic,CF,CAF,iso3166
+7550,Gabon,GA,GAB,iso3166
+7560,Chad,TD,TCD,iso3166
+7580,Saint Helena,SH,SHN,iso3166
+7600,Burkina Faso,BF,BFA,iso3166
+7610,Benin,BJ,BEN,iso3166
+7620,Angola,AO,AGO,iso3166
+7630,"Congo, Republic of the Congo",CG,COG,iso3166
+7642,Guinea-Bissau,GW,GNB,iso3166
+7643,Cabo Verde,CV,CPV,iso3166
+7644,Sao Tome and Principe,ST,STP,iso3166
+7650,Liberia,LR,LBR,iso3166
+7660,"Congo, Democratic Republic of the Congo (formerly Za",CD,COD,iso3166
+7670,Burundi,BI,BDI,iso3166
+7690,Rwanda,RW,RWA,iso3166
+7700,Somalia,SO,SOM,iso3166
+7741,Eritrea,ER,ERI,iso3166
+7749,Ethiopia,ET,ETH,iso3166
+7770,Djibouti,DJ,DJI,iso3166
+7780,Uganda,UG,UGA,iso3166
+7790,Kenya,KE,KEN,iso3166
+7800,Seychelles,SC,SYC,iso3166
+7810,British Indian Ocean Territory,IO,IOT,iso3166
+7830,Tanzania (United Republic of Tanzania),TZ,TZA,iso3166
+7850,Mauritius,MU,MUS,iso3166
+7870,Mozambique,MZ,MOZ,iso3166
+7880,Madagascar,MG,MDG,iso3166
+7881,Mayotte,YT,MYT,iso3166
+7890,Comoros,KM,COM,iso3166
+7904,Reunion,RE,REU,iso3166
+7905,French Southern and Antarctic Lands,TF,ATF,iso3166
+7910,South Africa,ZA,ZAF,iso3166
+7920,Namibia,NA,NAM,iso3166
+7930,Botswana,BW,BWA,iso3166
+7940,Zambia,ZM,ZMB,iso3166
+7950,Eswatini,SZ,SWZ,iso3166
+7960,Zimbabwe,ZW,ZWE,iso3166
+7970,Malawi,MW,MWI,iso3166
+7990,Lesotho,LS,LSO,iso3166
+9030,Puerto Rico,PR,PRI,iso3166
+9110,Virgin Islands of the United States,VI,VIR,iso3166
+9350,Guam,GU,GUM,iso3166
+9510,American Samoa,AS,ASM,iso3166
+9610,Northern Mariana Islands,MP,MNP,iso3166
+9800,United States Minor Outlying Islands,UM,UMI,iso3166

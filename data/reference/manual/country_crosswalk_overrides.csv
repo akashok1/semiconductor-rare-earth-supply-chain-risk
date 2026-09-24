@@ -1,0 +1,2 @@
+cty_code,iso3,reason
+4803,,"Kosovo: Schedule C code KV is not ISO 3166-1 (Kosovo has no official alpha-3), and PortWatch carries no Kosovo row under any code in either the ports or the countries database. Left blank rather than using the unofficial XKX; landlocked, so it would need a gateway in step 6 either way"

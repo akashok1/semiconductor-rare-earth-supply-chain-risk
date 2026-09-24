@@ -1,0 +1,35 @@
+port_code,port_name,coast,reason
+2502,"ANDRADE, CA",land_border,Mexico land crossing inside the San Diego seaport district (25)
+2503,"CALEXICO, CA",land_border,Mexico land crossing inside the San Diego seaport district (25)
+2504,SAN YSIDRO,land_border,Mexico land crossing inside the San Diego seaport district (25)
+2505,"TECATE, CA",land_border,Mexico land crossing inside the San Diego seaport district (25)
+2506,OTAY MESA,land_border,Mexico land crossing inside the San Diego seaport district (25)
+2507,CALEXICO-EAST,land_border,Mexico land crossing inside the San Diego seaport district (25)
+3004,"BLAINE, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3009,"SUMAS, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3011,"NIGHTHAWK, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3012,"DANVILLE, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3013,"FERRY, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3015,"BOUNDARY, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3016,"LAURIER, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3017,"POINT ROBERTS, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3019,"OROVILLE, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3023,"LYNDEN, WA",land_border,Canada land crossing inside the Seattle seaport district (30)
+3025,METALINE FALLS,land_border,Canada land crossing inside the Seattle seaport district (30)
+3804,"SAGINAW/BAY CITY, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3807,"DETROIT METRO AIRPORT, DETROIT, MI",interior,"Airport inside the Detroit land border district (38), not a land crossing"
+3808,"ESCANABA, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3809,"MARQUETTE, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3814,"ALGONAC, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3815,"MUSKEGON, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3816,"GRAND HAVEN, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3818,"ROGERS CITY, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3819,"DETOUR, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3842,"PRESQUE ISLE, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3843,"ALPENA, MI",interior,"Great Lakes port inside the Detroit land border district (38), not a land crossing"
+3881,OAKLAND/PONTIAC AIRPORT,interior,"Airport inside the Detroit land border district (38), not a land crossing"
+3882,"WILLOW RUN AIRPORT, YPSILANTI, MI",interior,"Airport inside the Detroit land border district (38), not a land crossing"
+3883,"CAPITAL REGION INTL AIRPORT, LANSING, MI",interior,"Airport inside the Detroit land border district (38), not a land crossing"
+1803,"JACKSONVILLE, FL",east,Atlantic port in Tampa customs district 18
+1805,"FERNANDINA BEACH, FL",east,Atlantic port in Tampa customs district 18
+1816,"PORT CANAVERAL, FL",east,Atlantic port in Tampa customs district 18

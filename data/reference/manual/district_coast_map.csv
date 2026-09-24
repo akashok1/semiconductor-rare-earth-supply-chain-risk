@@ -1,0 +1,47 @@
+district_code,district_name,coast,reason
+01,"PORTLAND, ME",east,Atlantic seaport district (Maine and New Hampshire)
+02,"ST. ALBANS, VT",land_border,Canada land border crossings (Vermont)
+04,"BOSTON, MA",east,Atlantic seaport district (Massachusetts and Connecticut)
+05,"PROVIDENCE, RI",east,Atlantic seaport district (Rhode Island)
+07,"OGDENSBURG, NY",land_border,Canada land border crossings (northern New York)
+09,"BUFFALO, NY",land_border,"Canada land border crossings (Buffalo-Niagara Falls); district also holds Lake Ontario ports and upstate airports, not split out by the spike"
+10,"NEW YORK CITY, NY",east,Atlantic seaport district (New York and northern New Jersey)
+11,"PHILADELPHIA, PA",east,Atlantic seaport district (Delaware River)
+13,"BALTIMORE, MD",east,Atlantic seaport district (Chesapeake Bay)
+14,"NORFOLK, VA",east,Atlantic seaport district (Hampton Roads)
+15,"WILMINGTON, NC",east,Atlantic seaport district (North Carolina)
+16,"CHARLESTON, SC",east,Atlantic seaport district (South Carolina)
+17,"SAVANNAH, GA",east,Atlantic seaport district (Georgia)
+18,"TAMPA, FL",gulf,"Gulf seaport district (Tampa Bay, Florida panhandle); its Atlantic ports Jacksonville, Fernandina Beach and Port Canaveral are handled by port overrides"
+19,"MOBILE, AL",gulf,Gulf seaport district (Alabama and Mississippi)
+20,"NEW ORLEANS, LA",gulf,Gulf seaport district (Lower Mississippi); inland river ports in the district fall here too
+21,"PORT ARTHUR, TX",gulf,Gulf seaport district (Sabine-Neches)
+23,"LAREDO, TX",land_border,Mexico land border crossings; no seaport in the district
+24,"EL PASO, TX",land_border,Mexico land border crossings
+25,"SAN DIEGO, CA",west,Pacific seaport district; Mexico land crossings in the district are port overrides
+26,"NOGALES, AZ",land_border,Mexico land border crossings
+27,"LOS ANGELES, CA",west,Pacific seaport district (Los Angeles and Long Beach)
+28,"SAN FRANCISCO, CA",west,Pacific seaport district (San Francisco Bay)
+29,"COLUMBIA-SNAKE, OR",west,Pacific seaport district (Columbia River)
+30,"SEATTLE, WA",west,Pacific seaport district (Puget Sound); Canada land crossings in the district are port overrides
+31,"ANCHORAGE, AK",west,"Pacific district (Alaska), grouped with west"
+32,"HONOLULU, HI",west,"Pacific district (Hawaii), grouped with west"
+33,"GREAT FALLS, MT",land_border,Canada land border crossings (Montana and Idaho)
+34,"PEMBINA, ND",land_border,Canada land border crossings (North Dakota and Minnesota)
+35,"MINNEAPOLIS, MN",interior,Interior district with no ocean coast or land border crossing
+36,"DULUTH, MN",land_border,Canada land border crossings (International Falls and Grand Portage)
+37,"MILWAUKEE, WI",interior,"Great Lakes ports, not an ocean coast"
+38,"DETROIT, MI",land_border,Canada land border crossings (Detroit and Port Huron and Sault Ste. Marie); airports and Great Lakes towns in the district are port overrides
+39,"CHICAGO, IL",interior,"Great Lakes and inland ports, not an ocean coast"
+41,"CLEVELAND, OH",interior,"Great Lakes and inland ports, not an ocean coast"
+45,"ST LOUIS, MO",interior,Interior district with no ocean coast or land border crossing
+49,"SAN JUAN, PR",east,"Caribbean district (Puerto Rico), grouped with east"
+51,VIRGIN ISLANDS OF THE UNITED STATES,east,"Caribbean district (US Virgin Islands), grouped with east"
+52,"MIAMI, FL",east,Atlantic seaport district (south Florida)
+53,"HOUSTON-GALVESTON, TX",gulf,Gulf seaport district (Houston and Galveston)
+54,"WASHINGTON, DC",east,Mid-Atlantic district (Washington DC area)
+55,"DALLAS/FT. WORTH, TX",interior,Interior district with no ocean coast or land border crossing
+59,NORFOLK/MOBILE/CHARLESTON,non_geographic,"Combined legacy code mixing east and gulf; excluded by the spike rather than guessed"
+60,VESSELS UNDER THEIR OWN POWER (IMPORTS AND EXPORTS),non_geographic,Not a place: vessels entering under their own power
+70,LOW-VALUED IMPORTS AND EXPORTS,non_geographic,Not a place: low-value shipment aggregate
+80,MAIL SHIPMENTS (EXPORT ONLY),non_geographic,Not a place: export-only mail aggregate
