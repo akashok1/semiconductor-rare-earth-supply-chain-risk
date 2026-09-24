@@ -126,3 +126,5 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   the legacy 15-origin matrix with no crossing flip at 200km; max
   distance change near a route 38.1km. Full routing runs in about 30
   seconds, not the hours the weighted design was assumed to cost.
+- 2026-09-23 22:15 The routing matrix is now 105,252 rows (1,253 origin ports × 3 US coasts × 28 chokepoints, under data/reference/generated/), and 87 routes, all from Persian Gulf origins, come within 200km of Hormuz. docs/07 §3.1, the charter (D-6) and the BRD (BR-08) describe a 15×2×28 = 840-row matrix at data/reference/routing_matrix.csv with Hormuz at 0 of 30. Code wins.
+- 2026-09-23 22:15 Four Brazilian origin ports (port693, port2370, port2099, port2372) are moved 520–1,078km to reach the sea-route network. CLAUDE.md's routing limitations don't mention snap distance. Code wins; worth a disclosed limitation or a port override.

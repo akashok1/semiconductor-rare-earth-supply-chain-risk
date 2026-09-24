@@ -8,7 +8,8 @@ Inputs, all local (this script makes no network call):
     validates them.
   - PortWatch chokepoints database, data/raw/
     portwatch_chokepoints_geometry.json, validated by
-    ingest.portwatch.validate_chokepoints_payload. Must hold 28 chokepoints.
+    ingest.portwatch.validate_chokepoints_payload. Every chokepoint it holds
+    is routed; it must be non-empty with unique ids.
   - data/reference/manual/us_destination_ports.csv: one PortWatch port per
     coast (west, east, gulf). Destination coordinates come from the ports
     database, not the CSV.
@@ -88,7 +89,6 @@ US_DESTINATIONS_PATH = REFERENCE_DIR / "manual" / "us_destination_ports.csv"
 ROUTES_PATH = REFERENCE_DIR / "generated" / "routes.csv"
 ROUTING_MATRIX_PATH = REFERENCE_DIR / "generated" / "routing_matrix.csv"
 
-EXPECTED_CHOKEPOINT_COUNT = 28
 COASTS = ("west", "east", "gulf")
 US_ISO3 = "USA"
 EARTH_RADIUS_KM = 6371.0088
@@ -165,7 +165,8 @@ def select_origins(ports: dict[str, dict]) -> list[dict]:
 
 
 def load_chokepoints() -> list[dict]:
-    """The 28 PortWatch chokepoints, in chokepoint id order."""
+    """Every PortWatch chokepoint in the cached database, in chokepoint id
+    order. Raises only if there are none or an id repeats."""
     if not CHOKEPOINTS_CACHE_FILE.exists():
         raise RoutingInputError(
             f"{CHOKEPOINTS_CACHE_FILE.name} is not cached. Run "
@@ -178,10 +179,8 @@ def load_chokepoints() -> list[dict]:
         a = feature["attributes"]
         lat, lon = _check_coords(a["portid"], a["lat"], a["lon"])
         chokepoints.append({"id": a["portid"], "name": a["portname"], "lat": lat, "lon": lon})
-    if len(chokepoints) != EXPECTED_CHOKEPOINT_COUNT:
-        raise RoutingInputError(
-            f"Expected {EXPECTED_CHOKEPOINT_COUNT} chokepoints, found {len(chokepoints)}."
-        )
+    if not chokepoints:
+        raise RoutingInputError(f"{CHOKEPOINTS_CACHE_FILE.name} holds no chokepoints.")
     if len({c["id"] for c in chokepoints}) != len(chokepoints):
         raise RoutingInputError("Duplicate chokepoint ids.")
     return sorted(chokepoints, key=lambda c: _id_number(c["id"]))
@@ -364,13 +363,15 @@ def _validate_outputs(routes, matrix, n_origins, n_dests, n_chokepoints) -> None
         )
 
 
-def summarize(routes: list[dict], matrix: list[dict], elapsed: float, n_origins_total: int, n_dests: int) -> None:
+def summarize(
+    routes: list[dict], matrix: list[dict], elapsed: float, n_origins_total: int, n_dests: int, n_chokepoints: int
+) -> None:
     ok = [r for r in routes if r["status"] == "ok"]
     failed = [r for r in routes if r["status"] != "ok"]
     per_route = elapsed / len(routes) if routes else float("nan")
     print(f"Routes: {len(routes)} ({len(ok)} ok, {len(failed)} failed), "
           f"{len(matrix)} routing_matrix rows")
-    print(f"Elapsed {elapsed:.1f}s, {per_route * 1000:.1f} ms per route (incl. 28 chokepoint distances)")
+    print(f"Elapsed {elapsed:.1f}s, {per_route * 1000:.1f} ms per route (incl. {n_chokepoints} chokepoint distances)")
     full = n_origins_total * n_dests
     print(f"Projected full run: {full} routes, ~{full * per_route / 60:.1f} min")
     for r in failed:
@@ -416,7 +417,7 @@ def main() -> None:
     routes, matrix = compute(run_origins, destinations, chokepoints)
     elapsed = time.perf_counter() - start
     _validate_outputs(routes, matrix, len(run_origins), len(destinations), len(chokepoints))
-    summarize(routes, matrix, elapsed, len(origins), len(destinations))
+    summarize(routes, matrix, elapsed, len(origins), len(destinations), len(chokepoints))
 
     if args.sample is not None:
         return

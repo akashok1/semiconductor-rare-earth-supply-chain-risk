@@ -100,7 +100,7 @@ Or run the two committed pipeline steps directly, which write to
 `data/reference/` rather than to a findings report:
 
 ```bash
-.venv/bin/python -m ingest.reference    # port/chokepoint coordinates, routing_matrix.csv
+.venv/bin/python -m ingest.routing      # sea routes, generated/routes.csv and routing_matrix.csv
 .venv/bin/python -m ingest.hs_bridge    # HS2017/HS2022 bridge table, hs_bridge.csv
 ```
 
@@ -110,9 +110,9 @@ not part of the pipeline; open them with the `.venv` kernel to follow the same
 exploration path interactively.
 
 `data/reference/mode_shares.csv` and `data/reference/port_entry_shares.csv`
-are committed outputs of the Census spike. `data/reference/routing_matrix.csv`,
-`port_coordinates.csv`, and `chokepoint_coordinates.csv` are committed outputs
-of `ingest/reference.py` (`.venv/bin/python -m ingest.reference`), and
+are committed outputs of the Census spike.
+`data/reference/generated/routes.csv` and `routing_matrix.csv` are committed
+outputs of `ingest/routing.py` (`.venv/bin/python -m ingest.routing`), and
 `data/reference/hs_bridge.csv` is a committed output of `ingest/hs_bridge.py`
 (`.venv/bin/python -m ingest.hs_bridge`). `data/reference/basket_selection.csv`
 is a hand-added scaffold, not yet produced by any script; its

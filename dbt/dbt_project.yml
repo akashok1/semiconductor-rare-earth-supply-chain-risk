@@ -40,6 +40,11 @@ seeds:
         +column_types: {port_code: text, district_code: text}
       census_country_crosswalk:
         +column_types: {cty_code: text, iso2: text, iso3: text}
+      # Written by ingest/routing.py and loaded into raw by load.py, not seeded.
+      routes:
+        +enabled: false
+      routing_matrix:
+        +enabled: false
     manual:
       basket_codes:
         +column_types: {hs6_code: text, hs_version: text}
@@ -51,14 +56,8 @@ seeds:
         +column_types: {port_code: text}
       country_crosswalk_overrides:
         +column_types: {cty_code: text, iso3: text}
-    # Legacy seeds from ingest/reference.py, retired in steps 6 and 8.
+    # Legacy seeds from the retired ingest/reference.py, removed in step 8.
     mode_shares:
       +column_types: {hs6_code: text}
     port_entry_shares:
       +column_types: {hs6_code: text}
-    chokepoint_coordinates:
-      +column_types: {portid: text}
-    port_coordinates:
-      +column_types: {locode: text, country_iso3: text}
-    routing_matrix:
-      +column_types: {origin_locode: text, origin_country_iso3: text, destination_locode: text, portid: text}
