@@ -1,0 +1,4 @@
+coast,portid,portname,census_port_code,reason
+west,port664,Los Angeles-Long Beach,2704,"Largest west coast Census port by 2018-2025 basket vessel value (2704 Los Angeles, 34.0% of all basket vessel value). PortWatch combines Los Angeles and Long Beach into one port (LOCODE US LAX), matched by name and LOCODE"
+east,port815,New York-New Jersey,1003,"Largest east coast Census port by 2018-2025 basket vessel value (1003 Newark, 12.9%). PortWatch carries no separate Newark port; New York-New Jersey (no LOCODE) sits in Newark Bay, matched by name and coordinates"
+gulf,port481,Houston (US-TX),5301,"Largest gulf Census port by 2018-2025 basket vessel value (5301 Houston, 11.7%). Matched by name and LOCODE US HOU"

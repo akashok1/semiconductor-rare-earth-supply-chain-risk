@@ -74,6 +74,8 @@ from ingest.config import (  # noqa: E402
 CACHE_DIR = REPO_ROOT / "data" / "raw"
 PAGE_SIZE = 1000
 MAX_PAGES = 500  # hard cap; largest known pull (daily transits) is 79 pages
+CHOKEPOINTS_CACHE_FILE = CACHE_DIR / "portwatch_chokepoints_geometry.json"
+PORTS_CACHE_PREFIX = "portwatch_ports_database"
 
 
 class PortwatchError(RuntimeError):
@@ -101,16 +103,11 @@ def _get_json(url: str, params: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 
-def fetch_chokepoints(force: bool = False) -> tuple[Path, int]:
-    """Chokepoint point geometry. Returns (cache_file, api_calls)."""
-    cache_file = CACHE_DIR / "portwatch_chokepoints_geometry.json"
-    if not force and cache_file.exists():
-        return cache_file, 0
-
-    payload = _get_json(
-        _service_url(PORTWATCH_CHOKEPOINTS_SERVICE),
-        {"where": "1=1", "outFields": "*", "outSR": 4326, "f": "json"},
-    )
+def validate_chokepoints_payload(payload: dict) -> None:
+    """Raise unless the payload is a complete single-fetch chokepoints
+    response: no ArcGIS error body and no exceededTransferLimit."""
+    if "error" in payload:
+        raise PortwatchError(f"Chokepoints database carries an ArcGIS error body: {payload['error']}")
     if payload.get("exceededTransferLimit"):
         raise PortwatchError(
             "Chokepoints database query returned exceededTransferLimit=true "
@@ -118,6 +115,19 @@ def fetch_chokepoints(force: bool = False) -> tuple[Path, int]:
             "chokepoint) no longer holds. This pull needs pagination before "
             "it can be trusted."
         )
+
+
+def fetch_chokepoints(force: bool = False) -> tuple[Path, int]:
+    """Chokepoint point geometry. Returns (cache_file, api_calls)."""
+    cache_file = CHOKEPOINTS_CACHE_FILE
+    if not force and cache_file.exists():
+        return cache_file, 0
+
+    payload = _get_json(
+        _service_url(PORTWATCH_CHOKEPOINTS_SERVICE),
+        {"where": "1=1", "outFields": "*", "outSR": 4326, "f": "json"},
+    )
+    validate_chokepoints_payload(payload)
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     temp_file = CACHE_DIR / ".tmp_portwatch_chokepoints_geometry.json"
@@ -266,6 +276,19 @@ def _paginated_pull(
     return final_paths, api_calls
 
 
+def read_cached_features(cache_prefix: str) -> list[dict]:
+    """Every feature across a paginated pull's cached pages, validated as a
+    cached rerun validates them. No network: raises if nothing is cached."""
+    pages = _cached_pages(cache_prefix)
+    if not pages:
+        raise PortwatchError(
+            f"{cache_prefix}: no cached pages in data/raw/. Run "
+            "`python -m ingest.portwatch` first."
+        )
+    _validate_cached_pages(cache_prefix, pages)
+    return [f for path in pages for f in json.loads(path.read_text())["features"]]
+
+
 # ---------------------------------------------------------------------------
 # 2. Daily chokepoint transits
 # ---------------------------------------------------------------------------
@@ -287,7 +310,7 @@ def fetch_daily_transits(force: bool = False) -> tuple[list[Path], int]:
 
 def fetch_ports_database(force: bool = False) -> tuple[list[Path], int]:
     return _paginated_pull(
-        "portwatch_ports_database",
+        PORTS_CACHE_PREFIX,
         _service_url(PORTWATCH_PORTS_SERVICE),
         {
             "where": "1=1",

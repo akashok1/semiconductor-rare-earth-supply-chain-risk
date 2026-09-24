@@ -103,3 +103,26 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   deferred pending an SME scope decision after the refactor merges.
 - 2026-09-23 20:53 Schedule C (country.txt, produced 31JAN14) carries ISO alpha-2 only, and PortWatch_countries_database has ISO3 with no ISO2, so there is no source-backed Schedule C to ISO3 join without a manual map or a new dependency. CLAUDE.md refactor step 5b assumes a direct Schedule C to ISO3 crosswalk. The code wins; step 5b Part 3 is blocked pending a decision.
 - 2026-09-23 20:53 District 18 (Tampa) holds Atlantic ports Jacksonville, Fernandina Beach and Port Canaveral, and the spike's district map labels them Gulf (Jacksonville is $1.58B, 1.5% of 2018-2025 vessel value). CLAUDE.md's coast shares (sum 0.948-1.000) were derived from that map. The data wins; the coast shares include this misassignment until a 1803 override is approved.
+- 2026-09-23 21:10 District 18 Atlantic ports reassigned to east by port
+  override: 1803 Jacksonville ($1.58B, 1.55% of 2018-2025 vessel value)
+  and 1816 Port Canaveral; 1805 Fernandina Beach added but carries no
+  basket vessel value. Coast split now west 49.8%, east 36.4%, gulf
+  13.5%. The spike and CLAUDE.md coast shares included Jacksonville in
+  gulf. Data wins.
+- 2026-09-23 21:10 Census to ISO3 crosswalk uses Schedule C ISO alpha-2
+  plus pycountry (ISO 3166). 238 of 241 codes match; Kosovo has no
+  official alpha-3 and $0 containerized value. No source-backed
+  alternative existed. Dependency added.
+- 2026-09-23 21:10 15 countries with containerized value have no
+  PortWatch port, 2.10% of the total; Laos alone is 1.48% ($1.49B).
+  CLAUDE.md assumed landlocked gaps were negligible. Routed in step 6
+  through a gateway country's port weights.
+- - 2026-09-23 21:45 PortWatch share_country_maritime_export has no
+  documented unit and covers all cargo: summed over container ports it
+  falls below 95 for 63 of 174 countries. CLAUDE.md treated it as a
+  container-relevant weight. Kept as headline weight with a container
+  vessel count sensitivity in the exposure mart. Assumption logged.
+- 2026-09-23 21:45 Rebuilt routing (1,253 ports, 3,759 routes) matches
+  the legacy 15-origin matrix with no crossing flip at 200km; max
+  distance change near a route 38.1km. Full routing runs in about 30
+  seconds, not the hours the weighted design was assumed to cost.
