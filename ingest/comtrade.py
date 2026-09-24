@@ -1,35 +1,40 @@
-"""Comtrade ingest: US annual imports, 2022-2025, HS2022 (H6), all basket codes.
+"""Comtrade ingest: US annual imports by partner, every bridge code, every
+project year.
 
-Four calls, one per year, each covering every H6 code in
-data/reference/generated/hs_bridge.csv at once (comma-joined cmdCode, per
-docs/07_assumptions_limitations.md and CLAUDE.md this is a single call per
-year, not per code). 2018-2021 (H5) is already cached from
-analysis/verification_round1.py; this script only extends the range forward
-across the 2021/2022 classification break, per hs_bridge.csv.
+Years come from config (YEAR_START..YEAR_END). The HS vintage requested for
+each year comes from data/reference/generated/hs_bridge.csv: the bridge's
+single non-null vintage_break_year splits the range, years before it use the
+older hs_version's code list and years from it onward the newer one's. Each
+code list is the distinct hs6_code values for that hs_version. One call per
+year covers every code at once (comma-joined cmdCode).
 
-Queries go to /get/C/A/HS (combined classification), not /get/C/A/H6: the
-latter returns HTTP 500 for every request, empirically (a specific-vintage
-clCode is accepted by Comtrade's availability/reference endpoints but not by
-this data endpoint). /get/C/A/HS returns each reporter's native
-classification per period -- H6 for 2022 onward -- and every row's actual
-vintage still comes back in classificationCode, same as the already-cached
-2018-2021 (H5) files pulled the same way by
-analysis/verification_round1.py.
+Queries go to /get/C/A/HS, not /get/C/A/H5 or /H6: the vintage-specific
+endpoints return HTTP 500. /get/C/A/HS returns the reporter's native vintage
+per period, and each row reports it in classificationCode.
 
-The ``comtradeapicall`` package (CLAUDE.md's stated architecture for this
-source) is not used here: its ``getFinalData`` swallows non-200 responses by
-printing the body and returning ``None`` rather than raising, which cannot
-satisfy "fail loudly on 401 or any auth failure" below. This script instead
-follows the raw-``requests`` pattern already proven in
-analysis/verification_round1.py and ingest/reference.py, and produces
-byte-identical cache-file shape to the existing 2018-2021 files. See the
-FINDINGS block accompanying the commit that introduced this file.
+Every response, fresh or cached, is validated before use:
+  - the distinct cmdCode set equals the bridge code list exactly,
+  - every row's classificationCode equals the expected hs_version,
+  - the "error" field is empty.
+A fresh response that fails is never written to disk. A cached file that
+fails raises, so a bad cache fails loudly.
 
-Usage: .venv/bin/python -m ingest.comtrade
+Each year caches to data/raw/comtrade_final_C_A_HS_{year}.json. A cached year
+makes zero calls and its file is only read. --refresh <year|all> ignores the
+cache for that year, fetches, validates, writes to a temp file and only then
+moves it over the cached file, so a failed refresh leaves the cache intact.
+
+The API key travels only as a request header. HTTP 401/403 raises
+ComtradeAuthError before anything is written; 429 is retried with backoff;
+any other non-200 raises. comtradeapicall is not used because it swallows
+non-200 responses and returns None.
+
+Usage: .venv/bin/python -m ingest.comtrade [--refresh {YEAR,all}]
 """
 
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import sys
@@ -41,7 +46,12 @@ import requests
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from ingest.config import COMTRADE_DATA_BASE, require_comtrade_api_key  # noqa: E402
+from ingest.config import (  # noqa: E402
+    COMTRADE_DATA_BASE,
+    YEAR_END,
+    YEAR_START,
+    require_comtrade_api_key,
+)
 
 CACHE_DIR = REPO_ROOT / "data" / "raw"
 HS_BRIDGE_PATH = REPO_ROOT / "data" / "reference" / "generated" / "hs_bridge.csv"
@@ -50,17 +60,20 @@ REPORTER_USA = "842"
 FLOW_IMPORT = "M"
 CUSTOMS_ALL = "C00"
 
-HS_VERSION = "H6"
-YEARS = [2022, 2023, 2024, 2025]
+YEARS = range(YEAR_START, YEAR_END + 1)
 
 
 class ComtradeAuthError(RuntimeError):
     """Raised on HTTP 401/403 from the Comtrade API. Never includes the key."""
 
 
-class ComtradeCodeCountError(RuntimeError):
-    """Raised when a year's response covers a different set of codes than
-    hs_bridge.csv says it should."""
+class ComtradeBridgeError(RuntimeError):
+    """Raised when hs_bridge.csv does not define an unambiguous vintage split."""
+
+
+class ComtradeValidationError(RuntimeError):
+    """Raised when a response (fresh or cached) does not match what
+    hs_bridge.csv says the year should contain."""
 
 
 def _comtrade_headers() -> dict:
@@ -70,24 +83,75 @@ def _comtrade_headers() -> dict:
     return {"Ocp-Apim-Subscription-Key": require_comtrade_api_key()}
 
 
-def _load_h6_codes() -> list[str]:
-    """Distinct HS6 codes for hs_version == H6, from hs_bridge.csv."""
-    codes: set[str] = set()
+def _cache_file(year: int) -> Path:
+    return CACHE_DIR / f"comtrade_final_C_A_HS_{year}.json"
+
+
+def load_year_plan() -> dict[int, tuple[str, list[str]]]:
+    """Map each project year to (hs_version, sorted code list), from
+    hs_bridge.csv. Raises unless the bridge has exactly one distinct non-null
+    vintage_break_year and exactly two hs_versions."""
     with HS_BRIDGE_PATH.open(newline="") as f:
-        for row in csv.DictReader(f):
-            if row["hs_version"] == HS_VERSION:
-                codes.add(row["hs6_code"])
-    return sorted(codes)
+        rows = list(csv.DictReader(f))
+
+    breaks = {r["vintage_break_year"] for r in rows if r["vintage_break_year"].strip()}
+    if len(breaks) != 1:
+        raise ComtradeBridgeError(
+            f"hs_bridge.csv has {len(breaks)} distinct non-null "
+            f"vintage_break_year value(s) {sorted(breaks)}, expected exactly one."
+        )
+    break_year = int(breaks.pop())
+
+    codes_by_version: dict[str, set[str]] = {}
+    for r in rows:
+        codes_by_version.setdefault(r["hs_version"], set()).add(r["hs6_code"])
+    if len(codes_by_version) != 2:
+        raise ComtradeBridgeError(
+            f"hs_bridge.csv has hs_version values {sorted(codes_by_version)}, "
+            "expected exactly two (one each side of the vintage break)."
+        )
+    old_version, new_version = sorted(codes_by_version)
+
+    plan = {}
+    for year in YEARS:
+        version = old_version if year < break_year else new_version
+        plan[year] = (version, sorted(codes_by_version[version]))
+    return plan
 
 
-def _fetch_year(cache_name: str, year: int, codes: list[str]) -> dict:
-    """GET one year of final trade data for every code at once, caching the
-    raw JSON response under data/raw/cache_name. Raises ComtradeAuthError on
-    401/403 before writing anything to disk. Retries once on 429."""
-    cache_file = CACHE_DIR / cache_name
-    if cache_file.exists():
-        return json.loads(cache_file.read_text())
+def validate(year: int, payload: dict, hs_version: str, codes: list[str]) -> set[str]:
+    """Raise ComtradeValidationError unless the payload's code set,
+    classificationCode and error field are what the bridge expects. Returns
+    the set of classificationCode values seen."""
+    error = payload.get("error")
+    if error:
+        raise ComtradeValidationError(f"{year}: response carries error: {error!r}")
 
+    rows = payload.get("data")
+    if not isinstance(rows, list):
+        raise ComtradeValidationError(f"{year}: response has no data list.")
+
+    seen = {r["cmdCode"] for r in rows}
+    expected = set(codes)
+    if seen != expected:
+        raise ComtradeValidationError(
+            f"{year}: cmdCode set does not match hs_bridge.csv "
+            f"(hs_version={hs_version}). Missing: {sorted(expected - seen)}. "
+            f"Unexpected: {sorted(seen - expected)}."
+        )
+
+    classifications = {r["classificationCode"] for r in rows}
+    if classifications != {hs_version}:
+        raise ComtradeValidationError(
+            f"{year}: classificationCode values {sorted(classifications)}, "
+            f"expected only {hs_version}."
+        )
+    return classifications
+
+
+def _fetch(year: int, codes: list[str]) -> dict:
+    """GET one year for every code at once. Raises ComtradeAuthError on
+    401/403, retries on 429, raises on any other non-200. Writes nothing."""
     params = {
         "reporterCode": REPORTER_USA,
         "period": year,
@@ -118,52 +182,55 @@ def _fetch_year(cache_name: str, year: int, codes: list[str]) -> dict:
             continue
         break
     resp.raise_for_status()
+    return resp.json()
 
-    payload = resp.json()
+
+def pull_year(year: int, hs_version: str, codes: list[str], force: bool) -> tuple[set[str], int]:
+    """Return (classificationCode values seen, API calls made) for one year.
+    A cached year is read and validated, never rewritten, unless force."""
+    cache_file = _cache_file(year)
+    if cache_file.exists() and not force:
+        payload = json.loads(cache_file.read_text())
+        return validate(year, payload, hs_version, codes), 0
+
+    payload = _fetch(year, codes)
+    classifications = validate(year, payload, hs_version, codes)
+
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_file.write_text(json.dumps(payload, indent=2))
+    temp_file = CACHE_DIR / f".tmp_{cache_file.name}"
+    try:
+        temp_file.write_text(json.dumps(payload, indent=2))
+        temp_file.replace(cache_file)
+    except Exception:
+        temp_file.unlink(missing_ok=True)
+        raise
     time.sleep(1.5)  # stay well under the free-tier rate limit
-    return payload
-
-
-def _validate_code_coverage(year: int, payload: dict, expected_codes: list[str]) -> None:
-    seen_codes = {row["cmdCode"] for row in payload.get("data", [])}
-    expected_count = len(expected_codes)
-    seen_count = len(seen_codes)
-    if seen_count != expected_count:
-        raise ComtradeCodeCountError(
-            f"{year}: response covers {seen_count} distinct cmdCode value(s), "
-            f"expected {expected_count} from data/reference/generated/hs_bridge.csv "
-            f"(hs_version={HS_VERSION}). Seen: {sorted(seen_codes)}. "
-            f"Expected: {expected_codes}."
-        )
-
-
-def pull_year(year: int, codes: list[str]) -> Path:
-    cache_name = f"comtrade_final_C_A_HS_{year}.json"
-    cache_file = CACHE_DIR / cache_name
-    already_cached = cache_file.exists()
-
-    payload = _fetch_year(cache_name, year, codes)
-    _validate_code_coverage(year, payload, codes)
-
-    if already_cached:
-        print(f"  {year}: already cached ({cache_name}), 0 API calls")
-    else:
-        print(f"  {year}: fetched and cached ({cache_name})")
-    return cache_file
+    return classifications, 1
 
 
 def main() -> None:
-    print(f"Loading {HS_VERSION} code list from {HS_BRIDGE_PATH.relative_to(REPO_ROOT)}...")
-    codes = _load_h6_codes()
-    print(f"  {len(codes)} code(s): {codes}")
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--refresh",
+        choices=[str(y) for y in YEARS] + ["all"],
+        help="Ignore the cache for this year (or all years), fetch fresh, and "
+        "replace the cached file only once the response validates.",
+    )
+    args = parser.parse_args()
 
-    print(f"Pulling Comtrade final trade data for {YEARS}...")
-    for year in YEARS:
-        pull_year(year, codes)
-
-    print("Done.")
+    plan = load_year_plan()
+    total_calls = 0
+    print(f"Comtrade final trade data, {YEAR_START}-{YEAR_END}, codes from "
+          f"{HS_BRIDGE_PATH.relative_to(REPO_ROOT)}")
+    for year, (hs_version, codes) in plan.items():
+        force = args.refresh in (str(year), "all")
+        classifications, calls = pull_year(year, hs_version, codes, force)
+        total_calls += calls
+        print(
+            f"  {year}: expected {hs_version}, {len(codes)} codes, "
+            f"classificationCode {sorted(classifications)}, {calls} API call(s)"
+        )
+    print(f"Done. {total_calls} API call(s) total.")
 
 
 if __name__ == "__main__":
