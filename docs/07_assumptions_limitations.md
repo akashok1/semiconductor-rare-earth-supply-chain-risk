@@ -4,7 +4,7 @@ Working reference for the Import Concentration Risk build. Records what was
 assumed, what was tested, what changed as a result, and what remains
 unverifiable. Kept current as the build proceeds.
 
-Last updated: 2026-09-17
+Last updated: 2026-09-24
 
 ---
 
@@ -13,15 +13,14 @@ Last updated: 2026-09-17
 | Source | What it gives | Access | Used for |
 |---|---|---|---|
 | UN Comtrade | Annual US import value by partner country and HS6 code, 2018 to 2025 | API, free tier key, 500 calls/day | Every dollar figure and every concentration measure |
-| US Census international trade | Monthly US imports by HS6 with air, vessel, containerized vessel values, and port of entry | API, free key | Mode of transport shares and port of entry shares, held as reference multipliers |
-| IMF PortWatch | Daily transit counts and capacity by vessel type for 28 maritime chokepoints, 2019 onward, plus chokepoint point coordinates from a separate spatial layer | ArcGIS REST, no key | Chokepoint list and coordinates, vessel mix evidence, event study |
+| US Census international trade | Monthly US imports by HS6 and country with general, air, vessel and containerized vessel values (imports/hs), and vessel value by US port of entry (imports/porths) | API, free key | Each country's containerized vessel value and each code's total import value (the exposure numerator and denominator), and each code's coast shares |
+| IMF PortWatch | Chokepoints database (28 points with coordinates); daily transit counts and capacity by vessel type per chokepoint, 2019 onward; ports database (2,065 ports with portid, ISO3, coordinates, container vessel counts and country maritime trade shares) | ArcGIS REST, no key | Chokepoint list and coordinates; origin and US destination port coordinates; within-country port weights; transits held for a future disruption case study, read by no current mart |
 | searoute (Eurostat network) | Shortest sea route between two points, computed over a pre-built ocean mesh with Dijkstra | Python package, computed locally, no API | Which chokepoints a route between two ports passes near |
 
 Static reference documents, cached as files rather than queried:
 
 | Document | Used for |
 |---|---|
-| UN/LOCODE, improved republication filling official coordinate gaps from OpenStreetMap | Resolving origin and destination port coordinates. Official UN/LOCODE has no coordinates for Kaohsiung, among others |
 | Census Schedule D port and district codes | Classifying US ports of entry into coastal regions and land borders |
 | UN Stats HS correlation tables | Mapping HS2017 codes to HS2022 codes in the bridge table |
 | USGS Mineral Commodity Summaries, Interior critical minerals list | Justifying rare earth basket selection |
@@ -53,43 +52,84 @@ For a canonical product spanning several HS codes, partner values are summed
 across those codes first and shares computed on the total. HHI of a combined
 product is not the average of its components' HHIs.
 
-**Exposure**, per canonical product per chokepoint per year:
+**Exposure** is modelled, from Census plus computed routes, per HS6 code,
+year, chokepoint and distance threshold. It is computed per HS6 code, not
+per canonical product, because vessel share diverges between successor
+codes (854140's successors range from 2.75% to 95.2% containerized vessel).
+It is grouped under its canonical product for display, never blended.
 
 ```
-exposure = sum over partners of [
-      partner_share_of_import_value          (Comtrade, measured)
-    x containerized_vessel_share_of_that_code (Census, measured)
-    x routing_weight(partner, chokepoint)     (searoute, computed)
-]
+exposure = sum over countries c of
+             cnt_val(code, c, year) x routing_weight(code, c, chokepoint)
+           / gen_val(code, year, all countries, all modes)
+
+routing_weight = sum over coasts k (west, east, gulf) of
+             coast_share(code, year, k)
+           x sum over ports p of country c of
+               port_weight(p, c)
+             x crosses(p, US port of k, chokepoint, threshold)
+
+port_weight(p, c) = share_country_maritime_export(p), normalized over
+             c's ports with vessel_count_container > 0
 ```
 
-where
+| Term | Source | Kind |
+|---|---|---|
+| `cnt_val(code, c, year)` | Census imports/hs, country c's own containerized vessel value | Measured |
+| `gen_val(code, year)` | Census imports/hs, general imports, all countries and all modes | Measured |
+| `coast_share(code, year, k)` | Census imports/porths vessel value by US port, classified to coast by Schedule D district with manual port overrides | Measured |
+| `port_weight(p, c)` | PortWatch ports database, computed in dbt | Measured weight, normalization is a modelling choice |
+| `crosses(...)` | `min_distance_km <= threshold` on `routing_matrix`, computed in dbt at 50, 100, 200 and 300km | Computed |
 
-```
-routing_weight = sum over US coasts of [
-      coast_share_of_that_code's_vessel_value   (Census, measured)
-    x 1 if the shortest sea route from that partner's representative port
-        to that coast passes within 200km of the chokepoint, else 0
-]
-```
+- `cnt_val` is each country's own containerized vessel value. A code-level
+  vessel share is never applied to every partner: that would give
+  land-dominant partners (Mexico, 95.8% land) fake maritime exposure.
+- Air and land value stay in the denominator and are never routed. No
+  public source gives air corridors or land routing at commodity level.
+- `coast_share` is per code only. Census vessel value by port carries no
+  country, so a German and a Chinese shipment of the same code get the same
+  coast split. Disclosed limitation.
+- Countries without PortWatch ports are routed through a gateway country's
+  port weights (section 3.1). Territories with no plausible gateway are
+  unrouted.
 
-Every term is measured or computed. No term is assigned by judgement. The
-only free parameter is the 200km proximity threshold, treated as a stated
-parameter and sensitivity tested when the exposure mart is built.
+**Parameters and sensitivity.** Two modelling choices are stated as
+parameters and sensitivity tested at the exposure mart:
 
-**Worked example, permanent magnets (850511) and the Taiwan Strait:**
+- **Distance threshold.** 200km is the headline; 50, 100 and 300km are the
+  sensitivity range (A-7).
+- **Port weighting.** `share_country_maritime_export` is the headline
+  weight. It has no documented unit and covers all cargo, not containers
+  only: summed over a country's container ports it falls below 95 for 63
+  of 174 countries, hence the normalization. `vessel_count_container`,
+  normalized the same way, is the sensitivity weight (A-4).
 
-China holds roughly 80% of import value. 56.6% of 850511 value arrives by
-containerized vessel. Of that vessel value, 75.9% enters via West Coast ports
-and 17.5% via East Coast. Sea routes from Chinese ports to both coasts pass
-near the Taiwan Strait. So China contributes roughly
-0.80 x 0.566 x 0.934 = 0.42, meaning about 42% of magnet import value sits on
-routes transiting the Taiwan Strait, before adding other partners.
+The other judgement inputs are the manual reference CSVs, each row with a
+reason: the landlocked gateways, one US destination port per coast, and the
+district to coast map with its port overrides.
 
-**What this number is not.** It is not a statement that 42% of shipments
-physically passed through that strait. It is the share of import value whose
-shortest sea route would transit it. Routing substitution, transshipment and
-carrier choice are not modelled.
+**Reported alongside every exposure figure**, never silently zeroed:
+
+- vessel coverage: `cnt_val / gen_val`, the share of the code's value that
+  the figure can speak to at all;
+- unrouted share: containerized value from countries with no route;
+- coast residual: vessel value landing outside the three coasts (interior
+  and Great Lakes ports; coast shares sum to 0.948 to 1.000).
+
+Exposure is labelled as modelled wherever it sits next to measured
+concentration.
+
+**Worked example.** The earlier worked example (850511 and the Taiwan
+Strait, about 42%) applied a code-level vessel share to China's import
+share under the retired one-port-per-country method, and is withdrawn. A
+figure under the current formula will be quoted from `fct_exposure` once
+it exists, not computed by hand here.
+
+**What this number is not.** It is not a statement that a share of
+shipments physically passed through a strait. It is the share of import
+value whose shortest sea route, from its country's container ports to the
+US coast it lands on, would pass within the threshold of the chokepoint.
+Routing substitution, transshipment and carrier choice are not modelled.
 
 ---
 
@@ -98,17 +138,16 @@ carrier choice are not modelled.
 Each of these started as an assumption in the project brief and was replaced
 by a measurement.
 
+The verification phase's routing tests on 15 representative ports x 2 US
+coasts (30 routes) are superseded by the full routing run in section 3.1
+and kept as a historical record in `docs/verification/03_routing_method.md`.
+
 | Assumption | How it was tested | Result | What changed |
 |---|---|---|---|
-| Imports arrive predominantly by sea | Comtrade mode of transport field, then Census air and vessel values per HS6 | Comtrade reports TOTAL MOT only for the US. Census shows 70 to 98% air for most semiconductor codes, 20 to 53% air for rare earths. Code 854231 moves $1.59B by vessel against $196.73B total, 0.8% | Exposure applies only to the measured containerized vessel share of each code, not to total import value. Census added as a third source |
-| Both baskets route via Malacca and the South China Sea | Computed shortest sea routes from 15 supplier ports to 2 US ports, intersected with chokepoint coordinates | East Asia to US West Coast crosses the open Pacific. Across 30 routes, Panama is the most crossed at 10, then Gibraltar and Windward Passage at 7, Malacca at 6. Gibraltar, Suez and Bab el-Mandeb appear only for European, Israeli and Indian origins | Routing matrix rebuilt around the chokepoints the routes actually cross. Relevant Pacific chokepoints are Taiwan Strait, Korea Strait, Tsugaru and Luzon |
+| Imports arrive predominantly by sea | Comtrade mode of transport field, then Census air and vessel values per HS6 | Comtrade reports TOTAL MOT only for the US. Census shows 70 to 98% air for most semiconductor codes, 20 to 53% air for rare earths. Code 854231 moves $1.59B by vessel against $196.73B total, 0.8% | Exposure routes only each country's own containerized vessel value; air and land value stay in the denominator unrouted. Census added as a third source |
 | Downstream magnets are more concentrated than raw rare earths | HHI computed for both, 2023 | The reverse. Raw rare earth metals (280530) reach HHI 9,749 at 98.7% China, magnets (850511) HHI 6,413 at 79.8% | Hypothesis in the brief recorded as disproven. Caveat added that 280530 sits on a small value base, under $50M a year |
-| Routing weights must be assigned by judgement | Tested whether searoute could compute routes and whether crossings could be detected against chokepoint coordinates | Routes compute and crossings detect correctly. 15 of 28 chokepoints are crossed by no tested route, including the Strait of Hormuz | Routing matrix became computed rather than hand assigned. This removes the project's largest subjective input |
-| Nearest vertex distance is an adequate proxy for route proximity | Reimplemented using true nearest point on the route line, in an azimuthal equidistant projection centred on each chokepoint, and compared both methods on all 30 routes | No crossings differ. The vertex method happened to be correct because the Eurostat mesh places dense nodes at straits, so a route transiting a chokepoint almost always has a vertex there | Method replaced anyway. The result is now correct by construction rather than by node placement. Validated first against a synthetic case where a segment passed 2.2km from a point while both its vertices sat over 284km away |
 | HS2017 covers 2018 to the latest year | Queried Comtrade classification vintage by year for reporter USA | US data is native H5 through 2021 and H6 from 2022. Querying H5 for later years returns zero rows. 854140 and 854150 split into six HS2022 subheadings | The HS bridge table moved from optional enhancement to first release requirement |
-| Chokepoint risk in the news is relevant to these baskets | Vessel mix per chokepoint from PortWatch, and route crossings | The Strait of Hormuz is crossed by zero of 30 tested routes and is overwhelmingly tanker traffic | Hormuz retained only as a contrast case. Two independent lines of evidence, geometry and vessel mix, reach the same conclusion |
-| The unexplained residual in Census mode data might not be land trade | Compared the residual against land border port share computed from official Schedule D codes | The two independent measurements agree within 2 percentage points for all 22 codes | Residual confirmed as land trade. Accounting closes: air plus vessel plus land equals total |
-| Port coordinates entered by hand are good enough inside a 200km threshold | Replaced with coordinates resolved from the UN/LOCODE dataset for all 15 origins and both US destinations | Coordinates now sourced and citable | No hand entered coordinate remains in the project. Which port represents each country is still an editorial choice, recorded in the script |
+| The unexplained residual in Census mode data might not be land trade (verification phase, 22 HS2017 codes) | Compared the residual against land border port share computed from official Schedule D codes | The two independent measurements agree within 2 percentage points for all 22 codes | Residual confirmed as land trade. Accounting closes: air plus vessel plus land equals total |
 
 ### 3.1 Routing method (A-3, A-7, D-8, BR-10)
 
@@ -121,7 +160,8 @@ phase's 15 representative ports x 2 US coasts (30 routes, kept in
 representative port per country. Ports are keyed on PortWatch `portid` and
 ISO3, never LOCODE. Within a country, each port is weighted by its
 `share_country_maritime_export`, normalized over that country's container
-ports. The weights are computed in dbt, not in `ingest/routing.py`.
+ports. The weights are computed in dbt, not in `ingest/routing.py`;
+`vessel_count_container` is the sensitivity weight (section 2).
 
 **Countries without PortWatch ports.** Landlocked or portless countries are
 routed through a gateway country's port weights, one row each with a reason
@@ -228,7 +268,7 @@ the affected number appears.
 | A-1 | Country of origin approximates production origin | Comtrade records last substantial transformation, not corporate or upstream supply chain structure | Concentration is understated. Malaysia at 33% of integrated circuits is assembly and test of wafers fabricated elsewhere, so true fabrication concentration is higher than measured |
 | A-2 | Comtrade partner code 490, "Other Asia, nes", is Taiwan | Taiwan is not a UN member and is reported as a residual category | Minor. The category is overwhelmingly Taiwan, but it is a convention rather than a measurement |
 | A-3 | Shortest sea route approximates the route actually sailed | No public dataset links a shipment to a route. The searoute authors state the tool is built for realistic looking routes rather than navigation | Exposure attributed to the wrong chokepoint where carriers deviate for cost, weather, congestion or alliance routing |
-| A-4 | One representative port stands for a whole country's exports | Comtrade gives partner country, not port of loading | Crossings misattributed for large countries with coasts on different seas. China routed from Shanghai, so southern Chinese exports may route differently |
+| A-4 | A country's containerized exports to the US leave from its container ports in proportion to each port's `share_country_maritime_export`, normalized over the country's ports with `vessel_count_container > 0` | Comtrade and Census give partner country, not port of loading. The PortWatch share covers all cargo and all destinations, not containers bound for the US | Crossings misweighted within countries whose ports sit on different seas, e.g. northern versus southern China relative to the Taiwan Strait. Tested by rerunning exposure with `vessel_count_container` as the weight |
 | A-5 | Import value share is a reasonable proxy for physical dependency | No public source gives unit volumes consistently across products | Products with volatile prices show concentration shifts that reflect price, not supply. Net weight is reported alongside value as a partial check |
 | A-6 | Chokepoint transit counts reflect route activity | Documented AIS signal loss and transponder suppression in some regions | Affected chokepoints are flagged rather than used as reliable volumes |
 | A-7 | A 200km radius around a chokepoint's published point coordinate captures transit of that chokepoint | PortWatch publishes each chokepoint as a single point, but a chokepoint is an area. The Strait of Malacca alone runs roughly 800km, so exact intersection would be meaningless and some radius is required | A threshold too tight drops real crossings, too loose invents them. Treated as a stated parameter and sensitivity tested at the exposure mart |
@@ -240,9 +280,9 @@ the affected number appears.
 | Excluded | Reason |
 |---|---|
 | Tier two and tier three supplier visibility | No public dataset supports it. Trade data measures shipments between countries, not corporate ownership |
-| Air freight routing | Census measures the air share, but no public source gives air corridors or transfer hubs at commodity level. Air value is removed from the exposure denominator rather than routed |
-| Land border trade routing | Mexico and Canada imports are 95.5% and 74.8% land respectively. Land trade has no maritime chokepoint exposure and is excluded from exposure, not from concentration |
-| Individual ports (2,065 in PortWatch) | Adds volume without serving the decision. Chokepoints only |
+| Air freight routing | Census measures the air share, but no public source gives air corridors or transfer hubs at commodity level. Air and land value stay in the exposure denominator and are never routed |
+| Land border trade routing | Mexico and Canada imports are 95.8% and 75.2% land respectively across the 28 basket HS6 codes, 2018 to 2025 (`dbt/analyses/mexico_canada_mode_split.sql`). Land trade has no maritime chokepoint exposure and is excluded from exposure, not from concentration. Mode residual (general value not carried by air or vessel) from non-neighbour countries, Malaysia $2.49B over 2018 to 2025 (`dbt/analyses/residual_by_country.sql`), is consistent with transshipment through Mexican or Canadian ports; it is likewise unrouted and stays in the denominator |
+| Individual ports as a unit of analysis | The PortWatch ports database (2,065 ports) is used as an input: coordinates for origin and US destination ports, and within-country port weights. Ports are not reported or ranked in their own right; exposure is reported per chokepoint only |
 | Exports and re-exports | The decision concerns import dependency |
 | Importers other than the United States | Doubles data and concordance work for marginal analytical gain |
 | Landed cost, tariffs, freight rates | The decision is second sourcing and buffer stock, not cost |
@@ -263,7 +303,7 @@ the affected number appears.
 | Port of entry distribution computed on total import value | Top ports came back as LAX, SFO, Anchorage and Sea-Tac, which are airports, making the table useless for maritime routing | Recomputed on vessel value only |
 | Port classification by name keyword | Land border crossings fell into "Unclassified". CBP districts mix seaports with land crossings under one district number, so San Diego contains Otay Mesa and Seattle contains Blaine | Classify by official Schedule D port code with explicit overrides for mixed districts |
 | Chokepoint proximity measured to nearest route vertex | Vertex spacing on open ocean segments runs to hundreds of km, so a route can pass close to a chokepoint on a segment and register as a miss | Replaced with true nearest point on the route line, measured in an azimuthal equidistant projection centred on each chokepoint so planar distance from the centre equals great circle distance. No crossings changed on this route set |
-| Origin port coordinates entered by hand | Flagged in review as an unsourced input | Resolved from the UN/LOCODE dataset, fetched and cached, source documented in the script |
+| Origin port coordinates entered by hand | Flagged in review as an unsourced input | Resolved from the UN/LOCODE dataset, fetched and cached, source documented in the script. Since replaced by the PortWatch ports database |
 | WCO correlation table names 851712 (cellular telephones) as sole predecessor of both 854151 and 854159 | Checked directly against the Conversions tab: 854150 never appears as a named predecessor for anything, and the sheet is structurally one-predecessor-per-code with zero merged cells, zero blank-predecessor continuation rows and no code listed twice, so this is the table's own automated matching failing, not a parse artifact | Resolved empirically by Census import-value continuity across the 2021/2022 break instead of trusting the table: 854150 at $825.9M in 2021 against 854151+854159 at $819.9M in 2022, a 0.7% gap |
 
 ### 6.1 854150 to 854151/854159: the correlation table was wrong, resolved by value continuity
@@ -325,8 +365,10 @@ nomenclature text supports the mechanism: 854159 keeps 854150's old "other
 semiconductor devices" title verbatim, and 854151 is new for
 "semiconductor-based transducers," added to the 8541 heading text in the
 HS2022 revision. 851712 has no plausible mechanism to be a predecessor of
-either. `hs_bridge.csv` records this resolution and its basis directly in
-the row notes, not as a WCO table finding.
+either. The resolution and its evidence live in
+`data/reference/manual/bridge_overrides.csv`, one row per successor code;
+`hs_bridge.py` applies it and the generated `hs_bridge.csv` rows point back
+to that file. It is not recorded as a WCO table finding.
 
 ### 6.2 Vintage-break value continuity, all 22 basket codes
 
@@ -384,9 +426,11 @@ investigated:
 
 ---
 
-## 7. Data quality rules encoded as tests
+## 7. Data quality rules
 
-Published by IMF PortWatch and encoded as dbt tests that fail the build.
+The PortWatch rules are published by IMF PortWatch; the Comtrade and Census
+rules were verified in the raw data. None is written yet: every rule below
+is to be encoded as a dbt test.
 
 | Issue | Handling |
 |---|---|
@@ -396,6 +440,8 @@ Published by IMF PortWatch and encoded as dbt tests that fail the build.
 | 2021 receiver coverage expansion causing a step change at Gwangyang and Malacca | Flagged as a series break, never presented as growth |
 | Strait of Hormuz boundary revised February 2026 | Data version pinned. Series labelled as not comparable across the revision |
 | A missing source year | Shown as missing. Interpolation is not permitted |
+| Comtrade partner 0 (World) | Excluded at staging. In raw it equals the sum of partner rows exactly, per code per year; asserted as a completeness check |
+| Census `'-'` sentinel | Excluded at staging, although tagged DET. In raw it equals the sum of the DET rows exactly, per code per year; asserted as a completeness check |
 
 Structural rules verified in the data:
 
@@ -423,7 +469,7 @@ State these before anyone asks.
 
 - ~~Verify that the HS2017 to HS2022 split of 854140 and 854150 is a clean partition, using the UN correlation tables. Check that summed H6 value for 2022 is continuous with H5 value for 2021.~~ Done, see sections 6.1 and 6.2. 854140 is a clean 4-way partition per the correlation table. 854150 is not resolvable via the correlation table at all (it names 851712 as predecessor of both successors); resolved empirically by value continuity instead.
 - Record the current DOJ and FTC Merger Guidelines version and its HHI threshold bands.
-- Populate `candidate_source`, `us_net_import_reliance_pct` and `decision_basis` in `basket_selection.csv`, recording per candidate code the external list it appears on, the US net import reliance figure where published, and the basis for the decision to include or exclude.
 - Sensitivity test the 200km proximity threshold at the exposure mart, reporting whether the exposure ranking changes at 50, 100, 200 and 300km. This satisfies deliverable D-8 and requirement BR-10.
-- Run the concentration series across all years once the bridge table exists. No trend has been measured yet, so the question of whether concentration worsened after the 2025 Chinese export restrictions is still open.
-- Encode the vintage-break value-continuity check (section 6.2) as a dbt test once the dbt project exists: summed H6 value for a canonical product's first H6 year against its last H5 year, flagged past a tolerance. Satisfies BR-13.
+- Sensitivity test the port weighting at the exposure mart: `vessel_count_container` against the headline `share_country_maritime_export`, reporting whether the exposure ranking changes (A-4).
+- Run the concentration series across all years. No trend has been measured yet, so the question of whether concentration worsened after the 2025 Chinese export restrictions is still open.
+- Encode the vintage-break value-continuity check (section 6.2) as a dbt test: summed H6 value for a canonical product's first H6 year against its last H5 year, flagged past a tolerance. Satisfies BR-13.
