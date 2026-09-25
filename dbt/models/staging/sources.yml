@@ -13,6 +13,11 @@ sources:
         description: >
           UN Comtrade bilateral trade data (annual US imports by partner and
           HS6), loaded from data/raw/comtrade_final_C_A_*.json.
+      - name: comtrade_partners
+        description: >
+          UN Comtrade partner area reference list (code, name, ISO3, group
+          flag), loaded from data/raw/comtrade_partner_areas.json. The data
+          endpoint returns partner codes only.
       - name: census_hs_annual
         description: >
           US Census international trade, HS6 x country annual import value

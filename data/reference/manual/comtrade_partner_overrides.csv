@@ -1,0 +1,2 @@
+partner_code,iso3,partner_name,reason
+490,TWN,Taiwan,"Comtrade reports Taiwan as ""Other Asia, nes"" (partnerAreas lists 490 with pseudo-ISO3 S19); it is a real single-country partner, not an aggregate"

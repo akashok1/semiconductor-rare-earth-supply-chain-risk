@@ -60,6 +60,8 @@ seeds:
         +column_types: {port_code: text}
       country_crosswalk_overrides:
         +column_types: {cty_code: text, iso3: text}
+      comtrade_partner_overrides:
+        +column_types: {partner_code: text, iso3: text, partner_name: text}
     # Test fixtures from the verification phase, compared against models by
     # tests. Never read by a model as an input.
     fixtures:
