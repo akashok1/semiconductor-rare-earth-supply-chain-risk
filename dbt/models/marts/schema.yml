@@ -69,3 +69,94 @@ models:
         description: Partners with import value > 0.
       - name: n_codes
         description: HS6 codes with nonzero Comtrade value in the product-year.
+
+  - name: fct_exposure
+    description: >
+      Modelled chokepoint exposure per HS6 code, year, chokepoint,
+      threshold_km, weighting and dest_coast (Census cnt_val x computed
+      routes). exposure = sum over countries of cnt_val x crossing_share /
+      gen_val_total; national blends west, east and gulf by coast_share.
+      Countries with no route stay in the denominator. Never sum across
+      chokepoints.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [hs6_code, year, chokepoint_id, threshold_km, weighting, dest_coast]
+    columns:
+      - name: basket
+        data_tests: [not_null]
+      - name: canonical_product_id
+        description: From hs_bridge on hs6_code and hs_version.
+        data_tests: [not_null]
+      - name: hs6_code
+        data_tests: [not_null]
+      - name: hs_version
+        data_tests: [not_null]
+      - name: year
+        data_tests: [not_null]
+      - name: chokepoint_id
+        data_tests: [not_null]
+      - name: chokepoint_name
+        data_tests: [not_null]
+      - name: threshold_km
+        data_tests: [not_null]
+      - name: weighting
+        description: export_share (headline) or vessel_count (sensitivity).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['export_share', 'vessel_count']
+      - name: dest_coast
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['west', 'east', 'gulf', 'national']
+      - name: exposure
+        description: Modelled share of the code-year's general import value.
+        data_tests: [not_null]
+      - name: gen_val_total
+        description: Census general value, all countries and modes.
+      - name: cnt_val_total
+        description: Census containerized vessel value, all countries.
+      - name: vessel_coverage
+        description: cnt_val_total / gen_val_total.
+        data_tests: [not_null]
+      - name: unrouted_share
+        description: >
+          Share of cnt_val_total from countries with no port weights (no
+          ISO3, or no own or gateway ports).
+      - name: coast_residual
+        description: >
+          Vessel value share landing outside the three coasts; national rows
+          only, 0 on single-coast rows.
+        data_tests: [not_null]
+
+  - name: fct_exposure_summary
+    description: >
+      One 2x2 point per HS6 code, year, weighting and dest_coast. y-axis:
+      the single chokepoint with the highest exposure at 200km (tie-break
+      exposure desc, then chokepoint_name; 'none' if that exposure is 0),
+      with the same chokepoint at 100 and 300km as the band. x-axis: the
+      canonical product's HHI from fct_concentration (measured). Exposure
+      is modelled.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [hs6_code, year, weighting, dest_coast]
+    columns:
+      - name: max_chokepoint
+        data_tests: [not_null]
+      - name: max_exposure_200
+        data_tests: [not_null]
+      - name: exposure_100
+        description: Same chokepoint as max_chokepoint, at 100km.
+        data_tests: [not_null]
+      - name: exposure_300
+        description: Same chokepoint as max_chokepoint, at 300km.
+        data_tests: [not_null]
+      - name: hhi
+        description: Canonical product's HHI for the year (0-10,000).
+      - name: effective_suppliers
+        description: 10,000 / hhi.
