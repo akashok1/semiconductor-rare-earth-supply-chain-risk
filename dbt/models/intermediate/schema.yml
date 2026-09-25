@@ -1,0 +1,163 @@
+version: 2
+
+models:
+  - name: int_census_country_mode
+    description: >
+      Census import value by mode per HS6 code, country and year, December
+      YTD only. Countries map to ISO3 through the Schedule C crosswalk with
+      manual overrides taking precedence; countries without an ISO3 are kept
+      and flagged by is_missing_iso3.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [hs6_code, cty_code, year]
+      # ISO3 is 1:1 with cty_code where present, so it is also a valid key.
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [hs6_code, iso3, year]
+          config:
+            where: "iso3 is not null"
+    columns:
+      - name: hs6_code
+        data_tests: [not_null]
+      - name: hs_version
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['H5', 'H6']
+      - name: year
+        data_tests: [not_null]
+      - name: cty_code
+        data_tests: [not_null]
+      - name: iso3
+        description: Null only where is_missing_iso3 is true.
+      - name: is_missing_iso3
+        data_tests: [not_null]
+      - name: gen_val
+        data_tests: [not_null]
+      - name: air_val
+        data_tests: [not_null]
+      - name: ves_val
+        data_tests: [not_null]
+      - name: cnt_val
+        description: Containerized vessel value, a subset of ves_val.
+        data_tests: [not_null]
+      - name: land_val
+        description: gen_val - ves_val - air_val (land plus unsplit modes).
+        data_tests: [not_null]
+
+  - name: int_coast_shares
+    description: >
+      Share of vessel import value per US coast (west, east, gulf) per HS6
+      code and year, from porths_vessel. Port to coast via
+      port_coast_overrides, then district_coast_map. coast_residual is
+      1 - sum of the three shares (interior, Great Lakes, land border,
+      non-geographic and unmapped ports), repeated on each coast row.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [hs6_code, year, coast]
+    columns:
+      - name: hs6_code
+        data_tests: [not_null]
+      - name: hs_version
+        data_tests: [not_null]
+      - name: year
+        data_tests: [not_null]
+      - name: coast
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['west', 'east', 'gulf']
+      - name: coast_ves_val
+        data_tests: [not_null]
+      - name: total_ves_val
+        data_tests: [not_null]
+      - name: coast_share
+        data_tests: [not_null]
+      - name: coast_residual
+        data_tests: [not_null]
+
+  - name: int_port_weights
+    description: >
+      Weight of each foreign container port within its partner country, in
+      two weightings (long format): export_share (headline,
+      share_country_maritime_export normalized over the country's ports with
+      vessel_count_container > 0) and vessel_count (sensitivity,
+      vessel_count_container over the same ports). Landlocked countries with
+      no container ports of their own take their gateway's ports and weights
+      (weight_source = via_gateway).
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [iso3, portid, weighting]
+    columns:
+      - name: iso3
+        description: Partner country the weight applies to.
+        data_tests: [not_null]
+      - name: portid
+        data_tests: [not_null]
+      - name: weighting
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['export_share', 'vessel_count']
+      - name: port_weight
+        data_tests: [not_null]
+      - name: weight_source
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['own', 'via_gateway']
+      - name: gateway_iso3
+        description: Gateway country whose ports are used; null when own.
+
+  - name: int_route_crossings
+    description: >
+      Whether each origin port's route to each US coast crosses each
+      chokepoint, per threshold in var('crossing_thresholds_km').
+      crosses = min_distance_km <= threshold_km.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [origin_portid, dest_coast, chokepoint_id, threshold_km]
+    columns:
+      - name: origin_portid
+        data_tests: [not_null]
+      - name: dest_coast
+        data_tests: [not_null]
+      - name: chokepoint_id
+        data_tests: [not_null]
+      - name: threshold_km
+        data_tests: [not_null]
+      - name: min_distance_km
+        data_tests: [not_null]
+      - name: crosses
+        data_tests: [not_null]
+
+  - name: int_country_crossing_share
+    description: >
+      Per partner country, US coast, chokepoint, threshold and weighting:
+      sum over the country's ports of port_weight x crosses. No product or
+      year. Never sum across chokepoints.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [iso3, dest_coast, chokepoint_id, threshold_km, weighting]
+    columns:
+      - name: iso3
+        data_tests: [not_null]
+      - name: dest_coast
+        data_tests: [not_null]
+      - name: chokepoint_id
+        data_tests: [not_null]
+      - name: threshold_km
+        data_tests: [not_null]
+      - name: weighting
+        data_tests: [not_null]
+      - name: crossing_share
+        data_tests: [not_null]

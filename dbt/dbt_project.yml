@@ -19,6 +19,10 @@ vars:
   # First year US Census/Comtrade data is native HS2022 (H6) rather than
   # HS2017 (H5). Years before this are H5. See CLAUDE.md's HS bridge section.
   h6_boundary_year: 2022
+  # Distance (km) from a route line to a chokepoint point within which the
+  # route counts as crossing it. 200 is the headline; the rest are
+  # sensitivities. The only place these values are defined.
+  crossing_thresholds_km: [50, 100, 200, 300]
 
 models:
   import_concentration_risk:
