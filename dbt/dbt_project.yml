@@ -62,6 +62,8 @@ seeds:
         +column_types: {cty_code: text, iso3: text}
       comtrade_partner_overrides:
         +column_types: {partner_code: text, iso3: text, partner_name: text}
+      chokepoint_risk_set:
+        +column_types: {chokepoint_name: text, reason: text}
     # Test fixtures from the verification phase, compared against models by
     # tests. Never read by a model as an input.
     fixtures:
