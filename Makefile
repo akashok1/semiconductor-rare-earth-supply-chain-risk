@@ -1,4 +1,4 @@
-.PHONY: all bridge comtrade census portwatch routing load \
+.PHONY: all bridge comtrade census portwatch routing load export \
 	dbt-seed dbt-seed-full dbt-build dbt-compile dbt-debug dbt-run dbt-test dbt-docs
 
 # Ingest scripts read secrets through ingest/config.py (python-dotenv), so
@@ -34,6 +34,10 @@ routing:
 
 load:
 	$(PY) -m ingest.load $(ARGS)
+
+# Dumps the fct_ marts to exports/*.csv for Tableau. Run after dbt-build.
+export:
+	$(PY) -m ingest.export $(ARGS)
 
 dbt-seed:
 	$(DBT) seed --project-dir dbt $(ARGS)
