@@ -135,26 +135,39 @@ models:
 
   - name: fct_exposure_summary
     description: >
-      One 2x2 point per HS6 code, year, weighting and dest_coast. y-axis:
-      the single chokepoint with the highest exposure at 200km (tie-break
-      exposure desc, then chokepoint_name; 'none' if that exposure is 0),
-      with the same chokepoint at 100 and 300km as the band. x-axis: the
-      canonical product's HHI from fct_concentration (measured). Exposure
-      is modelled.
+      One 2x2 point per HS6 code, year, weighting and dest_coast, with two
+      y-axis candidates. flow_: the single chokepoint with the highest
+      exposure at 200km over all 28. risk_: the same over the manual
+      chokepoint_risk_set only. Each carries the same chokepoint at 100 and
+      300km as the band; tie-break exposure desc, then chokepoint_name;
+      'none' if the top exposure is 0. x-axis: the canonical product's HHI
+      from fct_concentration (measured). Exposure is modelled.
     data_tests:
       - unique_combination_of_columns:
           arguments:
             combination_of_columns: [hs6_code, year, weighting, dest_coast]
     columns:
-      - name: max_chokepoint
+      - name: flow_max_chokepoint
+        description: Highest-exposure chokepoint at 200km, all 28.
         data_tests: [not_null]
-      - name: max_exposure_200
+      - name: flow_max_exposure_200
         data_tests: [not_null]
-      - name: exposure_100
-        description: Same chokepoint as max_chokepoint, at 100km.
+      - name: flow_exposure_100
+        description: Same chokepoint as flow_max_chokepoint, at 100km.
         data_tests: [not_null]
-      - name: exposure_300
-        description: Same chokepoint as max_chokepoint, at 300km.
+      - name: flow_exposure_300
+        description: Same chokepoint as flow_max_chokepoint, at 300km.
+        data_tests: [not_null]
+      - name: risk_max_chokepoint
+        description: Highest-exposure chokepoint at 200km, risk set only.
+        data_tests: [not_null]
+      - name: risk_max_exposure_200
+        data_tests: [not_null]
+      - name: risk_exposure_100
+        description: Same chokepoint as risk_max_chokepoint, at 100km.
+        data_tests: [not_null]
+      - name: risk_exposure_300
+        description: Same chokepoint as risk_max_chokepoint, at 300km.
         data_tests: [not_null]
       - name: hhi
         description: Canonical product's HHI for the year (0-10,000).
