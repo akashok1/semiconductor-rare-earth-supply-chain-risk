@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: fct_supplier_share
+    description: >
+      Comtrade US import value and share per canonical product, year and
+      partner (measured). Partner values summed across the product's HS6
+      codes before shares are taken. Partner ISO3/name from Comtrade's
+      partner list, manual overrides first (490 = Taiwan). nes and area
+      partners are kept and flagged by is_aggregate_partner.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [canonical_product_id, year, partner_code]
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [canonical_product_id, year, rank]
+    columns:
+      - name: basket
+        data_tests: [not_null]
+      - name: canonical_product_id
+        data_tests: [not_null]
+      - name: year
+        data_tests: [not_null]
+      - name: partner_code
+        description: UN M49 partner code. World (0) never appears.
+        data_tests: [not_null]
+      - name: partner_iso3
+        description: >
+          ISO3, or Comtrade's pseudo-code for aggregates. Override wins.
+        data_tests: [not_null]
+      - name: partner_name
+        data_tests: [not_null]
+      - name: is_aggregate_partner
+        description: >
+          Comtrade group flag, or "nes" as a whole word in the name; false
+          wherever a manual override exists.
+        data_tests: [not_null]
+      - name: import_value_usd
+        data_tests: [not_null]
+      - name: share
+        description: import_value_usd / product-year total.
+      - name: rank
+        description: 1 = largest value; ties broken by partner_code.
+        data_tests: [not_null]
+
+  - name: fct_concentration
+    description: >
+      Supplier concentration per canonical product and year, from
+      fct_supplier_share (measured). HHI 0-10,000; no threshold column.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [canonical_product_id, year]
+    columns:
+      - name: basket
+        data_tests: [not_null]
+      - name: total_import_value_usd
+        data_tests: [not_null]
+      - name: hhi
+        description: 10,000 x sum of squared partner shares.
+      - name: effective_suppliers
+        description: 10,000 / hhi.
+      - name: top1_partner_name
+      - name: top1_share
+      - name: top3_share
+        description: Share of the three largest partners (fewer if fewer exist).
+      - name: supplier_count
+        description: Partners with import value > 0.
+      - name: n_codes
+        description: HS6 codes with nonzero Comtrade value in the product-year.
