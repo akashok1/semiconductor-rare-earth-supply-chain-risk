@@ -36,28 +36,28 @@ load:
 	$(PY) -m ingest.load $(ARGS)
 
 dbt-seed:
-	$(DBT) seed --project-dir dbt
+	$(DBT) seed --project-dir dbt $(ARGS)
 
 # Rebuilds every seed table from scratch. Needed when a seed's columns or
 # column types change; a plain seed only truncates and reinserts.
 dbt-seed-full:
-	$(DBT) seed --full-refresh --project-dir dbt
+	$(DBT) seed --full-refresh --project-dir dbt $(ARGS)
 
 dbt-build:
-	$(DBT) build --project-dir dbt
+	$(DBT) build --project-dir dbt $(ARGS)
 
 # Compiles models and dbt/analyses/ (dbt build does not compile analyses).
 dbt-compile:
-	$(DBT) compile --project-dir dbt
+	$(DBT) compile --project-dir dbt $(ARGS)
 
 dbt-debug:
 	$(DBT) debug --project-dir dbt
 
 dbt-run:
-	$(DBT) run --project-dir dbt
+	$(DBT) run --project-dir dbt $(ARGS)
 
 dbt-test:
-	$(DBT) test --project-dir dbt
+	$(DBT) test --project-dir dbt $(ARGS)
 
 dbt-docs:
 	$(DBT) docs generate --project-dir dbt
