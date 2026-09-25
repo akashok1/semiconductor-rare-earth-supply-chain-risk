@@ -81,6 +81,10 @@ YEAR_END = 2025
 # UN Comtrade: annual final trade data, all classification vintages.
 COMTRADE_DATA_BASE = "https://comtradeapi.un.org/data/v1"
 
+# UN Comtrade partner area reference list (code, name, ISO3, group flag).
+# Static file, no key, not counted against the daily call quota.
+COMTRADE_PARTNER_AREAS_URL = "https://comtradeapi.un.org/files/v1/app/reference/partnerAreas.json"
+
 # US Census international trade API.
 CENSUS_IMPORTS_HS_URL = "https://api.census.gov/data/timeseries/intltrade/imports/hs"
 CENSUS_IMPORTS_PORTHS_URL = "https://api.census.gov/data/timeseries/intltrade/imports/porths"

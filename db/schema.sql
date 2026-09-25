@@ -81,6 +81,31 @@ CREATE INDEX IF NOT EXISTS ix_comtrade_imports_ref_year ON raw.comtrade_imports 
 CREATE INDEX IF NOT EXISTS ix_comtrade_imports_hs_version ON raw.comtrade_imports (hs_version);
 
 -- ============================================================
+-- comtrade_partners
+-- UN Comtrade partner area reference list (partnerAreas.json): code, name,
+-- ISO3 and group flag. The data endpoint returns partner codes only.
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS raw.comtrade_partners (
+    partner_code            text,
+    partner_desc            text,
+    partner_note            text,
+    partner_iso2            text,
+    partner_iso3            text,
+    entry_effective_date    text,
+    entry_expired_date      text,
+    is_group                text,
+    source_file             text NOT NULL,
+    ingested_at             timestamptz NOT NULL DEFAULT now(),
+    payload                 jsonb NOT NULL
+);
+
+COMMENT ON TABLE raw.comtrade_partners IS
+    'UN Comtrade partner areas, loaded from data/raw/comtrade_partner_areas.json';
+
+CREATE INDEX IF NOT EXISTS ix_comtrade_partners_partner_code ON raw.comtrade_partners (partner_code);
+
+-- ============================================================
 -- census_hs_annual
 -- US Census international trade, HS6 x country annual import value with
 -- air/vessel/containerized-vessel splits.

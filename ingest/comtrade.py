@@ -29,7 +29,13 @@ ComtradeAuthError before anything is written; 429 is retried with backoff;
 any other non-200 raises. comtradeapicall is not used because it swallows
 non-200 responses and returns None.
 
-Usage: .venv/bin/python -m ingest.comtrade [--refresh {YEAR,all}]
+The partner area reference list (partnerAreas.json: code, name, ISO3, group
+flag) is pulled alongside, because /get/C/A/HS returns partner codes only.
+It needs no key and caches to data/raw/comtrade_partner_areas.json, under the
+same rules: validated fresh or cached, written via a temp file, --refresh
+partners (or all) to replace it.
+
+Usage: .venv/bin/python -m ingest.comtrade [--refresh {YEAR,partners,all}]
 """
 
 from __future__ import annotations
@@ -47,6 +53,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from ingest.config import (  # noqa: E402
     COMTRADE_DATA_BASE,
+    COMTRADE_PARTNER_AREAS_URL,
     YEAR_END,
     YEAR_START,
     require_comtrade_api_key,
@@ -81,6 +88,16 @@ def _comtrade_headers() -> dict:
 
 def _cache_file(year: int) -> Path:
     return CACHE_DIR / f"comtrade_final_C_A_HS_{year}.json"
+
+
+PARTNER_AREAS_CACHE_FILE = CACHE_DIR / "comtrade_partner_areas.json"
+
+# Keys every partnerAreas record carries. PartnerCodeIsoAlpha2, partnerNote
+# and entryExpiredDate are present on only some records.
+PARTNER_AREAS_REQUIRED_KEYS = (
+    "PartnerCode", "PartnerDesc", "PartnerCodeIsoAlpha3",
+    "entryEffectiveDate", "isGroup",
+)
 
 
 def load_year_plan() -> dict[int, tuple[str, list[str]]]:
@@ -184,13 +201,55 @@ def pull_year(year: int, hs_version: str, codes: list[str], force: bool) -> tupl
     return classifications, 1
 
 
+def validate_partner_areas(payload: dict) -> int:
+    """Raise ComtradeValidationError unless the payload is a non-empty
+    results list, every record carries the required keys, and PartnerCode is
+    unique. Returns the record count."""
+    rows = payload.get("results") if isinstance(payload, dict) else None
+    if not isinstance(rows, list) or not rows:
+        raise ComtradeValidationError("partnerAreas: response has no results list.")
+    for row in rows:
+        missing = [k for k in PARTNER_AREAS_REQUIRED_KEYS if k not in row]
+        if missing:
+            raise ComtradeValidationError(f"partnerAreas: record {row!r} lacks {missing}.")
+    codes = [row["PartnerCode"] for row in rows]
+    if len(codes) != len(set(codes)):
+        raise ComtradeValidationError("partnerAreas: PartnerCode is not unique.")
+    return len(rows)
+
+
+def pull_partner_areas(force: bool) -> tuple[int, int]:
+    """Return (records, API calls made). Keyless; raises on any non-200.
+    A cached file is read and validated, never rewritten, unless force."""
+    if PARTNER_AREAS_CACHE_FILE.exists() and not force:
+        payload = json.loads(PARTNER_AREAS_CACHE_FILE.read_text())
+        return validate_partner_areas(payload), 0
+
+    resp = requests.get(COMTRADE_PARTNER_AREAS_URL, timeout=60)
+    resp.raise_for_status()
+    # The file starts with a UTF-8 byte order mark.
+    payload = json.loads(resp.content.decode("utf-8-sig"))
+    count = validate_partner_areas(payload)
+
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    temp_file = CACHE_DIR / f".tmp_{PARTNER_AREAS_CACHE_FILE.name}"
+    try:
+        temp_file.write_text(json.dumps(payload, indent=2))
+        temp_file.replace(PARTNER_AREAS_CACHE_FILE)
+    except Exception:
+        temp_file.unlink(missing_ok=True)
+        raise
+    return count, 1
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--refresh",
-        choices=[str(y) for y in YEARS] + ["all"],
-        help="Ignore the cache for this year (or all years), fetch fresh, and "
-        "replace the cached file only once the response validates.",
+        choices=[str(y) for y in YEARS] + ["partners", "all"],
+        help="Ignore the cache for this year (or the partner list, or all), "
+        "fetch fresh, and replace the cached file only once the response "
+        "validates.",
     )
     args = parser.parse_args()
 
@@ -206,6 +265,9 @@ def main() -> None:
             f"  {year}: expected {hs_version}, {len(codes)} codes, "
             f"classificationCode {sorted(classifications)}, {calls} API call(s)"
         )
+    partners, calls = pull_partner_areas(args.refresh in ("partners", "all"))
+    total_calls += calls
+    print(f"  partner areas: {partners} records, {calls} call(s)")
     print(f"Done. {total_calls} API call(s) total.")
 
 

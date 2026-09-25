@@ -2,7 +2,7 @@
 
 No network calls. Reads every cached response already on disk, plus the two
 routing CSVs in data/reference/generated/, and truncates then inserts each
-of the nine raw tables, so a rerun is idempotent and costs nothing beyond a
+of the ten raw tables, so a rerun is idempotent and costs nothing beyond a
 database round trip. Requires db/schema.sql to already be applied.
 
 Everything lands as text; casting happens later in dbt staging. Each table
@@ -38,6 +38,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from ingest.census import expected_header  # noqa: E402
+from ingest.comtrade import (  # noqa: E402
+    PARTNER_AREAS_CACHE_FILE,
+    PARTNER_AREAS_REQUIRED_KEYS,
+    validate_partner_areas,
+)
 from ingest.config import require_postgres_dsn  # noqa: E402
 from ingest.portwatch import (  # noqa: E402
     CHOKEPOINTS_CACHE_FILE,
@@ -143,6 +148,37 @@ def load_comtrade_imports(cur: psycopg.Cursor) -> tuple[int, list[str]]:
         values.append(json.dumps(record))  # payload
         rows.append(values)
     return _insert(cur, "comtrade_imports", _COMTRADE_COLUMNS, rows), unmapped
+
+
+# ---------------------------------------------------------------------------
+# comtrade_partners
+# ---------------------------------------------------------------------------
+
+# (JSON key, raw column), in db/schema.sql column order. Required keys are
+# key checked; the optional ones (absent on some records) load as NULL.
+_COMTRADE_PARTNERS_MAP = [
+    ("PartnerCode", "partner_code"), ("PartnerDesc", "partner_desc"),
+    ("partnerNote", "partner_note"), ("PartnerCodeIsoAlpha2", "partner_iso2"),
+    ("PartnerCodeIsoAlpha3", "partner_iso3"),
+    ("entryEffectiveDate", "entry_effective_date"),
+    ("entryExpiredDate", "entry_expired_date"), ("isGroup", "is_group"),
+]
+
+
+def load_comtrade_partners(cur: psycopg.Cursor) -> tuple[int, list[str]]:
+    payload = json.loads(PARTNER_AREAS_CACHE_FILE.read_text())
+    validate_partner_areas(payload)
+    records = payload["results"]
+    keys = [key for key, _ in _COMTRADE_PARTNERS_MAP]
+    unmapped = _check_keys("comtrade_partners", records, list(PARTNER_AREAS_REQUIRED_KEYS))
+    unmapped = [k for k in unmapped if k not in keys]
+    rows = [
+        [_text(record.get(key)) for key in keys]
+        + [PARTNER_AREAS_CACHE_FILE.name, json.dumps(record)]
+        for record in records
+    ]
+    columns = [col for _, col in _COMTRADE_PARTNERS_MAP] + ["source_file", "payload"]
+    return _insert(cur, "comtrade_partners", columns, rows), unmapped
 
 
 # ---------------------------------------------------------------------------
@@ -367,6 +403,7 @@ def main() -> None:
     with psycopg.connect(require_postgres_dsn()) as conn, conn.cursor() as cur:
         counts = {}
         counts["raw.comtrade_imports"], unmapped["raw.comtrade_imports"] = load_comtrade_imports(cur)
+        counts["raw.comtrade_partners"], unmapped["raw.comtrade_partners"] = load_comtrade_partners(cur)
         counts["raw.census_hs_annual"] = load_census_hs_annual(cur)
         counts["raw.census_porths_vessel"] = load_census_porths_vessel(cur)
         counts["raw.portwatch_chokepoint_transits"], unmapped["raw.portwatch_chokepoint_transits"] = (
