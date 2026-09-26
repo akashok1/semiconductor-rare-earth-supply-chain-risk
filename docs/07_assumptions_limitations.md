@@ -4,7 +4,7 @@ Working reference for the Semiconductor and Rare Earth Supply Chain Risk build. 
 assumed, what was tested, what changed as a result, and what remains
 unverifiable. Kept current as the build proceeds.
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
 ---
 
@@ -14,7 +14,7 @@ Last updated: 2026-09-24
 |---|---|---|---|
 | UN Comtrade | Annual US import value by partner country and HS6 code, 2018 to 2025 | API, free tier key, 500 calls/day | Every dollar figure and every concentration measure |
 | US Census international trade | Monthly US imports by HS6 and country with general, air, vessel and containerized vessel values (imports/hs), and vessel value by US port of entry (imports/porths) | API, free key | Each country's containerized vessel value and each code's total import value (the exposure numerator and denominator), and each code's coast shares |
-| IMF PortWatch | Chokepoints database (28 points with coordinates); daily transit counts and capacity by vessel type per chokepoint, 2019 onward; ports database (2,065 ports with portid, ISO3, coordinates, container vessel counts and country maritime trade shares) | ArcGIS REST, no key | Chokepoint list and coordinates; origin and US destination port coordinates; within-country port weights; transits held for a future disruption case study, read by no current mart |
+| IMF PortWatch | Chokepoints database (28 points with coordinates); daily transit counts and capacity by vessel type per chokepoint, 2019 onward; ports database (2,065 ports with portid, ISO3, coordinates, container vessel counts and country maritime trade shares; one undated snapshot) | ArcGIS REST, no key | Chokepoint list and coordinates; origin and US destination port coordinates; within-country port weights; transits held for a future disruption case study, read by no current mart |
 | searoute (Eurostat network) | Shortest sea route between two points, computed over a pre-built ocean mesh with Dijkstra | Python package, computed locally, no API | Which chokepoints a route between two ports passes near |
 
 Static reference documents, cached as files rather than queried:
@@ -25,7 +25,7 @@ Static reference documents, cached as files rather than queried:
 | UN Stats HS correlation tables | Mapping HS2017 codes to HS2022 codes in the bridge table |
 | USGS Mineral Commodity Summaries, Interior critical minerals list | Justifying rare earth basket selection |
 | Commerce semiconductor supply chain review | Justifying semiconductor basket selection |
-| DOJ and FTC Merger Guidelines | HHI threshold bands, version cited |
+| European Commission (2021), *Strategic dependencies and capacities* (SWD(2021) 352) | The HHI 0.4 (4,000) concentration criterion used as the 2x2 line. Not the DOJ/FTC merger bands: those describe firm market power, not supplier-country dependence |
 
 All API responses are cached under `data/raw/` on first pull and read from
 cache on rerun. `data/raw/` is immutable and gitignored. A rerun costs zero
@@ -119,17 +119,83 @@ district to coast map with its port overrides.
 Exposure is labelled as modelled wherever it sits next to measured
 concentration.
 
-**Worked example.** The earlier worked example (850511 and the Taiwan
-Strait, about 42%) applied a code-level vessel share to China's import
-share under the retired one-port-per-country method, and is withdrawn. A
-figure under the current formula will be quoted from `fct_exposure` once
-it exists, not computed by hand here.
+**Worked example.** 854143 (photovoltaic modules), 2025, headline
+weighting, from `fct_exposure_summary`: $6.39B general import value,
+98.5% of it containerized vessel, 0% unrouted, coast residual 0.01%. The
+largest suppliers by containerized value are Indonesia ($2.29B), Laos
+($1.00B, routed via Thailand), India, Viet Nam and Malaysia, all of which
+reach the east and gulf coasts westbound through the Indian Ocean. The
+risk-set maximum at 200km is Suez at 95.2% landing east, Panama at 62.1%
+landing gulf, Taiwan Strait at 33.7% landing west, and Suez at 52.0%
+national (blended by coast share). The all-28 maximum at national is
+Gibraltar at 52.1%, which is why the 2x2 reads the risk set (section
+2.1). The earlier 850511 and Taiwan Strait example (about 42%) applied a
+code-level vessel share to China's import share, which the current
+formula forbids, and stays withdrawn.
 
 **What this number is not.** It is not a statement that a share of
 shipments physically passed through a strait. It is the share of import
 value whose shortest sea route, from its country's container ports to the
 US coast it lands on, would pass within the threshold of the chokepoint.
 Routing substitution, transshipment and carrier choice are not modelled.
+
+### 2.1 The 2x2 and the dashboard
+
+The dashboard is built by hand in Tableau Public from the CSVs in
+`exports/` (written by `make export`). It has four sheets:
+
+| Sheet | Source | What it shows |
+|---|---|---|
+| 2x2 | `fct_exposure_summary` | One point per HS6 code. x: `hhi`, fixed axis 0 to 10,000. y: `risk_max_exposure_200`, fixed axis 0 to 100%, labelled with `risk_max_chokepoint` |
+| Top suppliers | `fct_supplier_share` | Top 10 partners by share for the selected canonical product and year |
+| HHI trend | `fct_concentration` | HHI for the selected canonical product, every year 2018 to 2025 |
+| Chokepoints | `fct_exposure` | Top 10 chokepoints at 200km with exposure of at least 1%, the risk set coloured apart from the rest, titled "do not add these up" |
+
+Controls are Tableau parameters, not filters, so one control drives all
+four sheets: Product, Year (default 2025), Coast (default national), HHI
+line (default 4,000) and Exposure line (default 25%). Weighting is fixed
+to `export_share` on the dashboard; `vessel_count` is a sensitivity
+reported in section 3.2, not a control.
+
+**Axes.** HHI line at 4,000 is the European Commission (2021) concentration
+criterion (HHI 0.4). `effective_suppliers` (10,000 / HHI) is in the
+tooltip. The y-axis is the largest single-chokepoint exposure at 200km
+over the risk set in `data/reference/manual/chokepoint_risk_set.csv`
+(Suez, Bab el-Mandeb, Panama, Hormuz, Taiwan Strait, each with its
+documented disruption). The all-28 maximum (`flow_` columns) is drilldown
+only: it picks funnels with no disruption record (Gibraltar, Tsugaru,
+Yucatan). It is never a sum across chokepoints, which double counts, and
+never a union over all 28, which collapses to vessel share because 82% of
+routes cross at least one chokepoint at 200km.
+
+**Quadrants**, computed in Tableau:
+
+| Condition | Label | Action |
+|---|---|---|
+| Risk-set exposure at 100km and at 300km fall on opposite sides of the exposure line | Distance sensitive | Not assigned a quadrant: the call depends on the proximity threshold |
+| HHI and exposure both at or above their lines | Buffer stock + second supplier | Build buffer stock now and start qualifying a second supplier |
+| HHI only | Qualify second supplier | Country risk is persistent: diversify it |
+| Exposure only | Hold buffer stock | Hold buffer stock. If you receive goods on more than one coast, the Coast control shows which coast avoids the chokepoint |
+| Neither | Monitor | |
+
+**Coast control** means "where your goods land". A per-coast figure
+assumes the importer receives all its sea imports at that coast's ports
+(`coast_share` for that coast set to 1). National is the US average,
+blended by each code's actual coast shares. Every coast is assumed to
+receive the national supplier mix, because no public source splits
+supplier country by US coast (Census vessel value by port carries no
+country). HHI does not change with the coast.
+
+**Logic that lives in Tableau, not dbt.** Disclosed because it is not
+covered by dbt tests:
+
+- Product name labels: a CASE on `hs6_code`.
+- The H5 to H6 successor mapping for the supplier and trend sheets: a
+  CASE mapping the six HS2022 successors (854141, 854142, 854143, 854149;
+  854151, 854159) to their canonical products 854140 and 854150, because
+  those two sheets key on `canonical_product_id` while the 2x2 is picked
+  by HS6 code.
+- The Quadrant calculation above.
 
 ---
 
@@ -234,7 +300,7 @@ Gulf origins; no other origin crosses it.
 
 These are unweighted route counts. They say which chokepoints enter or leave
 the crossing set at each threshold, not how the exposure ranking changes.
-That question stays open until `fct_exposure` exists.
+The value-weighted answer is in section 3.2.
 
 **Known limitations.** Disclosed, not fixed.
 
@@ -255,6 +321,76 @@ That question stays open until `fct_exposure` exists.
 - coast_share is per code only, because Census vessel value by port carries
   no country. A German and a Chinese shipment of the same code get the same
   coast split.
+- Port weights come from one undated PortWatch ports database snapshot,
+  applied unchanged to every year from 2018 to 2025. A country whose
+  export mix shifted between its ports over the period is weighted as it
+  stands in the snapshot. PortWatch daily chokepoint transits (2019 on)
+  are loaded into raw and staged, but no mart reads them.
+- The Suez and Bab el-Mandeb figures assume the Red Sea route is open.
+  Carriers have diverted Asia to US east coast services via the Cape of
+  Good Hope since late 2023, so for 2024 and 2025 those figures describe
+  the shortest-path exposure, not the route sailed. 854143's 52.0%
+  national Suez figure for 2025 is the largest case.
+
+### 3.2 Sensitivity results (BR-10, D-8, A-4)
+
+Both tests read `fct_exposure_summary` at the dashboard defaults (HHI line
+4,000, exposure line 25%, risk-set y-axis), all 26 HS6 codes live in 2025
+and every code-year from 2018.
+
+**Distance threshold.** A point is distance sensitive when the same
+chokepoint's exposure at 100km and at 300km falls on opposite sides of
+the 25% line. In 2025 no point is distance sensitive at any coast. Across
+2018 to 2025 there are 10, all landing west and all Taiwan Strait:
+854140 (2018), 854190 (2019 to 2023), 854142 (2022 to 2024) and 848610
+(2023). Each sits under 25% at 200km and crosses it only at 300km,
+consistent with Taiwan Strait's jump from 141 to 242 routes between 200
+and 300km (section 3.1). No national point is distance sensitive in any year.
+
+**Port weighting.** Swapping `export_share` for `vessel_count` weighting
+moves exactly one point across a line, in any year or coast: 854142
+landing gulf in 2025, Panama at 25.8% under `export_share` and 24.9%
+under `vessel_count`, so Hold buffer stock becomes Monitor. At national,
+no code in any year changes quadrant. Flagged counts for 2025 under
+`export_share` / `vessel_count`: national 8 / 8, east 10 / 10, gulf
+10 / 9, west 5 / 5.
+
+**2025 at the defaults, national, `export_share`.** 8 of 26 codes are
+flagged:
+
+| Quadrant | Codes (risk-set chokepoint, exposure at 200km) |
+|---|---|
+| Buffer stock + second supplier | 280530 (HHI 6,924; Panama 46.0%) |
+| Qualify second supplier | 284610 (HHI 5,657; Panama 20.0%), 850511 (HHI 5,364; Panama 15.6%) |
+| Hold buffer stock | 854143 (Suez 52.0%), 854190 (Bab el-Mandeb 39.9%), 848610 (Panama 37.1%), 848630 (Panama 30.7%), 284690 (Panama 25.8%; HHI 3,764, near both lines) |
+| Monitor | The other 18 |
+
+### 3.3 What a supplier share means here
+
+- **Supplier is country of origin, not mining origin.** Comtrade records
+  the country of last substantial transformation. 284610's top supplier
+  in 2023 to 2025 is Japan (69% to 73%): a processed rare earth compound,
+  not mined ore. The HHI measures who ships the processed good to the US,
+  not who mines the input (A-1).
+- **HS2022 successors inherit family-level concentration.** 854140 and
+  854150 split in 2022, but Comtrade concentration is computed per
+  canonical product, so all four 854140 successors carry the same HHI and
+  supplier table, and so do both 854150 successors. The family's top
+  supplier need not be the top supplier of any one successor: in 2025
+  854140's top supplier is Indonesia (29.7%), and the solar module points
+  (854142, 854143) show that family-level figure, not a solar-only one.
+  Exposure, by contrast, is per HS6 code.
+- **280530 is tiny.** Raw rare earth metals are $8.2M of US imports in
+  2025 ($22.1M in 2023, $4.7M in 2024). Its HHI (6,924 in 2025, 9,749 at
+  98.7% China in 2023) is real but sits on a value base where one
+  shipment moves the share.
+- **Only rare earths clear the line in 2025, not in every year.** All
+  three canonical products at or above HHI 4,000 in 2025 are rare earth
+  products (280530, 284610, 850511), and 280530 and 850511 are above it
+  in every year from 2018 to 2025. Earlier years add non-rare-earth
+  products: 854231 (processors) at 4,040 in 2019 and 4,137 in 2020, and
+  848610 at 4,030 in 2019. 284690 is above 4,000 in six of eight years
+  and 284610 from 2020 on.
 
 ---
 
@@ -429,8 +565,12 @@ investigated:
 ## 7. Data quality rules
 
 The PortWatch rules are published by IMF PortWatch; the Comtrade and Census
-rules were verified in the raw data. None is written yet: every rule below
-is to be encoded as a dbt test.
+rules were verified in the raw data. Only the Comtrade World rule is a dbt
+test (`assert_comtrade_partners_sum_to_world`). The PortWatch rules are not
+built: they govern the daily transits, which no mart reads, and are carried
+forward to the event study. The Census sentinel is filtered in
+`stg_census_hs`, but its equality to the DET rows is not asserted by a
+test.
 
 | Issue | Handling |
 |---|---|
@@ -440,8 +580,8 @@ is to be encoded as a dbt test.
 | 2021 receiver coverage expansion causing a step change at Gwangyang and Malacca | Flagged as a series break, never presented as growth |
 | Strait of Hormuz boundary revised February 2026 | Data version pinned. Series labelled as not comparable across the revision |
 | A missing source year | Shown as missing. Interpolation is not permitted |
-| Comtrade partner 0 (World) | Excluded at staging. In raw it equals the sum of partner rows exactly, per code per year; asserted as a completeness check |
-| Census `'-'` sentinel | Excluded at staging, although tagged DET. In raw it equals the sum of the DET rows exactly, per code per year; asserted as a completeness check |
+| Comtrade partner 0 (World) | Excluded at staging. In raw it equals the sum of partner rows exactly, per code per year; asserted by `assert_comtrade_partners_sum_to_world` |
+| Census `'-'` sentinel | Excluded at staging, although tagged DET. In raw it equals the sum of the DET rows, within $1 for all 192 code-years (verified by query, not a dbt test) |
 
 Structural rules verified in the data:
 
@@ -468,8 +608,10 @@ State these before anyone asks.
 ## 9. Open items
 
 - ~~Verify that the HS2017 to HS2022 split of 854140 and 854150 is a clean partition, using the UN correlation tables. Check that summed H6 value for 2022 is continuous with H5 value for 2021.~~ Done, see sections 6.1 and 6.2. 854140 is a clean 4-way partition per the correlation table. 854150 is not resolvable via the correlation table at all (it names 851712 as predecessor of both successors); resolved empirically by value continuity instead.
-- Record the current DOJ and FTC Merger Guidelines version and its HHI threshold bands.
-- Sensitivity test the 200km proximity threshold at the exposure mart, reporting whether the exposure ranking changes at 50, 100, 200 and 300km. This satisfies deliverable D-8 and requirement BR-10.
-- Sensitivity test the port weighting at the exposure mart: `vessel_count_container` against the headline `share_country_maritime_export`, reporting whether the exposure ranking changes (A-4).
-- Run the concentration series across all years. No trend has been measured yet, so the question of whether concentration worsened after the 2025 Chinese export restrictions is still open.
+- ~~Record the current DOJ and FTC Merger Guidelines version and its HHI threshold bands.~~ Replaced: the 2x2 line is the European Commission (2021) HHI 0.4 criterion (section 2.1). Merger bands describe firm market power, not supplier-country dependence.
+- ~~Sensitivity test the 200km proximity threshold.~~ Done, section 3.2. Tested as quadrant changes at the 25% line between 100 and 300km, not as a full rank-order comparison.
+- ~~Sensitivity test the port weighting.~~ Done, section 3.2: one point moves in any year or coast (854142, gulf, 2025).
+- ~~Run the concentration series across all years.~~ Done, `fct_concentration` covers 2018 to 2025. 280530's China share fell from 98.7% (2023) to 78.2% (2024) and 82.5% (2025); the drop predates China's April 2025 rare earth export controls and is not attributed to them. 284690's China share fell from 74.5% to 58.6% in 2025 while France rose from 5.8% to 15.5%, consistent with the controls, which name yttrium and scandium compounds under 2846 codes.
+- Event study (D-7, BR-14). Not built. PortWatch transits and the "RED SEA TENSIONS" disruption rollup are loaded for it.
+- PortWatch data-quality tests (section 7). Not built, deferred with the event study.
 - Encode the vintage-break value-continuity check (section 6.2) as a dbt test: summed H6 value for a canonical product's first H6 year against its last H5 year, flagged past a tolerance. Satisfies BR-13.

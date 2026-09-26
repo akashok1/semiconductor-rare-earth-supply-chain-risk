@@ -1,5 +1,7 @@
 # PROJECT BRIEF: Semiconductor and Rare Earth Supply Chain Risk
 
+> **Baselined, superseded where the code differs.** The current record is [`docs/07_assumptions_limitations.md`](docs/07_assumptions_limitations.md) and [`README.md`](README.md). Not built: FRD (03), standalone UAT plan (06, folded into [05](docs/05_traceability_matrix.md)), event study (D-7), Excel scenario workbook (D-10), GitHub Actions scheduled refresh, PortWatch data-quality dbt tests.
+
 **Owner:** Akash A
 **Repo:** `semiconductor-rare-earth-supply-chain-risk`
 **Status:** Verification complete, build in progress
