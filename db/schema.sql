@@ -1,4 +1,4 @@
--- Raw landing DDL for import-concentration-risk.
+-- Raw landing DDL for semiconductor-rare-earth-supply-chain-risk.
 --
 -- Applied to Postgres before dbt runs. Idempotent: safe to re-run in full
 -- against an existing database.

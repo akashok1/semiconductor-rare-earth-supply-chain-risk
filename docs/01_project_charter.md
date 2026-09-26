@@ -1,9 +1,9 @@
-# Project Charter: Import Concentration Risk
+# Project Charter: Semiconductor and Rare Earth Supply Chain Risk
 
 | Field | Value |
 |---|---|
-| Project name | Import Concentration Risk |
-| Repository | `import-concentration-risk` |
+| Project name | Semiconductor and Rare Earth Supply Chain Risk |
+| Repository | `semiconductor-rare-earth-supply-chain-risk` |
 | Document ID | `docs/01_project_charter.md` |
 | Version | 1.2 |
 | Status | Amended post-Verification, approved for build |

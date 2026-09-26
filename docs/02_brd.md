@@ -1,8 +1,8 @@
-# Business Requirements Document: Import Concentration Risk
+# Business Requirements Document: Semiconductor and Rare Earth Supply Chain Risk
 
 | Field | Value |
 |---|---|
-| Project name | Import Concentration Risk |
+| Project name | Semiconductor and Rare Earth Supply Chain Risk |
 | Document ID | `docs/02_brd.md` |
 | Version | 1.2 |
 | Status | Rebaselined post-Verification |

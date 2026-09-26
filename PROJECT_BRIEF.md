@@ -1,7 +1,7 @@
-# PROJECT BRIEF: Import Concentration Risk
+# PROJECT BRIEF: Semiconductor and Rare Earth Supply Chain Risk
 
 **Owner:** Akash A
-**Repo:** `import-concentration-risk`
+**Repo:** `semiconductor-rare-earth-supply-chain-risk`
 **Status:** Verification complete, build in progress
 **Last updated:** 2026-09-18
 
@@ -213,7 +213,7 @@ One canonical product maps to many HS codes across vintages. `code_status` is `a
 ## 9. Repo structure
 
 ```
-import-concentration-risk/
+semiconductor-rare-earth-supply-chain-risk/
 ├── PROJECT_BRIEF.md
 ├── CLAUDE.md               # gitignored
 ├── README.md

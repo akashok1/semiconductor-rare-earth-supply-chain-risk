@@ -1,4 +1,4 @@
-# Import Concentration Risk
+# Semiconductor and Rare Earth Supply Chain Risk
 
 How concentrated is the US supply of a given import, and how exposed is that
 supply to a maritime chokepoint closure? Built around one decision: ahead of
@@ -80,8 +80,8 @@ for [UN Comtrade](https://comtradeplus.un.org/) and the
 [Census Bureau](https://api.census.gov/data/key_signup.html).
 
 ```bash
-git clone https://github.com/akashok1/import-concentration-risk.git
-cd import-concentration-risk
+git clone https://github.com/akashok1/semiconductor-rare-earth-supply-chain-risk.git
+cd semiconductor-rare-earth-supply-chain-risk
 uv sync
 cp .env.example .env
 # edit .env: set COMTRADE_API_KEY and CENSUS_API_KEY

@@ -1,6 +1,6 @@
 # Assumptions, exclusions and corrections
 
-Working reference for the Import Concentration Risk build. Records what was
+Working reference for the Semiconductor and Rare Earth Supply Chain Risk build. Records what was
 assumed, what was tested, what changed as a result, and what remains
 unverifiable. Kept current as the build proceeds.
 
