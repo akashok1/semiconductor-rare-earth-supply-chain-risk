@@ -34,8 +34,9 @@ routing:
 	$(PY) -m ingest.routing $(ARGS)
 
 # Applies the raw landing DDL to the icr_postgres container. Idempotent
-# (CREATE ... IF NOT EXISTS only), so `all` runs it on every pass. psql takes
-# credentials from the container's environment, not from .env.
+# (CREATE ... IF NOT EXISTS and COMMENT ON only, no DROP), so `all` runs it on
+# every pass. psql takes credentials from the container's environment, not
+# from .env.
 schema:
 	docker exec -i icr_postgres sh -c 'psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' < db/schema.sql
 
