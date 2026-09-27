@@ -89,7 +89,7 @@ Makefile     one target per pipeline step
 |---|---|---|
 | Buffer stock + second supplier | 280530 rare earth metals (Panama 46.0%) | Build buffer stock now and start qualifying a second supplier |
 | Qualify second supplier | 284610 cerium compounds, 850511 permanent magnets | Country risk is persistent: diversify it |
-| Hold buffer stock | 854143 solar modules (Suez 52.0%), 854190 semiconductor device parts (Bab el-Mandeb 39.9%), 848610 wafer and boule machines (Panama 37.1%), 848630 flat panel machines (Panama 30.7%), 284690 other rare earth compounds (Panama 25.8%) | Hold buffer stock. If you receive goods on more than one coast, the Coast control shows which coast avoids the chokepoint |
+| Hold buffer stock | 854143 solar panels (Suez 52.0%), 854190 semiconductor device parts (Bab el-Mandeb 39.9%), 848610 wafer and boule machines (Panama 37.1%), 848630 flat panel machines (Panama 30.7%), 284690 other rare earth compounds (Panama 25.8%) | Hold buffer stock. If you receive goods on more than one coast, the Coast control shows which coast avoids the chokepoint |
 | Monitor | The other 18 codes | |
 | Distance sensitive | None in 2025 | |
 
@@ -291,7 +291,7 @@ Disclosed rather than built:
 - **Coast shares are per code**, not per supplier country.
 - **HS2022 successors share family-level concentration.** All four
   854140 successors show the family HHI and suppliers, so the solar
-  module points show Indonesia as top supplier for the whole family.
+  panel points show Indonesia as top supplier for the whole family.
 - **No price, tariff or capacity data**, and no forecasting.
 
 ## How this was built

@@ -377,7 +377,7 @@ flagged:
   canonical product, so all four 854140 successors carry the same HHI and
   supplier table, and so do both 854150 successors. The family's top
   supplier need not be the top supplier of any one successor: in 2025
-  854140's top supplier is Indonesia (29.7%), and the solar module points
+  854140's top supplier is Indonesia (29.7%), and the solar panel points
   (854142, 854143) show that family-level figure, not a solar-only one.
   Exposure, by contrast, is per HS6 code.
 - **280530 is tiny.** Raw rare earth metals are $8.2M of US imports in
