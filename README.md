@@ -217,21 +217,25 @@ vintage boundary matching the bridge.
 
 ## Docs
 
-| Doc | Status |
-|---|---|
-| [`docs/07_assumptions_limitations.md`](docs/07_assumptions_limitations.md) | Current record: formula, dashboard decisions, sensitivity, corrections |
-| [`docs/04_data_dictionary.md`](docs/04_data_dictionary.md) | The four exported marts, column by column |
-| [`docs/05_traceability_matrix.md`](docs/05_traceability_matrix.md) | Every BR to model, test and dashboard element; dbt tests stand in for UAT |
-| [`docs/FINDINGS.md`](docs/FINDINGS.md) | Where the code contradicted a baselined doc |
-| `PROJECT_BRIEF.md`, `docs/01_project_charter.md`, `docs/02_brd.md` | Baselined, superseded where the code differs |
-| `docs/verification/` | Verification-phase findings, historical |
+| Doc | What it is | Who should read it |
+|---|---|---|
+| [`01_project_charter.md`](docs/01_project_charter.md) | Charter: scope, deliverables, assumptions (baselined) | Sponsor: what was agreed |
+| [`02_brd.md`](docs/02_brd.md) | BRD: 34 business requirements (baselined) | Committee: what they need and why |
+| [`03_frd.md`](docs/03_frd.md) | FRD: 23 functional requirements, where each lives | Builder: what the system does |
+| [`04_data_dictionary.md`](docs/04_data_dictionary.md) | The four exported marts, column by column | Dashboard author and analyst |
+| [`05_traceability_matrix.md`](docs/05_traceability_matrix.md) | Every BR to FR, model, test and UAT case, with status | Reviewer: what is met and what is not |
+| [`06_uat_plan.md`](docs/06_uat_plan.md) | UAT: 97 dbt tests plus 14 dashboard acceptance cases | Tester: how to accept the dashboard |
+| [`07_assumptions_limitations.md`](docs/07_assumptions_limitations.md) | Current record: formula, dashboard decisions, sensitivity, corrections | Anyone challenging a number |
+| [`FINDINGS.md`](docs/FINDINGS.md) | Where the code contradicted a baselined doc | Reviewer |
+| [`verification/`](docs/verification/) | Verification-phase findings, historical | Anyone tracing a method decision |
+
+`PROJECT_BRIEF.md`, the charter and the BRD are baselined and superseded
+where the code differs; `docs/07` wins.
 
 ## Not built
 
 Disclosed rather than built:
 
-- FRD (`docs/03`) and a standalone UAT plan (`docs/06`, folded into the
-  traceability matrix, where dbt tests are the evidence).
 - Event study of chokepoint traffic around a disruption (D-7, BR-14).
   PortWatch daily transits are loaded and staged for it; no mart reads
   them.

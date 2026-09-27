@@ -1,6 +1,6 @@
 # PROJECT BRIEF: Semiconductor and Rare Earth Supply Chain Risk
 
-> **Baselined, superseded where the code differs.** The current record is [`docs/07_assumptions_limitations.md`](docs/07_assumptions_limitations.md) and [`README.md`](README.md). Not built: FRD (03), standalone UAT plan (06, folded into [05](docs/05_traceability_matrix.md)), event study (D-7), Excel scenario workbook (D-10), GitHub Actions scheduled refresh, PortWatch data-quality dbt tests.
+> **Baselined, superseded where the code differs.** The current record is [`docs/07_assumptions_limitations.md`](docs/07_assumptions_limitations.md) and [`README.md`](README.md). Not built: event study (D-7), Excel scenario workbook (D-10), GitHub Actions scheduled refresh, PortWatch data-quality dbt tests.
 
 **Owner:** Akash A
 **Repo:** `semiconductor-rare-earth-supply-chain-risk`
@@ -217,7 +217,7 @@ One canonical product maps to many HS codes across vintages. `code_status` is `a
 ```
 semiconductor-rare-earth-supply-chain-risk/
 ├── PROJECT_BRIEF.md
-├── CLAUDE.md               # gitignored
+├── CLAUDE.md               # gitignored: the private working spec
 ├── README.md
 ├── .gitignore
 ├── .env.example            # COMTRADE_API_KEY, CENSUS_API_KEY
@@ -332,7 +332,7 @@ Pitch commercially (corporate supply chain risk), not geopolitically. Geopolitic
 
 ## 13. Repo hygiene
 
-- `CLAUDE.md` and `.claude/` in `.gitignore`
+- The working spec (`CLAUDE.md`) and `.claude/` in `.gitignore`
 - No co-author trailers or "Generated with" footers in commit messages
 - `.env` gitignored before any key is ever written to it
 - Squash or reword early history before the repo goes public

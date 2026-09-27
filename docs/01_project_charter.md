@@ -1,6 +1,6 @@
 # Project Charter: Semiconductor and Rare Earth Supply Chain Risk
 
-> **Baselined, superseded where the code differs.** The current record is [`docs/07_assumptions_limitations.md`](07_assumptions_limitations.md) and [`README.md`](../README.md). Not built: FRD (03), standalone UAT plan (06, folded into [05](05_traceability_matrix.md)), event study (D-7), Excel scenario workbook (D-10), GitHub Actions scheduled refresh, PortWatch data-quality dbt tests.
+> **Baselined, superseded where the code differs.** The current record is [`docs/07_assumptions_limitations.md`](07_assumptions_limitations.md) and [`README.md`](../README.md). Not built: event study (D-7), Excel scenario workbook (D-10), GitHub Actions scheduled refresh, PortWatch data-quality dbt tests.
 
 | Field | Value |
 |---|---|

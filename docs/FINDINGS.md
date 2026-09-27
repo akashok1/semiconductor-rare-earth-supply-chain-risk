@@ -1,6 +1,10 @@
 # Findings
 
-Build-phase findings where the code contradicts a baselined doc or a documented assumption turns out wrong. See CLAUDE.md's FINDINGS protocol.
+A working log of contradictions found during the build: where the code contradicted a baselined doc or a documented assumption turned out wrong.
+
+"CLAUDE.md" is the private working spec used with an AI coding assistant (gitignored, so not in this repo).
+
+"X wins" records which source was treated as correct.
 
 - 2026-09-19 Census cache is annual, not monthly. Brief section 4 and
   CLAUDE.md say monthly. Annual is correct for DR-9 and is what the cache
@@ -144,3 +148,5 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
 - 2026-09-26 00:45 hs_bridge.code_status is not carried into any mart. BR-33 requires it in the marts. Code wins; BR-33 is marked Partial in docs/05.
 - 2026-09-26 00:45 docs/07 §1 cited the DOJ/FTC Merger Guidelines as the HHI threshold source. CLAUDE.md sets the EC (2021) HHI 0.4 criterion. CLAUDE.md wins; docs/07 corrected.
 - 2026-09-26 18:40 A fresh clone would fail at make load because nothing applies db/schema.sql (not the README, the Makefile or docker-compose), and ingest/load.py requires it. The README's "Running it from a clean clone" section implies the listed steps are complete. The code wins; the README needs a schema step.
+- 2026-09-26 18:49 The UAT plan is docs/06_uat_plan.md. docs/02_brd.md §15 and the PROJECT_BRIEF.md repo tree name docs/06_uat_test_plan.md. The file wins; the baselined docs keep the old name.
+- 2026-09-26 18:49 The basket and bridge files are data/reference/manual/basket_codes.csv and data/reference/generated/hs_bridge.csv. docs/01_project_charter.md and PROJECT_BRIEF.md name data/reference/basket_selection.csv and data/reference/hs_bridge.csv, and docs/verification/round2_mode_and_port_of_entry.md names data/reference/mode_shares.csv and port_entry_shares.csv (now the mode_shares_expected seed and dropped). The code wins; the baselined and historical docs are not edited.

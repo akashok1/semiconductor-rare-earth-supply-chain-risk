@@ -10,7 +10,7 @@ filtered as (
     from source
     -- summary_lvl = 'DET' alone is not enough: the grand-total sentinel row
     -- (cty_code = '-') is also tagged DET, and unfiltered it double counts
-    -- against per-country rows (see CLAUDE.md, Census gotchas).
+    -- against per-country rows (see docs/07 §6).
     where summary_lvl = 'DET'
       and cty_code != '-'
 

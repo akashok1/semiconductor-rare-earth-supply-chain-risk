@@ -206,7 +206,7 @@ by a measurement.
 
 The verification phase's routing tests on 15 representative ports x 2 US
 coasts (30 routes) are superseded by the full routing run in section 3.1
-and kept as a historical record in `docs/verification/03_routing_method.md`.
+and kept as a historical record in `docs/verification/spike_routing_method.md`.
 
 | Assumption | How it was tested | Result | What changed |
 |---|---|---|---|
@@ -219,7 +219,7 @@ and kept as a historical record in `docs/verification/03_routing_method.md`.
 
 Routing is computed, not hand assigned, and replaces the verification
 phase's 15 representative ports x 2 US coasts (30 routes, kept in
-`docs/verification/03_routing_method.md` as a historical record).
+`docs/verification/spike_routing_method.md` as a historical record).
 
 **Origins.** Every foreign port in the PortWatch ports database with
 `vessel_count_container > 0`: 1,253 ports in 174 countries. There is no

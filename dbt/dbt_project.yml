@@ -17,7 +17,8 @@ clean-targets:
 
 vars:
   # First year US Census/Comtrade data is native HS2022 (H6) rather than
-  # HS2017 (H5). Years before this are H5. See CLAUDE.md's HS bridge section.
+  # HS2017 (H5). Years before this are H5. See
+  # docs/07_assumptions_limitations.md §6.
   h6_boundary_year: 2022
   # Distance (km) from a route line to a chokepoint point within which the
   # route counts as crossing it. 200 is the headline; the rest are

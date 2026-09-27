@@ -2,7 +2,7 @@
 -- chokepoint, at every distance threshold in var('crossing_thresholds_km').
 -- A route crosses when its minimum distance to the chokepoint point is
 -- within the threshold. Chokepoints are points while straits are long, so
--- the threshold stands in for the strait's extent (see CLAUDE.md, Routing).
+-- the threshold stands in for the strait's extent (see docs/07 §3.1).
 
 with thresholds as (
 
