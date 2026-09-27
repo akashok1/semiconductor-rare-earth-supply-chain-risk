@@ -73,7 +73,7 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   share times code-level containerized share, assigning maritime
   exposure to land-dominant partners. Replaced with Census country-level
   containerized value. CLAUDE.md updated. Refactor wins.
-- - 2026-09-23 01:31 CLAUDE.md said Comtrade world totals were verified
+- 2026-09-23 01:31 CLAUDE.md said Comtrade world totals were verified
   "within 0.68 percent of the reported World row." Raw checks show
   partner 0 equals the sum of partner rows exactly; 0.68% was the Census
   vs Comtrade gap for 854231 2023. CLAUDE.md corrected. Data wins.
@@ -117,7 +117,7 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
   PortWatch port, 2.10% of the total; Laos alone is 1.48% ($1.49B).
   CLAUDE.md assumed landlocked gaps were negligible. Routed in step 6
   through a gateway country's port weights.
-- - 2026-09-23 21:45 PortWatch share_country_maritime_export has no
+- 2026-09-23 21:45 PortWatch share_country_maritime_export has no
   documented unit and covers all cargo: summed over container ports it
   falls below 95 for 63 of 174 countries. CLAUDE.md treated it as a
   container-relevant weight. Kept as headline weight with a container
@@ -138,10 +138,9 @@ Build-phase findings where the code contradicts a baselined doc or a documented 
 - 2026-09-24 19:26 raw.comtrade_imports partner_iso and partner_desc are empty on all 9,142 rows because the request omits includeDesc, so partner labels come from the new raw.comtrade_partners. CLAUDE.md "Current state" says the raw layer has 9 tables, but there are now 10. The code wins.
 - 2026-09-24 19:26 The check that the Comtrade World row equals the sum of partner rows had no dbt test until assert_comtrade_partners_sum_to_world (it passes). CLAUDE.md "Measures" says this is already asserted as a dbt test. The code wins; the test now exists.
 - 2026-09-24 19:26 A substring match on "nes" catches Indonesia, Philippines, Polynesia, Micronesia and the Grenadines, so is_aggregate_partner matches "nes" as a whole word. The step 3 instruction says "name containing nes". The whole-word match wins.
--    -2026-09-26 00:45 vessel_count weighting moves one point across a line in any year or coast: 854142, gulf, 2025 (Panama 25.8% to 24.9%). CLAUDE.md says "vessel_count weighting moves no 2025 code across a
-    line" without naming a coast; that is true only at national. Data wins; the claim should be scoped to national.
-  - 2026-09-26 00:45 In 2025 every canonical product at or above HHI 4,000 is a rare earth product, but 854231 was above it in 2019 (4,040) and 2020 (4,137), and 848610 in 2019 (4,030). The headline "rare
-    earths are the only concentration problem" has no year attached. Data wins; README scopes the claim to 2025.
-  - 2026-09-26 00:45 No dbt test reads the mode_shares_expected fixture. CLAUDE.md calls it a test fixture that asserts the pipeline reproduces the verified figures. Code wins; it is a seed with no test.
-  - 2026-09-26 00:45 hs_bridge.code_status is not carried into any mart. BR-33 requires it in the marts. Code wins; BR-33 is marked Partial in docs/05.
-  - 2026-09-26 00:45 docs/07 §1 cited the DOJ/FTC Merger Guidelines as the HHI threshold source. CLAUDE.md sets the EC (2021) HHI 0.4 criterion. CLAUDE.md wins; docs/07 corrected.
+- 2026-09-26 00:45 vessel_count weighting moves one point across a line in any year or coast: 854142, gulf, 2025 (Panama 25.8% to 24.9%). CLAUDE.md says "vessel_count weighting moves no 2025 code across a line" without naming a coast; that is true only at national. Data wins; the claim should be scoped to national.
+- 2026-09-26 00:45 In 2025 every canonical product at or above HHI 4,000 is a rare earth product, but 854231 was above it in 2019 (4,040) and 2020 (4,137), and 848610 in 2019 (4,030). The headline "rare earths are the only concentration problem" has no year attached. Data wins; README scopes the claim to 2025.
+- 2026-09-26 00:45 No dbt test reads the mode_shares_expected fixture. CLAUDE.md calls it a test fixture that asserts the pipeline reproduces the verified figures. Code wins; it is a seed with no test.
+- 2026-09-26 00:45 hs_bridge.code_status is not carried into any mart. BR-33 requires it in the marts. Code wins; BR-33 is marked Partial in docs/05.
+- 2026-09-26 00:45 docs/07 §1 cited the DOJ/FTC Merger Guidelines as the HHI threshold source. CLAUDE.md sets the EC (2021) HHI 0.4 criterion. CLAUDE.md wins; docs/07 corrected.
+- 2026-09-26 18:40 A fresh clone would fail at make load because nothing applies db/schema.sql (not the README, the Makefile or docker-compose), and ingest/load.py requires it. The README's "Running it from a clean clone" section implies the listed steps are complete. The code wins; the README needs a schema step.

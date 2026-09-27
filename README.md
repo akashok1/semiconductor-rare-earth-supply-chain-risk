@@ -9,9 +9,9 @@ permanent magnets. It scores every HS6 code on two axes:
 - **Supplier concentration** (measured): HHI of US import value by
   partner country, from UN Comtrade.
 - **Chokepoint exposure** (modelled): the share of import value whose
-  shortest sea route passes within 200km of a disrupted maritime
-  chokepoint, from US Census trade by mode and port plus sea routes
-  computed from 1,253 origin ports.
+  shortest sea route passes within 200km of a maritime chokepoint with
+  a documented disruption (the risk set), from US Census trade by mode
+  and port plus sea routes computed from 1,253 origin ports.
 
 Concentration is a measurement. Exposure is a model. The dashboard and
 every doc label them that way.
@@ -25,16 +25,18 @@ every doc label them that way.
 - **Exposure**: the share of a product's total US import value on a ship
   whose route passes within 200km of a chokepoint. Modelled.
 - **Flagged**: in any quadrant other than Monitor.
+- **Distance sensitive**: the answer flips depending on whether the
+  route passes within 100km or 300km of the chokepoint, so the quadrant
+  is not assigned.
 - **Canonical product**: a product tracked across the 2022 HS code split.
 
-**Dashboard:** _Tableau Public link pending_
-**Screenshots:** _pending_
+**Dashboard:** _Tableau Public link pending_ ·
+**Screenshots:** _pending, in [`dashboard/`](dashboard/)_
 
 ## Headline findings
 
-- **8 of 26 codes flagged in 2025** (US-wide view, headline port
-  weighting, default lines HHI 4,000 and exposure 25%). The other 18 are
-  Monitor.
+- **8 of 26 codes flagged in 2025** (US average, default thresholds:
+  HHI 4,000 and exposure 25%). The other 18 are Monitor.
 - **In 2025, rare earths are the only concentration problem.** All 3 codes above
   HHI 4,000 in 2025 are rare earth inputs (280530 rare earth metals 6,924,
   284610 cerium compounds 5,657, 850511 permanent magnets 5,364). 280530
@@ -46,18 +48,19 @@ every doc label them that way.
 - **Routing:** 1,253 origin ports in 174 countries, routed to three US
   coasts and measured against 28 chokepoints.
 - **Census double count caught:** processors' 2018 imports summed to
-  $125.4B against a true $21.6B, because Census regional rollups and a
-  grand-total row are tagged as detail rows. Caught by reconciling Census
-  by country, Census by port and Comtrade against each other.
+  $125.4B against a true $21.6B, because the Census API mixes regional
+  totals in with country rows, and its grand-total row is tagged as a
+  country row. Caught by reconciling Census by country, Census by port
+  and Comtrade against each other.
 - **97 dbt tests (13 custom), all passing.**
 
 ### 2025 at the default lines (national)
 
 | Quadrant | Codes | Action |
 |---|---|---|
-| Buffer stock + second supplier | 280530 (Panama 46.0%) | Build buffer stock now and start qualifying a second supplier |
-| Qualify second supplier | 284610, 850511 | Country risk is persistent: diversify it |
-| Hold buffer stock | 854143 solar modules (Suez 52.0%), 854190 (Bab el-Mandeb 39.9%), 848610 (Panama 37.1%), 848630 (Panama 30.7%), 284690 (Panama 25.8%) | Hold buffer stock. If you receive goods on more than one coast, the Coast control shows which coast avoids the chokepoint |
+| Buffer stock + second supplier | 280530 rare earth metals (Panama 46.0%) | Build buffer stock now and start qualifying a second supplier |
+| Qualify second supplier | 284610 cerium compounds, 850511 permanent magnets | Country risk is persistent: diversify it |
+| Hold buffer stock | 854143 solar modules (Suez 52.0%), 854190 semiconductor device parts (Bab el-Mandeb 39.9%), 848610 wafer and boule machines (Panama 37.1%), 848630 flat panel machines (Panama 30.7%), 284690 other rare earth compounds (Panama 25.8%) | Hold buffer stock. If you receive goods on more than one coast, the Coast control shows which coast avoids the chokepoint |
 | Monitor | The other 18 codes | |
 | Distance sensitive | None in 2025 | |
 
@@ -187,13 +190,15 @@ cd semiconductor-rare-earth-supply-chain-risk
 uv sync
 cp .env.example .env   # set the API keys and Postgres credentials
 docker compose up -d   # Postgres on port 5433
-make all               # bridge, comtrade, census, portwatch, routing, load, dbt-build
+make all               # bridge, comtrade, census, portwatch, routing, schema, load, dbt-build
 make export            # marts -> exports/*.csv for Tableau
 ```
 
 `make all` runs, in order: `bridge` (HS bridge), `comtrade`, `census`,
-`portwatch`, `routing` (searoute over every container port), `load` (raw
-files into Postgres `raw.*`) and `dbt-build` (seeds, models, tests).
+`portwatch`, `routing` (searoute over every container port), `schema`
+(applies `db/schema.sql` to the `icr_postgres` container; idempotent, so
+safe on every run), `load` (raw files into Postgres `raw.*`) and
+`dbt-build` (seeds, models, tests).
 Pass flags with `ARGS`, e.g. `make comtrade ARGS="--refresh 2025"`.
 After a seed's columns change, run `make dbt-seed-full` first.
 

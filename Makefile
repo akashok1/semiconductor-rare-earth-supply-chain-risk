@@ -1,4 +1,4 @@
-.PHONY: all bridge comtrade census portwatch routing load export \
+.PHONY: all bridge comtrade census portwatch routing schema load export \
 	dbt-seed dbt-seed-full dbt-build dbt-compile dbt-debug dbt-run dbt-test dbt-docs
 
 # Ingest scripts read secrets through ingest/config.py (python-dotenv), so
@@ -13,9 +13,10 @@ PY = .venv/bin/python
 DBT = set -a && . ./.env && set +a && DBT_PROFILES_DIR=dbt .venv/bin/dbt
 
 # Run order: basket_codes (manual) -> bridge -> comtrade, census, portwatch
-# -> routing -> load -> dbt. Targets do not depend on each other; `all` runs
-# them in order. dbt build seeds, runs and tests, so `all` skips dbt-seed.
-all: bridge comtrade census portwatch routing load dbt-build
+# -> routing -> schema -> load -> dbt. Targets do not depend on each other;
+# `all` runs them in order. dbt build seeds, runs and tests, so `all` skips
+# dbt-seed.
+all: bridge comtrade census portwatch routing schema load dbt-build
 
 bridge:
 	$(PY) -m ingest.hs_bridge $(ARGS)
@@ -31,6 +32,12 @@ portwatch:
 
 routing:
 	$(PY) -m ingest.routing $(ARGS)
+
+# Applies the raw landing DDL to the icr_postgres container. Idempotent
+# (CREATE ... IF NOT EXISTS only), so `all` runs it on every pass. psql takes
+# credentials from the container's environment, not from .env.
+schema:
+	docker exec -i icr_postgres sh -c 'psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' < db/schema.sql
 
 load:
 	$(PY) -m ingest.load $(ARGS)
