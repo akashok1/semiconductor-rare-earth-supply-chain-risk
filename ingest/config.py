@@ -6,8 +6,9 @@ as a module constant -- no other file in ingest/ defines one. Importing this
 module must never raise: each accessor is a lazy, fail-fast check called only
 by the script that actually needs that credential, so a script that only
 touches Comtrade is never blocked by a missing Census key (see
-PROJECT_BRIEF.md section 5, "Operational trap": a dead key must never produce
-a silent empty ingest -- it must fail loudly, but only when actually used).
+docs/00_project_brief.md section 5, "Operational trap": a dead key must never
+produce a silent empty ingest -- it must fail loudly, but only when actually
+used).
 """
 
 from __future__ import annotations

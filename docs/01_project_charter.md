@@ -21,7 +21,7 @@
 | 1.1 | 2026-09-18 | Amended to match Verification findings. Routing changed from assumed to computed. Census added as a third source. HS bridge promoted to first release requirement. Basket framing made asymmetric. Assumptions and risks rewritten around the weaknesses that remain rather than the ones removed | Akash A |
 | 1.2 | 2026-09-18 | Basket asymmetry restated on value-weighted mode shares rather than per-code ranges, after 854140's successors were found to span 2.75 to 95.2 percent containerized vessel. Exposure grain moved from canonical product to commodity code. OBJ-2 and R-8 amended | Akash A |
 
-> Scope, stakeholder framing, and architecture decisions in this charter derive from `PROJECT_BRIEF.md`. Where the two disagree, `PROJECT_BRIEF.md` wins and this document gets a version bump. Where either disagrees with `docs/07_assumptions_limitations.md` on a matter of fact, the assumptions document wins, because it records what was measured.
+> Scope, stakeholder framing, and architecture decisions in this charter derive from `docs/00_project_brief.md`. Where the two disagree, `docs/00_project_brief.md` wins and this document gets a version bump. Where either disagrees with `docs/07_assumptions_limitations.md` on a matter of fact, the assumptions document wins, because it records what was measured.
 
 ---
 

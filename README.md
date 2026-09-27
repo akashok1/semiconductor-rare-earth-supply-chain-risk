@@ -219,6 +219,7 @@ vintage boundary matching the bridge.
 
 | Doc | What it is | Who should read it |
 |---|---|---|
+| [`00_project_brief.md`](docs/00_project_brief.md) | Project brief: the original problem, scope and design decisions (baselined) | Anyone asking why the project exists |
 | [`01_project_charter.md`](docs/01_project_charter.md) | Charter: scope, deliverables, assumptions (baselined) | Sponsor: what was agreed |
 | [`02_brd.md`](docs/02_brd.md) | BRD: 34 business requirements (baselined) | Committee: what they need and why |
 | [`03_frd.md`](docs/03_frd.md) | FRD: 23 functional requirements, where each lives | Builder: what the system does |
@@ -229,7 +230,7 @@ vintage boundary matching the bridge.
 | [`FINDINGS.md`](docs/FINDINGS.md) | Where the code contradicted a baselined doc | Reviewer |
 | [`verification/`](docs/verification/) | Verification-phase findings, historical | Anyone tracing a method decision |
 
-`PROJECT_BRIEF.md`, the charter and the BRD are baselined and superseded
+The brief, the charter and the BRD are baselined and superseded
 where the code differs; `docs/07` wins.
 
 ## Not built

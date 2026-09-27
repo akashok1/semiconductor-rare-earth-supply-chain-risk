@@ -39,7 +39,7 @@ Source: `analysis/verification_round1.py`, run against live Comtrade and IMF Por
 - Explicit code `280530`: **EXISTS**: 280530 - Earth-metals, rare; scandium and yttrium, whether or not intermixed or interalloyed
 - Explicit code `850511`: **EXISTS**: 850511 - Magnets; permanent magnets and articles intended to become permanent magnets after magnetisation, of metal
 
-All explicitly named codes from PROJECT_BRIEF.md section 3 exist in the live HS2017 (H5) list. Family headings resolved to the leaf codes above.
+All explicitly named codes from docs/00_project_brief.md section 3 exist in the live HS2017 (H5) list. Family headings resolved to the leaf codes above.
 
 ## 2. Latest available year for US import data
 
@@ -48,7 +48,7 @@ All explicitly named codes from PROJECT_BRIEF.md section 3 exist in the live HS2
 
 - Classification vintage by year (reporter USA): H0: 1991-1995, H1: 1996-2001, H2: 2002-2006, H3: 2007-2011, H4: 2012-2016, H5: 2017-2021, H6: 2022-2025
 
-**Finding:** US import data under the project's chosen HS2017 (H5) classification runs through 2021 only. Years 2022-2025 are reported under a newer revision. Querying the H5-tagged endpoint for those later years returns zero rows rather than converted data. Comtrade does not silently reclassify. This is the HS concordance problem named in PROJECT_BRIEF.md section 6, arriving one revision earlier than the brief's stated backward-only H4 enhancement anticipated. Extending this project's year range past 2021 requires the bridge table, not a wider H5 query.
+**Finding:** US import data under the project's chosen HS2017 (H5) classification runs through 2021 only. Years 2022-2025 are reported under a newer revision. Querying the H5-tagged endpoint for those later years returns zero rows rather than converted data. Comtrade does not silently reclassify. This is the HS concordance problem named in docs/00_project_brief.md section 6, arriving one revision earlier than the brief's stated backward-only H4 enhancement anticipated. Extending this project's year range past 2021 requires the bridge table, not a wider H5 query.
 
 ## 3. Import value and record count per surviving code, 2018-2021
 
@@ -83,7 +83,7 @@ No surviving code fell below the $1,000,000 cumulative-value floor.
 
 ## 4. PortWatch FeatureServer pagination
 
-Chokepoint tested: **Strait of Malacca** (`chokepoint5`), the chokepoint PROJECT_BRIEF.md section 6 identifies as most relevant to both baskets.
+Chokepoint tested: **Strait of Malacca** (`chokepoint5`), the chokepoint docs/00_project_brief.md section 6 identifies as most relevant to both baskets.
 
 - Pages fetched: 3 (rows per page: [1000, 1000, 806])
 - Total daily rows retrieved: 2806

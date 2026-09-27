@@ -1,6 +1,6 @@
 # PROJECT BRIEF: Semiconductor and Rare Earth Supply Chain Risk
 
-> **Baselined, superseded where the code differs.** The current record is [`docs/07_assumptions_limitations.md`](docs/07_assumptions_limitations.md) and [`README.md`](README.md). Not built: event study (D-7), Excel scenario workbook (D-10), GitHub Actions scheduled refresh, PortWatch data-quality dbt tests.
+> **Baselined, superseded where the code differs.** The current record is [`docs/07_assumptions_limitations.md`](07_assumptions_limitations.md) and [`README.md`](../README.md). Not built: event study (D-7), Excel scenario workbook (D-10), GitHub Actions scheduled refresh, PortWatch data-quality dbt tests.
 
 **Owner:** Akash A
 **Repo:** `semiconductor-rare-earth-supply-chain-risk`
