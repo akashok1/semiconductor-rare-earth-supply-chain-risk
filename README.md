@@ -33,6 +33,35 @@ every doc label them that way.
 **Dashboard:** _Tableau Public link pending_ ·
 **Screenshots:** _pending, in [`dashboard/`](dashboard/)_
 
+## Built with
+
+- **Python 3.12**: the ingest scripts. `requests` calls the APIs,
+  `searoute` computes sea routes, `shapely` and `pyproj` measure route to
+  chokepoint distance, `openpyxl` reads the UN correlation workbook,
+  `pycountry` maps country codes, `psycopg` loads and exports Postgres.
+  `pandas` and `matplotlib` appear only in the exploration notebooks.
+- **PostgreSQL 16 in Docker**: holds the raw tables and every dbt model.
+- **dbt** (`dbt-core`, `dbt-postgres`): turns raw tables into the marts
+  and runs the 97 data tests.
+- **Tableau Public**: the dashboard, built by hand from `exports/`.
+- **uv**: installs the Python dependencies from the lock file.
+- **Make**: runs the pipeline in order (`make all`, `make export`).
+- **Claude Code**: implementation.
+
+## Repo map
+
+```
+data/        raw API pulls (gitignored) and hand-kept reference CSVs
+db/          Postgres DDL for the raw tables
+dbt/         SQL models (staging, intermediate, marts) and tests
+dashboard/   Tableau workbook, screenshots and calculation notes
+docs/        brief, charter, BRD, FRD, dictionary, traceability, UAT, assumptions
+exports/     the four CSVs the dashboard reads
+ingest/      Python that pulls the sources, routes ships, loads Postgres
+notebooks/   first-look exploration from the verification phase
+Makefile     one target per pipeline step
+```
+
 ## Headline findings
 
 - **8 of 26 codes flagged in 2025** (US average, default thresholds:
